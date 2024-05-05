@@ -34,9 +34,10 @@ namespace WoTE.Content.NPCs.EoL
         {
             Color rainbow = Main.hslToRgb(Main.GlobalTimeWrappedHourly * 0.5f % 1f, 1f, 0.5f, 0);
             Texture2D backglow = MiscTexturesRegistry.BloomCircleSmall.Value;
-            Main.EntitySpriteDraw(backglow, drawPosition, null, NPC.GetAlpha(Color.Wheat) with { A = 0 } * 0.4f, NPC.rotation, backglow.Size() * 0.5f, NPC.scale * 3f, 0);
-            Main.EntitySpriteDraw(backglow, drawPosition, null, NPC.GetAlpha(Color.Wheat) with { A = 0 } * 0.67f, NPC.rotation, backglow.Size() * 0.5f, NPC.scale * 1.85f, 0);
-            Main.EntitySpriteDraw(backglow, drawPosition, null, NPC.GetAlpha(rainbow) * 0.7f, NPC.rotation, backglow.Size() * 0.5f, NPC.scale * 1.12f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, NPC.GetAlpha(Color.Wheat) with { A = 0 } * 0.25f, NPC.rotation, backglow.Size() * 0.5f, NPC.scale * 4.1f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, NPC.GetAlpha(Color.Wheat) with { A = 0 } * 0.67f, NPC.rotation, backglow.Size() * 0.5f, NPC.scale * 2.85f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, NPC.GetAlpha(rainbow) * 0.7f, NPC.rotation, backglow.Size() * 0.5f, NPC.scale * 1.5f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, NPC.GetAlpha(Color.Wheat) with { A = 0 }, NPC.rotation, backglow.Size() * 0.5f, NPC.scale * 0.8f, 0);
         }
 
         /// <summary>
