@@ -71,11 +71,11 @@ namespace WoTE.Content.NPCs.EoL
         public void DrawHands(Vector2 drawPosition, Color lightColor, SpriteEffects direction)
         {
             Texture2D leftHandTexture = TextureAssets.Extra[ExtrasID.HallowBossArmsLeft].Value;
-            Rectangle leftHandFrame = leftHandTexture.Frame(1, 7, 0, 0);
+            Rectangle leftHandFrame = leftHandTexture.Frame(1, 7, 0, (int)LeftHandFrame);
             Main.EntitySpriteDraw(leftHandTexture, drawPosition, leftHandFrame, NPC.GetAlpha(lightColor), NPC.rotation, leftHandFrame.Size() * 0.5f, NPC.scale, direction);
 
             Texture2D rightHandTexture = TextureAssets.Extra[ExtrasID.HallowBossArmsRight].Value;
-            Rectangle rightHandFrame = rightHandTexture.Frame(1, 7, 0, 0);
+            Rectangle rightHandFrame = rightHandTexture.Frame(1, 7, 0, (int)RightHandFrame);
             Main.EntitySpriteDraw(rightHandTexture, drawPosition, rightHandFrame, NPC.GetAlpha(lightColor), NPC.rotation, rightHandFrame.Size() * 0.5f, NPC.scale, direction);
         }
     }

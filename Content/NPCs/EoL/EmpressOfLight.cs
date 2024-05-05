@@ -37,6 +37,24 @@ namespace WoTE.Content.NPCs.EoL
         public Player Target => Main.player[NPC.target];
 
         /// <summary>
+        /// The frame of the Empress' left hand.
+        /// </summary>
+        public EmpressHandFrame LeftHandFrame
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The frame of the Empress' right hand.
+        /// </summary>
+        public EmpressHandFrame RightHandFrame
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The AI timer for the Empress.
         /// </summary>
         public ref int AITimer => ref StateMachine.CurrentState.Time;
