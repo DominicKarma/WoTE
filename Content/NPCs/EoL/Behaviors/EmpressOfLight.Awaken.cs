@@ -23,11 +23,14 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_Awaken()
         {
-            if (AITimer <= 10)
-                NPC.velocity = Vector2.UnitY * 5f;
+            if (AITimer <= 5)
+                NPC.velocity = Vector2.UnitY * 6f;
 
-            NPC.velocity *= 0.98f;
-            NPC.Opacity = Utilities.InverseLerp(0f, 60f, AITimer);
+            NPC.velocity *= 0.967f;
+            NPC.Opacity = Utilities.InverseLerp(0f, 30f, AITimer);
+
+            LeftHandFrame = EmpressHandFrame.HandPressedToChest;
+            RightHandFrame = EmpressHandFrame.HandPressedToChest;
         }
     }
 }
