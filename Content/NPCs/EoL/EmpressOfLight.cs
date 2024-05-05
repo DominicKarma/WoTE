@@ -1,5 +1,6 @@
-﻿using Luminance.Common.Utilities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Luminance.Common.Utilities;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -71,6 +72,8 @@ namespace WoTE.Content.NPCs.EoL
             internal set => myself = value;
         }
 
+        public override string Texture => $"Terraria/Images/NPC_{NPCID.HallowBoss}";
+
         #endregion Fields and Properties
 
         #region Loading
@@ -83,6 +86,34 @@ namespace WoTE.Content.NPCs.EoL
 
             var npcToBossHead = (IDictionary<int, int>)typeof(NPCHeadLoader).GetField("npcToBossHead", Utilities.UniversalBindingFlags).GetValue(null);
             npcToBossHead[Type] = NPCID.Sets.BossHeadTextures[Type];
+
+            Main.npcFrameCount[Type] = 2;
+        }
+
+        public override void SetDefaults()
+        {
+            NPC.npcSlots = 100f;
+            NPC.damage = 300;
+            NPC.width = 100;
+            NPC.height = 100;
+            NPC.defense = 100;
+            NPC.SetLifeMaxByMode(200000, 300000, 400000);
+
+            if (Main.expertMode)
+                NPC.damage = 125;
+
+            NPC.aiStyle = -1;
+            AIType = -1;
+            NPC.knockBackResist = 0f;
+            NPC.canGhostHeal = false;
+            NPC.boss = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = null;
+            NPC.value = Item.buyPrice(1, 0, 0, 0) / 5;
+            NPC.netAlways = true;
+            NPC.Opacity = 0f;
         }
 
         #endregion Loading
@@ -116,6 +147,9 @@ namespace WoTE.Content.NPCs.EoL
 
             // Increment timers.
             AITimer++;
+
+            // Emit light.
+            Lighting.AddLight(NPC.Center, Vector3.One * NPC.Opacity);
         }
 
         /// <summary>
