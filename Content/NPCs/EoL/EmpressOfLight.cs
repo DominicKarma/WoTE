@@ -9,22 +9,6 @@ namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
-        #region Custom Types and Enumerations
-
-        public enum EmpressAIType
-        {
-            Awaken,
-
-            // Intermediate states.
-            Teleport,
-            ResetCycle,
-
-            // Useful count constant.
-            Count
-        }
-
-        #endregion Custom Types and Enumerations
-
         #region Fields and Properties
 
         /// <summary>
