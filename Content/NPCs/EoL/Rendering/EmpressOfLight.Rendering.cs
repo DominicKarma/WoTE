@@ -1,4 +1,5 @@
-﻿using Luminance.Assets;
+﻿using System;
+using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -25,10 +26,10 @@ namespace WoTE.Content.NPCs.EoL
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
-            TeleportCutoffY = Utilities.Sin01(Main.GlobalTimeWrappedHourly * 2f);
+            TeleportCutoffY = Main.GlobalTimeWrappedHourly * 0.5f % 1f;
             Main.spriteBatch.PrepareForShaders();
             DrawInstance(NPC.Center - screenPos, TeleportCutoffY, false);
-            DrawInstance(NPC.Center - screenPos + Vector2.UnitX * 400f, 1f - TeleportCutoffY, true);
+            DrawInstance(NPC.Center - screenPos + Vector2.UnitX * 400f, 1f - TeleportCutoffY, false);
             Main.spriteBatch.ResetToDefault();
 
             return false;
@@ -49,7 +50,24 @@ namespace WoTE.Content.NPCs.EoL
             teleportShader.Apply();
 
             SpriteEffects direction = NPC.spriteDirection.ToSpriteDirection();
-            Main.EntitySpriteDraw(EmpressOfLightTargetManager.EmpressTarget, drawPosition, null, Color.White, 0f, EmpressOfLightTargetManager.EmpressTarget.Size() * 0.5f, NPC.scale, direction, 0f);
+            Main.EntitySpriteDraw(EmpressOfLightTargetManager.EmpressTarget, drawPosition, null, NPC.GetAlpha(Color.White), 0f, EmpressOfLightTargetManager.EmpressTarget.Size() * 0.5f, NPC.scale, direction, 0f);
+
+            Texture2D gradient = TextureAssets.Extra[ExtrasID.HallowBossGradient].Value;
+            float teleportRingOpacity = Utilities.InverseLerpBump(0f, 0.25f, 0.85f, 1f, cutoffY).Cubed();
+            Vector2 teleportRingPosition = drawPosition + Vector2.UnitY * (cutoffY - 0.5f) * 570f;
+            ManagedShader teleportRingShader = ShaderManager.GetShader("WoTE.EmpressTeleportRingShader");
+            teleportRingShader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
+            teleportRingShader.TrySetParameter("pulsationIntensity", 1f - cutoffY);
+            teleportRingShader.TrySetParameter("invertDisappearanceDirection", invertDisappearanceDirection);
+            teleportRingShader.Apply();
+
+            float ringGrowInterpolant = Utilities.InverseLerpBump(0f, 0.5f, 0.8f, 1f, cutoffY);
+            if (invertDisappearanceDirection)
+                ringGrowInterpolant = 1f - ringGrowInterpolant;
+
+            Vector2 ringScale = new Vector2(320f, 600f) * MathF.Pow(ringGrowInterpolant, 0.7f) * NPC.scale;
+            Color ringColor = Main.hslToRgb(Main.GlobalTimeWrappedHourly * 2f % 1f, 1f, 0.95f);
+            Main.EntitySpriteDraw(gradient, teleportRingPosition, null, NPC.GetAlpha(ringColor) * teleportRingOpacity, 0f, gradient.Size() * 0.5f, ringScale / gradient.Size(), SpriteEffects.FlipVertically);
         }
 
         /// <summary>
