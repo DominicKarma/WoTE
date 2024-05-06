@@ -13,7 +13,7 @@ namespace WoTE.Content.NPCs.EoL
             {
                 if (stateMachine is null)
                     LoadStates();
-                return stateMachine;
+                return stateMachine!;
             }
             set => stateMachine = value;
         }
@@ -34,6 +34,9 @@ namespace WoTE.Content.NPCs.EoL
 
         private void ResetGenericVariables(bool stateWasPopped, EntityAIState<EmpressAIType> oldState)
         {
+            if (!stateWasPopped || oldState.Identifier == EmpressAIType.Teleport)
+                return;
+
             for (int i = 0; i < 4; i++)
                 NPC.ai[i] = 0f;
 

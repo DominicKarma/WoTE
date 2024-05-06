@@ -152,6 +152,8 @@ namespace WoTE.Content.NPCs.EoL
 
             PerformPreUpdateResets();
 
+            DashAfterimageInterpolant = Utilities.Saturate(DashAfterimageInterpolant - 0.01f);
+
             StateMachine.PerformBehaviors();
             StateMachine.PerformStateTransitionCheck();
 
@@ -175,7 +177,7 @@ namespace WoTE.Content.NPCs.EoL
         /// </remarks>
         public void PerformPreUpdateResets()
         {
-            NPC.damage = NPC.defDamage;
+            NPC.damage = 0;
             NPC.defense = NPC.defDefense;
             NPC.dontTakeDamage = false;
             NPC.immortal = false;

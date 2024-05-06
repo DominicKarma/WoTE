@@ -1,6 +1,7 @@
 ﻿using System;
 using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -24,22 +25,22 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends redirecting during her Sequential Dashes attack.
         /// </summary>
-        public static int SequentialDashes_RedirectTime => Utilities.SecondsToFrames(0.333f);
+        public static int SequentialDashes_RedirectTime => Utilities.SecondsToFrames(0.23f);
 
         /// <summary>
         /// How long the Empress spends dashing during her Sequential Dashes attack.
         /// </summary>
-        public static int SequentialDashes_DashTime => Utilities.SecondsToFrames(0.433f);
+        public static int SequentialDashes_DashTime => Utilities.SecondsToFrames(0.25f);
 
         /// <summary>
         /// How long the Empress spends slowing down during her Sequential Dashes attack, after her dash.
         /// </summary>
-        public static int SequentialDashes_SlowDownTime => Utilities.SecondsToFrames(0.433f);
+        public static int SequentialDashes_SlowDownTime => Utilities.SecondsToFrames(0.15f);
 
         /// <summary>
         /// The amount of dashes that the Empress should perform during her Sequential Dashes attack before choosing a new attack. 
         /// </summary>
-        public static int SequentialDashes_DashCount => 3;
+        public static int SequentialDashes_DashCount => 2;
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_SequentialDashes()
@@ -66,8 +67,9 @@ namespace WoTE.Content.NPCs.EoL
             }
             else if (AITimer <= SequentialDashes_RedirectTime + SequentialDashes_DashTime)
             {
-                float dashInterpolant = Utilities.InverseLerp(0f, 9f, AITimer - SequentialDashes_RedirectTime);
-                NPC.velocity = Vector2.Lerp(NPC.velocity, SequentialDashes_DashDirection.ToRotationVector2() * 120f, dashInterpolant * 0.13f);
+                float dashInterpolant = Utilities.InverseLerp(0f, 5f, AITimer - SequentialDashes_RedirectTime);
+                NPC.velocity = Vector2.Lerp(NPC.velocity, SequentialDashes_DashDirection.ToRotationVector2() * 125f, dashInterpolant * 0.3f);
+                NPC.damage = NPC.defDamage;
                 DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, 1f, 0.3f);
             }
             else if (AITimer <= SequentialDashes_RedirectTime + SequentialDashes_DashTime + SequentialDashes_SlowDownTime)
@@ -79,7 +81,7 @@ namespace WoTE.Content.NPCs.EoL
             {
                 AITimer = 0;
                 SequentialDashes_DashCounter++;
-                TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(500f, 420f));
+                TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(500f, 420f), (int)(DefaultTeleportDuration * 1.15f));
                 NPC.netUpdate = true;
             }
 
@@ -120,18 +122,12 @@ namespace WoTE.Content.NPCs.EoL
 
             // Release everlasting rainbows outward.
             // TODO -- Probably replace this with something better sometime later?
-            SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
-            if (Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                for (int i = 0; i < 11; i++)
-                {
-                    Vector2 rainbowVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.TwoPi * i / 11f) * 12f;
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, rainbowVelocity, ProjectileID.HallowBossLastingRainbow, 150, 0f, -1, 0f, i / 7f);
-                }
-            }
+            SoundEngine.PlaySound(SoundID.Item160 with { MaxInstances = 0 });
 
             SequentialDashes_DashDirection = NPC.AngleTo(Target.Center);
             NPC.netUpdate = true;
+
+            ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 7f);
         }
     }
 }
