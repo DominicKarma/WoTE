@@ -7,6 +7,8 @@
     {
         Awaken,
 
+        SequentialDashes,
+
         // Intermediate states.
         Teleport,
         ResetCycle,

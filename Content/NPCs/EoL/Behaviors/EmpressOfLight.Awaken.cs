@@ -13,7 +13,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.RegisterTransition(EmpressAIType.Awaken, null, false, () =>
             {
-                return AITimer >= 9999999;
+                return AITimer >= 90;
             });
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Awaken, DoBehavior_Awaken);
@@ -32,9 +32,6 @@ namespace WoTE.Content.NPCs.EoL
 
             LeftHandFrame = EmpressHandFrame.HandPressedToChest;
             RightHandFrame = EmpressHandFrame.HandPressedToChest;
-
-            if (Main.mouseRight && Main.mouseRightRelease)
-                TeleportTo(Main.MouseWorld);
         }
     }
 }
