@@ -52,6 +52,20 @@ namespace WoTE.Content.NPCs.EoL
             SpriteEffects direction = NPC.spriteDirection.ToSpriteDirection();
             Main.EntitySpriteDraw(EmpressOfLightTargetManager.EmpressTarget, drawPosition, null, NPC.GetAlpha(Color.White), 0f, EmpressOfLightTargetManager.EmpressTarget.Size() * 0.5f, NPC.scale, direction, 0f);
 
+            DrawTeleportRing(drawPosition, cutoffY, invertDisappearanceDirection);
+        }
+
+        /// <summary>
+        /// Draws a teleportation ring for an empress of light instance
+        /// </summary>
+        /// <param name="drawPosition">The draw position of the Empress instance.</param>
+        /// <param name="cutoffY">The Y cutoff interpolant value.</param>
+        /// <param name="invertDisappearanceDirection">Whether the direction of disappearance should be inverted.</param>
+        public void DrawTeleportRing(Vector2 drawPosition, float cutoffY, bool invertDisappearanceDirection)
+        {
+            if (cutoffY <= 0f || cutoffY >= 1f)
+                return;
+
             Texture2D gradient = TextureAssets.Extra[ExtrasID.HallowBossGradient].Value;
             float teleportRingOpacity = Utilities.InverseLerpBump(0f, 0.25f, 0.85f, 1f, cutoffY).Cubed();
             Vector2 teleportRingPosition = drawPosition + Vector2.UnitY * (cutoffY - 0.5f) * 570f;
