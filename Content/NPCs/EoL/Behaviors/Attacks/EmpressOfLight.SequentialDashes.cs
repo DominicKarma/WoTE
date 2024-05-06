@@ -44,7 +44,6 @@ namespace WoTE.Content.NPCs.EoL
                 hoverDestination -= NPC.SafeDirectionTo(Target.Center) * Utilities.InverseLerp(-16f, -4f, redirectTime - AITimer).Squared() * 360f;
 
                 NPC.SmoothFlyNear(hoverDestination, 0.12f, 0.9f);
-
                 SequentialDashes_DashDirection = NPC.AngleTo(Target.Center);
 
                 if (AITimer == redirectTime)
@@ -85,7 +84,7 @@ namespace WoTE.Content.NPCs.EoL
             RightHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
 
             NPC.spriteDirection = NPC.velocity.X.NonZeroSign();
-            NPC.rotation = NPC.velocity.X * 0.0015f;
+            NPC.rotation = NPC.velocity.X * 0.00175f;
         }
     }
 }

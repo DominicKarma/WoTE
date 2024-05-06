@@ -7,7 +7,14 @@
     {
         Awaken,
 
+        // Attack states.
         SequentialDashes,
+        BasicPrismaticBolts,
+        ButterflyBurstDashes,
+        InwardPrismaticBoltCircle,
+        ReleaseLanceWallsFromBelow,
+        ConvergingTerraprismas,
+        TwirlingPetalSun,
 
         // Intermediate states.
         Teleport,

@@ -33,7 +33,6 @@ namespace WoTE.Content.NPCs.EoL
             Main.spriteBatch.PrepareForShaders();
 
             float illusionInterpolant = (1f - Utilities.InverseLerpBump(0f, 0.2f, 0.8f, 1f, TeleportCompletionRatio)) * DashAfterimageInterpolant;
-
             float cutoffYInterpolant = EasingCurves.Quadratic.Evaluate(EasingType.InOut, TeleportCompletionRatio);
             if (TeleportCompletionRatio > 0f && TeleportCompletionRatio < 1f)
             {
@@ -44,29 +43,7 @@ namespace WoTE.Content.NPCs.EoL
                 DrawInstance(NPC.Center - screenPos, Color.White, 0f, false);
 
             if (DashAfterimageInterpolant > 0f)
-            {
-                for (int i = NPC.oldPos.Length - 1; i >= 1; i--)
-                {
-                    float opacity = Utilities.InverseLerp(NPC.oldPos.Length, 1f, i) * DashAfterimageInterpolant * 0.8f;
-                    Vector2 drawPosition = Vector2.Lerp(NPC.oldPos[i] + NPC.Size * 0.5f, NPC.Center, 0f) - screenPos;
-                    Color afterimageColor = Main.hslToRgb((i + 5f) / 10f - Main.GlobalTimeWrappedHourly * 0.2f, 0.7f, 0.5f, 0) * opacity;
-                    DrawInstance(drawPosition, afterimageColor, 0f, false);
-                }
-
-                for (int i = 0; i < 20; i++)
-                {
-                    float time = (float)Main.timeForVisualEffects / 60f;
-                    Vector2 illusionDrawPosition = NPC.Center - screenPos - NPC.velocity * i * 0.23f;
-                    Vector3 illusionOffset = Vector3.Transform(Vector3.Forward, Matrix.CreateRotationX((time - 0.3f + i * 0.1f) * 0.7f * MathHelper.TwoPi) *
-                        Matrix.CreateRotationY((time - 0.8f + i * 0.3f) * 0.7f * MathHelper.TwoPi) *
-                        Matrix.CreateRotationZ((time + i * 0.5f) * 0.1f * MathHelper.TwoPi));
-                    illusionDrawPosition += new Vector2(illusionOffset.X, illusionOffset.Y) * illusionInterpolant * 150f;
-
-                    Color illusionColor = Main.hslToRgb((i + 5f) / 10f, 0.7f, 0.5f) * illusionInterpolant;
-
-                    DrawInstance(illusionDrawPosition, illusionColor with { A = 0 }, cutoffYInterpolant, false);
-                }
-            }
+                DrawAfterimageVisuals(screenPos, illusionInterpolant);
 
             Main.spriteBatch.ResetToDefault();
 
@@ -92,6 +69,37 @@ namespace WoTE.Content.NPCs.EoL
             Main.EntitySpriteDraw(EmpressOfLightTargetManager.EmpressTarget, drawPosition, null, NPC.GetAlpha(color), NPC.rotation, EmpressOfLightTargetManager.EmpressTarget.Size() * 0.5f, NPC.scale, direction, 0f);
 
             DrawTeleportRing(drawPosition, cutoffY, invertDisappearanceDirection);
+        }
+
+        /// <summary>
+        /// Draws the Empress' dash visuals.
+        /// </summary>
+        /// <param name="screenPos">The position of the camera. Used to offset world positions into screen space.</param>
+        /// <param name="illusionInterpolant">The illusion interpolant. Used for the vanilla game swirling illusions visual.</param>
+        public void DrawAfterimageVisuals(Vector2 screenPos, float illusionInterpolant)
+        {
+            for (int i = NPC.oldPos.Length - 1; i >= 1; i--)
+            {
+                float opacity = Utilities.InverseLerp(NPC.oldPos.Length, 1f, i) * DashAfterimageInterpolant * 0.8f;
+                Vector2 drawPosition = Vector2.Lerp(NPC.oldPos[i] + NPC.Size * 0.5f, NPC.Center, 0f) - screenPos;
+                Color afterimageColor = Main.hslToRgb((i + 5f) / 10f - Main.GlobalTimeWrappedHourly * 0.2f, 0.7f, 0.5f, 0) * opacity;
+                DrawInstance(drawPosition, afterimageColor, 0f, false);
+            }
+
+            for (int i = 0; i < 25; i++)
+            {
+                float time = (float)Main.timeForVisualEffects / 60f;
+                Vector2 illusionDrawPosition = NPC.Center - screenPos - NPC.velocity * i * 0.23f;
+                Vector3 illusionOffset = Vector3.Transform(Vector3.Forward,
+                    Matrix.CreateRotationX((time - 0.3f + i * 0.1f) * MathHelper.TwoPi * 0.7f) *
+                    Matrix.CreateRotationY((time - 0.8f + i * 0.3f) * MathHelper.TwoPi * 0.7f) *
+                    Matrix.CreateRotationZ((time + i * 0.5f) * MathHelper.TwoPi * 0.1f));
+                illusionDrawPosition += new Vector2(illusionOffset.X, illusionOffset.Y) * illusionInterpolant * 150f;
+
+                Color illusionColor = Main.hslToRgb((i + 5f) / 10f, 0.7f, 0.5f) * illusionInterpolant;
+
+                DrawInstance(illusionDrawPosition, illusionColor with { A = 0 }, 0f, false);
+            }
         }
 
         /// <summary>
