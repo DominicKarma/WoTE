@@ -25,7 +25,7 @@ namespace WoTE.Content.NPCs.EoL
             {
                 // Add the relevant phase cycle if it has been exhausted, to ensure that Nameless' attacks are cyclic.
                 if ((StateMachine?.StateStack?.Count ?? 1) <= 0)
-                    StateMachine.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
+                    StateMachine?.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
 
                 return StateMachine?.CurrentState?.Identifier ?? EmpressAIType.Awaken;
             }
@@ -62,7 +62,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// A shorthand accessor for the Empress NPC. Returns null if not currently present.
         /// </summary>
-        public static NPC Myself
+        public static NPC? Myself
         {
             get
             {
@@ -71,7 +71,11 @@ namespace WoTE.Content.NPCs.EoL
 
                 return myself;
             }
-            internal set => myself = value;
+            internal set
+            {
+                if (value is not null)
+                    myself = value;
+            }
         }
 
         public override string Texture => $"Terraria/Images/NPC_{NPCID.HallowBoss}";
@@ -86,7 +90,7 @@ namespace WoTE.Content.NPCs.EoL
 
             NPCID.Sets.BossHeadTextures[Type] = NPCID.Sets.BossHeadTextures[NPCID.HallowBoss];
 
-            var npcToBossHead = (IDictionary<int, int>)typeof(NPCHeadLoader).GetField("npcToBossHead", Utilities.UniversalBindingFlags).GetValue(null);
+            var npcToBossHead = (IDictionary<int, int>)typeof(NPCHeadLoader).GetField("npcToBossHead", Utilities.UniversalBindingFlags)!.GetValue(null)!;
             npcToBossHead[Type] = NPCID.Sets.BossHeadTextures[Type];
 
             Main.npcFrameCount[Type] = 2;

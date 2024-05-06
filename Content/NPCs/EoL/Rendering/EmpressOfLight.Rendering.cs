@@ -13,12 +13,6 @@ namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
-        public float TeleportCutoffY
-        {
-            get;
-            set;
-        }
-
         public override void FindFrame(int frameHeight)
         {
 
@@ -26,10 +20,15 @@ namespace WoTE.Content.NPCs.EoL
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
-            TeleportCutoffY = Main.GlobalTimeWrappedHourly * 0.5f % 1f;
             Main.spriteBatch.PrepareForShaders();
-            DrawInstance(NPC.Center - screenPos, TeleportCutoffY, false);
-            DrawInstance(NPC.Center - screenPos + Vector2.UnitX * 400f, 1f - TeleportCutoffY, false);
+
+            if (TeleportCompletionRatio > 0f && TeleportCompletionRatio < 1f)
+            {
+                DrawInstance(NPC.Center - screenPos, TeleportCompletionRatio, false);
+                DrawInstance(TeleportDestination - screenPos, 1f - TeleportCompletionRatio, false);
+            }
+            else
+                DrawInstance(NPC.Center - screenPos, 0f, false);
             Main.spriteBatch.ResetToDefault();
 
             return false;
@@ -104,7 +103,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <param name="drawPosition">The draw position of the backglow.</param>
         public void DrawBackglow(Vector2 drawPosition)
         {
-            float backglowScale = Utilities.InverseLerp(0.6f, 0f, TeleportCutoffY);
+            float backglowScale = 1f - Utilities.InverseLerpBump(0f, 0.5f, 0.6f, 1f, TeleportCompletionRatio);
             Color rainbow = Main.hslToRgb(Main.GlobalTimeWrappedHourly * 0.5f % 1f, 1f, 0.5f, 0);
             Texture2D backglow = MiscTexturesRegistry.BloomCircleSmall.Value;
             Main.EntitySpriteDraw(backglow, drawPosition, null, Color.Wheat with { A = 0 } * 0.25f, NPC.rotation, backglow.Size() * 0.5f, backglowScale * 4.1f, 0);

@@ -1,6 +1,7 @@
 ﻿using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace WoTE.Content.NPCs.EoL
@@ -31,6 +32,9 @@ namespace WoTE.Content.NPCs.EoL
 
             LeftHandFrame = EmpressHandFrame.HandPressedToChest;
             RightHandFrame = EmpressHandFrame.HandPressedToChest;
+
+            if (Main.mouseRight && Main.mouseRightRelease)
+                TeleportTo(Main.MouseWorld);
         }
     }
 }

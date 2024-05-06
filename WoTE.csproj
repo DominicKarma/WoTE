@@ -5,7 +5,7 @@
 
 	<!-- General -->
 	<PropertyGroup>
-		
+	  <Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Reference Include="Luminance">
