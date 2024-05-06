@@ -113,8 +113,6 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_SequentialDashes_PerformDashEffects()
         {
-            SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
-
             // Reset the old position and rotation arrays, to ensure that the dash starts off with a brand new
             // afterimage state.
             NPC.oldRot = new float[NPC.oldRot.Length];
@@ -122,6 +120,7 @@ namespace WoTE.Content.NPCs.EoL
 
             // Release everlasting rainbows outward.
             // TODO -- Probably replace this with something better sometime later?
+            SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for (int i = 0; i < 11; i++)
