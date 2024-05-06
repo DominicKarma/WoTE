@@ -94,6 +94,10 @@ namespace WoTE.Content.NPCs.EoL
             npcToBossHead[Type] = NPCID.Sets.BossHeadTextures[Type];
 
             Main.npcFrameCount[Type] = 2;
+
+            NPCID.Sets.MustAlwaysDraw[Type] = true;
+            NPCID.Sets.TrailingMode[Type] = 3;
+            NPCID.Sets.TrailCacheLength[Type] = 30;
         }
 
         public override void SetDefaults()
@@ -150,6 +154,9 @@ namespace WoTE.Content.NPCs.EoL
 
             StateMachine.PerformBehaviors();
             StateMachine.PerformStateTransitionCheck();
+
+            if ((StateMachine?.StateStack?.Count ?? 1) <= 0)
+                StateMachine?.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
 
             // Increment timers.
             AITimer++;

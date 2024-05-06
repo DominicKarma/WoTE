@@ -7,7 +7,7 @@ bool invertDisappearanceDirection;
 
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
-    float4 baseColor = tex2D(baseTexture, coords);
+    float4 baseColor = tex2D(baseTexture, coords) * sampleColor;
     float erasureNoiseOffset = tex2D(erasureNoise, coords * 0.85 + float2(0, globalTime * 0.75)) * 0.2;
     float erasureCutoff = smoothstep(cutoffY, cutoffY + 0.06, coords.y + erasureNoiseOffset);
     

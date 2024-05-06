@@ -53,6 +53,8 @@ namespace WoTE.Content.NPCs.EoL
             }, () =>
             {
                 TeleportCompletionRatio = 0f;
+                NPC.oldRot = new float[NPC.oldRot.Length];
+                NPC.oldPos = new Vector2[NPC.oldPos.Length];
             });
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Teleport, DoBehavior_Teleport);
@@ -70,7 +72,7 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_Teleport()
         {
-            NPC.velocity *= 0.7f;
+            NPC.velocity *= 0.85f;
 
             TeleportCompletionRatio = Utilities.InverseLerp(0f, TeleportDuration, AITimer);
 
