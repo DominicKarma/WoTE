@@ -51,9 +51,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float glow = smoothstep(0.5, 0.25, horizontalEdgeDistance + coords.x) * 0.3 / horizontalEdgeDistance;
     
     // Calculate colors.
-    float trailHue = coords.x * 1.3 - localTime * 0.9;
+    float trailHue = coords.x * 0.3 - localTime * 0.4;
     float4 trailColor = tex2D(colorGradientTexture, float2(trailHue, 0)) * opacity * trailTextureBrightness * lerp(1, 2, coords.x);
-    float4 rainbowColor = tex2D(colorGradientTexture, coords + float2(trailTextureBrightness * 0.5 + coords.x - localTime, 0)) * glow;
+    float4 rainbowColor = tex2D(colorGradientTexture, coords + float2(trailTextureBrightness * 0.5 + coords.x * 0.4 - localTime * 0.5, 0)) * glow;
     
     // Combine colors.
     return lerp(rainbowColor, trailColor, smoothstep(0, 0.5, coords.x));
