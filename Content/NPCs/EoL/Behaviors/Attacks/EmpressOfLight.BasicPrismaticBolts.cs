@@ -27,13 +27,15 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_BasicPrismaticBolts()
         {
+            DoBehavior_BasicPrismaticBolts_HoverAround();
+
             LeftHandFrame = EmpressHandFrame.PalmRaisedUp;
             RightHandFrame = EmpressHandFrame.PointingUp;
 
-            NPC.spriteDirection = 1;
-            NPC.rotation = NPC.velocity.X * 0.0026f;
+            DashAfterimageInterpolant = Utilities.InverseLerp(0f, 30f, AITimer) * 0.1f;
 
-            DoBehavior_BasicPrismaticBolts_HoverAround();
+            NPC.spriteDirection = 1;
+            NPC.rotation = NPC.velocity.X * 0.0035f;
         }
 
         public void DoBehavior_BasicPrismaticBolts_HoverAround()
