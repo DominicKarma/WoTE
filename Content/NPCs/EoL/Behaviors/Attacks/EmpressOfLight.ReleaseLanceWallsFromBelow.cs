@@ -28,12 +28,17 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static int ReleaseLanceWallsFromBelow_WallTelegraphTime => Utilities.SecondsToFrames(0.7f);
 
+        /// <summary>
+        /// How long the Empress' Upward Lance Firing attack lasts.
+        /// </summary>
+        public static int ReleaseLanceWallsFromBelow_WallReleaseTime => Utilities.SecondsToFrames(5.5f);
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_ReleaseLanceWallsFromBelow()
         {
             StateMachine.RegisterTransition(EmpressAIType.ReleaseLanceWallsFromBelow, null, false, () =>
             {
-                return AITimer >= 300;
+                return AITimer >= ReleaseLanceWallsFromBelow_WallReleaseTime;
             }, () =>
             {
                 TeleportTo(Target.Center - Vector2.UnitY * 350f);
