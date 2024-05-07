@@ -56,9 +56,6 @@ namespace WoTE.Content.NPCs.EoL
             LeftHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
             RightHandFrame = EmpressHandFrame.PointingUp;
 
-            if (AITimer == 1)
-                TeleportTo(Target.Center - Vector2.UnitX * Target.direction * 400f);
-
             if (AITimer <= OutwardRainbows_RainbowShootDelay)
             {
                 if (AITimer == 2)
@@ -97,6 +94,12 @@ namespace WoTE.Content.NPCs.EoL
                     Vector2 rainbowVelocity = (MathHelper.TwoPi * AITimer / 25f).ToRotationVector2() * 3f;
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, rainbowVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), 180, 0f, -1, AITimer / 20f % 1f);
                 }
+            }
+
+            if (AITimer == 1)
+            {
+                TeleportTo(Target.Center - Vector2.UnitX * Target.direction * 400f);
+                NPC.velocity = Vector2.Zero;
             }
 
             NPC.spriteDirection = NPC.velocity.X.NonZeroSign();
