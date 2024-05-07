@@ -6,6 +6,7 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -111,7 +112,20 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public ref float Frame => ref NPC.localAI[0];
 
-        public ref float DashAfterimageInterpolant => ref NPC.localAI[1];
+        /// <summary>
+        /// The index of this Lacewing relative to the overall set.
+        /// </summary>
+        public int Index => (int)NPC.ai[1];
+
+        /// <summary>
+        /// The standard hover offset angle that this Lacewing hovers at relative to the direction of its target.
+        /// </summary>
+        public ref float StandardHoverOffsetAngle => ref NPC.ai[0];
+
+        /// <summary>
+        /// The player's direction at the start of the dash sequence.
+        /// </summary>
+        public ref float PlayerDirectionAtStartOfDash => ref NPC.ai[2];
 
         public override string Texture => $"Terraria/Images/NPC_{Variant?.VanillaNPCID ?? NPCID.Butterfly}";
 
@@ -192,9 +206,12 @@ namespace WoTE.Content.NPCs.EoL
             // Ensure that Lacewings do not despawn naturally.
             NPC.timeLeft = 7200;
 
+            // Reset damage.
+            NPC.damage = NPC.defDamage;
+
             int redirectTime = EmpressOfLight.ButterflyBurstDashes_RedirectTime;
             int dashRepositionTime = EmpressOfLight.ButterflyBurstDashes_DashRepositionTime;
-            int dashTime = EmpressOfLight.SequentialDashes_DashTime;
+            int dashTime = EmpressOfLight.ButterflyBurstDashes_DashTime;
             int slowdownTime = EmpressOfLight.ButterflyBurstDashes_DashSlowdownTime;
             int attackCycleTime = redirectTime + dashRepositionTime + dashTime + slowdownTime;
             int wrappedAITimer = AITimer % attackCycleTime;
@@ -202,7 +219,7 @@ namespace WoTE.Content.NPCs.EoL
 
             if (doneDashing)
             {
-                NPC.SmoothFlyNear(EmpressOfLight.Myself.Center, 0.17f, 0.8f);
+                NPC.SmoothFlyNear(EmpressOfLight.Myself.Center, 0.3f, 0.7f);
                 if (NPC.WithinRange(EmpressOfLight.Myself.Center, 60f))
                     NPC.active = false;
                 NPC.damage = 0;
@@ -210,25 +227,36 @@ namespace WoTE.Content.NPCs.EoL
             else if (wrappedAITimer <= redirectTime)
             {
                 float flySpeedInterpolant = MathHelper.Lerp(0.4f, 0.05f, wrappedAITimer / (float)redirectTime);
+
+                // Store the player's direction at the start of the butterfly's dash.
                 if (wrappedAITimer <= 1)
-                    NPC.ai[1] = target.velocity.ToRotation();
+                    PlayerDirectionAtStartOfDash = target.velocity.ToRotation();
 
-                Vector2 baseDirectionOffset = NPC.ai[1].ToRotationVector2();
-                Vector2 hoverOffset = (baseDirectionOffset * new Vector2(620f, 400f)).RotatedBy(NPC.ai[0]);
-                hoverOffset += (NPC.whoAmI * 2f).ToRotationVector2() * 50f;
+                // Decide where to hover.
+                Vector2 baseDirectionOffset = PlayerDirectionAtStartOfDash.ToRotationVector2();
+                Vector2 hoverOffset = (baseDirectionOffset * new Vector2(620f, 400f)).RotatedBy(StandardHoverOffsetAngle);
+                hoverOffset += (NPC.whoAmI * 2f).ToRotationVector2() * 80f;
 
-                if (Vector2.Dot(hoverOffset, baseDirectionOffset) * (NPC.ai[0] >= 2f).ToDirectionInt() < 0f)
+                // Prevent moving past the player when moving to the hover position.
+                if (Vector2.Dot(hoverOffset, baseDirectionOffset) * (StandardHoverOffsetAngle >= MathHelper.Pi - 0.9f).ToDirectionInt() < 0f)
                     hoverOffset *= -1f;
 
                 Vector2 hoverDestination = target.Center + hoverOffset;
                 NPC.SmoothFlyNear(hoverDestination, flySpeedInterpolant, 1f - flySpeedInterpolant);
+
+                NPC.damage = 0;
             }
             else if (wrappedAITimer <= redirectTime + dashRepositionTime)
             {
+                // Make the first lacewing play dash sounds.
+                if (wrappedAITimer == redirectTime + 1 && Index == 0)
+                    SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
+
                 NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 70f, 0.27f);
             }
+
             else if (wrappedAITimer <= redirectTime + dashRepositionTime + dashTime)
-                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 5f;
+                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 6.7f;
             else
                 NPC.velocity *= 0.5f;
         }
