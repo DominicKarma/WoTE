@@ -222,7 +222,7 @@ namespace WoTE.Content.NPCs.EoL
             if (doneDashing)
             {
                 NPC.SmoothFlyNear(EmpressOfLight.Myself.Center, 0.3f, 0.7f);
-                if (NPC.WithinRange(EmpressOfLight.Myself.Center, 60f))
+                if (NPC.WithinRange(EmpressOfLight.Myself.Center, 80f))
                     NPC.active = false;
                 NPC.damage = 0;
             }
