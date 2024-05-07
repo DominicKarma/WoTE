@@ -101,7 +101,7 @@ namespace WoTE.Content.NPCs.EoL
             trailShader.SetTexture(TextureAssets.Extra[ExtrasID.HallowBossGradient], 3, SamplerState.LinearWrap);
             trailShader.Apply();
 
-            float perpendicularOffset = Utils.Remap(Projectile.velocity.Length(), 4f, 12.5f, 30f, 90f);
+            float perpendicularOffset = Utils.Remap(Projectile.velocity.Length(), 4f, 20f, 23f, 90f);
             Vector2 perpendicular = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * perpendicularOffset;
             Vector2[] trailPositions = new Vector2[Projectile.oldPos.Length];
             for (int i = 0; i < trailPositions.Length; i++)
