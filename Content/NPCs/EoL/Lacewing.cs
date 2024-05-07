@@ -15,7 +15,7 @@ using Terraria.Utilities;
 
 namespace WoTE.Content.NPCs.EoL
 {
-    public class Lacewing : ModNPC
+    public class Lacewing : ModNPC, IPixelatedPrimitiveRenderer
     {
         /// <summary>
         /// Represents a variant that this Lacewing can be.
@@ -96,6 +96,8 @@ namespace WoTE.Content.NPCs.EoL
             public static LacewingType GetRandom() => lacewingRng.Get();
         }
 
+        public PixelationPrimitiveLayer LayerToRenderTo => PixelationPrimitiveLayer.BeforeNPCs;
+
         /// <summary>
         /// The variant that this Lacewing is.
         /// </summary>
@@ -105,7 +107,7 @@ namespace WoTE.Content.NPCs.EoL
             set;
         }
 
-        public int AITimer => EmpressOfLight.Myself.As<EmpressOfLight>().AITimer;
+        public static int AITimer => EmpressOfLight.Myself.As<EmpressOfLight>().AITimer;
 
         /// <summary>
         /// The frame of this Lacewing.
@@ -284,54 +286,29 @@ namespace WoTE.Content.NPCs.EoL
             Rectangle frame = texture.Frame(1, totalFrames, 0, (int)(Frame + Variant.FrameStart));
             NPC.frame = frame;
 
-            RenderTrail();
             DrawRainbowBack(texture, drawPosition, direction);
             Main.EntitySpriteDraw(texture, drawPosition, frame, NPC.GetAlpha(Color.White), NPC.rotation, frame.Size() * 0.5f, NPC.scale, direction);
 
             return false;
         }
-        public float BoltWidthFunction(float completionRatio)
+
+        public float TrailWidthFunction(float completionRatio)
         {
-            float baseWidth = 20f;
-            float tipCutFactor = Utilities.InverseLerp(0.02f, 0.05f, completionRatio);
-            float slownessFactor = Utils.Remap(NPC.velocity.Length(), 3f, 9f, 0.18f, 1f);
-            return baseWidth * tipCutFactor * slownessFactor;
+            float baseWidth = 30f;
+            float tipCutFactor = Utilities.InverseLerp(0.03f, 0.05f, completionRatio);
+            float slownessFactor = Utils.Remap(NPC.velocity.Length(), 3f, 19f, 0.4f, 1f);
+            return baseWidth * tipCutFactor * slownessFactor * (1f - completionRatio);
         }
 
-        public Color BoltColorFunction(float completionRatio)
+        public Color TrailColorFunction(float completionRatio)
         {
-            float sineOffset = CalculateSinusoidalOffset(completionRatio);
-            return Color.Lerp(Color.White, Color.Black, sineOffset * 0.5f + 0.5f);
+            float hue = (Index / (float)EmpressOfLight.ButterflyBurstDashes_ButterflyCount * 2f + completionRatio * 0.12f) % 1f;
+            return Main.hslToRgb(hue, 1f, 0.5f - completionRatio * 0.2f);
         }
 
         public float CalculateSinusoidalOffset(float completionRatio)
         {
             return MathF.Sin(MathHelper.TwoPi * completionRatio + Main.GlobalTimeWrappedHourly * -9f + NPC.whoAmI) * Utilities.InverseLerp(0.01f, 0.9f, completionRatio);
-        }
-
-        public void RenderTrail()
-        {
-            ManagedShader trailShader = ShaderManager.GetShader("WoTE.PrismaticBoltShader");
-            trailShader.TrySetParameter("localTime", Main.GlobalTimeWrappedHourly + NPC.whoAmI * 1.8f);
-            trailShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
-            trailShader.SetTexture(TextureAssets.Extra[ExtrasID.FlameLashTrailShape], 2, SamplerState.LinearWrap);
-            trailShader.SetTexture(TextureAssets.Extra[ExtrasID.HallowBossGradient], 3, SamplerState.LinearWrap);
-            trailShader.Apply();
-
-            float perpendicularOffset = Utils.Remap(NPC.velocity.Length(), 4f, 20f, 23f, 90f) * Utilities.InverseLerp(60f, 15f, NPC.velocity.Length());
-            Vector2 perpendicular = NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * perpendicularOffset;
-            Vector2[] trailPositions = new Vector2[NPC.oldPos.Length];
-            for (int i = 0; i < trailPositions.Length; i++)
-            {
-                if (NPC.oldPos[i] == Vector2.Zero)
-                    continue;
-
-                float sine = CalculateSinusoidalOffset(i / (float)trailPositions.Length);
-                trailPositions[i] = NPC.oldPos[i] + perpendicular * sine;
-            }
-
-            PrimitiveSettings settings = new(BoltWidthFunction, BoltColorFunction, _ => NPC.Size * 0.5f, Shader: trailShader);
-            PrimitiveRenderer.RenderTrail(trailPositions, settings, 25);
         }
 
         public void DrawRainbowBack(Texture2D texture, Vector2 drawPosition, SpriteEffects direction)
@@ -355,6 +332,31 @@ namespace WoTE.Content.NPCs.EoL
                 Vector2 drawOffset = (MathHelper.TwoPi * i / 6f + NPC.rotation).ToRotationVector2() * offset;
                 Main.spriteBatch.Draw(texture, drawPosition + drawOffset, NPC.frame, color, NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, direction, 0f);
             }
+        }
+
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
+        {
+            ManagedShader trailShader = ShaderManager.GetShader("WoTE.LacewingTrailShader");
+            trailShader.TrySetParameter("localTime", Main.GlobalTimeWrappedHourly * 1.56f + NPC.whoAmI * 0.4f);
+            trailShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
+            trailShader.SetTexture(TextureAssets.Extra[ExtrasID.MagicMissileTrailShape], 2, SamplerState.LinearWrap);
+            trailShader.SetTexture(TextureAssets.Extra[ExtrasID.QueenSlimeGradient], 3, SamplerState.LinearWrap);
+            trailShader.Apply();
+
+            float perpendicularOffset = Utils.Remap(NPC.velocity.Length(), 4f, 20f, 12f, 40f) * Utilities.InverseLerp(60f, 15f, NPC.velocity.Length());
+            Vector2 perpendicular = NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * perpendicularOffset;
+            Vector2[] trailPositions = new Vector2[NPC.oldPos.Length];
+            for (int i = 0; i < trailPositions.Length; i++)
+            {
+                if (NPC.oldPos[i] == Vector2.Zero)
+                    continue;
+
+                float sine = CalculateSinusoidalOffset(i / (float)trailPositions.Length);
+                trailPositions[i] = NPC.oldPos[i] + perpendicular * sine;
+            }
+
+            PrimitiveSettings settings = new(TrailWidthFunction, TrailColorFunction, _ => NPC.Size * 0.5f, Pixelate: true, Shader: trailShader);
+            PrimitiveRenderer.RenderTrail(trailPositions, settings, 25);
         }
     }
 }
