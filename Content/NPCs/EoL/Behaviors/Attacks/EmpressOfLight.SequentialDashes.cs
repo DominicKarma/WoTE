@@ -40,7 +40,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of dashes that the Empress should perform during her Sequential Dashes attack before choosing a new attack. 
         /// </summary>
-        public static int SequentialDashes_DashCount => 2;
+        public static int SequentialDashes_DashCount => 3;
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_SequentialDashes()
