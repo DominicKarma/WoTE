@@ -11,7 +11,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float heatDistortionAngle = headDistortionData.g * 6.283;
     float2 heatDistortionDirection = float2(cos(heatDistortionAngle), sin(heatDistortionAngle));
     
-    return tex2D(screenTexture, coords + heatDistortionAngle * headDistortionData.a * 0.0075);
+    return tex2D(screenTexture, coords + heatDistortionAngle * headDistortionData.a * 0.0051);
 }
 
 technique Technique1
