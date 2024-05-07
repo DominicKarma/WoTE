@@ -11,7 +11,6 @@
         SequentialDashes,
         BasicPrismaticBolts,
         ButterflyBurstDashes,
-        InwardPrismaticBoltCircle,
         ReleaseLanceWallsFromBelow,
         ConvergingTerraprismas,
         TwirlingPetalSun,
