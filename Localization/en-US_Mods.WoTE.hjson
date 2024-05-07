@@ -3,4 +3,7 @@ NPCs: {
 	Lacewing.DisplayName: Lacewing
 }
 
-Projectiles.PrismaticBolt.DisplayName: Prismatic Bolt
+Projectiles: {
+	PrismaticBolt.DisplayName: Prismatic Bolt
+	LightLance.DisplayName: Light Lance
+}

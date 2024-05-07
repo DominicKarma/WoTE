@@ -12,6 +12,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
+using WoTE.Content.Particles.Metaballs;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -223,12 +224,15 @@ namespace WoTE.Content.NPCs.EoL
             {
                 NPC.SmoothFlyNear(EmpressOfLight.Myself.Center, 0.3f, 0.7f);
                 if (NPC.WithinRange(EmpressOfLight.Myself.Center, 80f))
+                {
+                    ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.2f, 0.03f);
                     NPC.active = false;
+                }
                 NPC.damage = 0;
             }
             else if (wrappedAITimer <= redirectTime)
             {
-                float flySpeedInterpolant = MathHelper.Lerp(0.4f, 0.05f, wrappedAITimer / (float)redirectTime);
+                float flySpeedInterpolant = MathHelper.Lerp(0.32f, 0.08f, Utilities.Convert01To010(wrappedAITimer / (float)redirectTime));
 
                 // Store the player's direction at the start of the butterfly's dash.
                 if (wrappedAITimer <= 1)
