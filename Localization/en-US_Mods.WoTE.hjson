@@ -6,4 +6,6 @@ NPCs: {
 Projectiles: {
 	PrismaticBolt.DisplayName: Prismatic Bolt
 	LightLance.DisplayName: Light Lance
+	AcceleratingLightLance.DisplayName: Accelerating Light Lance
+	AcceleratingRainbow.DisplayName: Accelerating Rainbow
 }

@@ -12,6 +12,7 @@
         BasicPrismaticBolts,
         ButterflyBurstDashes,
         ReleaseLanceWallsFromBelow,
+        OutwardRainbows,
         ConvergingTerraprismas,
         TwirlingPetalSun,
 
