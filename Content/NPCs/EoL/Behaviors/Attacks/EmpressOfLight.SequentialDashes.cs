@@ -30,7 +30,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends dashing during her Sequential Dashes attack.
         /// </summary>
-        public static int SequentialDashes_DashTime => Utilities.SecondsToFrames(0.25f);
+        public static int SequentialDashes_DashTime => Utilities.SecondsToFrames(0.32f);
 
         /// <summary>
         /// How long the Empress spends slowing down during her Sequential Dashes attack, after her dash.
@@ -67,8 +67,12 @@ namespace WoTE.Content.NPCs.EoL
             }
             else if (AITimer <= SequentialDashes_RedirectTime + SequentialDashes_DashTime)
             {
-                float dashInterpolant = Utilities.InverseLerp(0f, 5f, AITimer - SequentialDashes_RedirectTime);
-                NPC.velocity = Vector2.Lerp(NPC.velocity, SequentialDashes_DashDirection.ToRotationVector2() * 125f, dashInterpolant * 0.3f);
+                float dashInterpolant = Utilities.InverseLerp(0f, 10f, AITimer - SequentialDashes_RedirectTime);
+                float targetDirectionErringInterpolant = Utilities.InverseLerp(0f, SequentialDashes_DashTime, AITimer - SequentialDashes_RedirectTime) * Utilities.InverseLerp(200f, 400f, NPC.Distance(Target.Center));
+                Vector2 targetDirectionErring = NPC.SafeDirectionTo(Target.Center) * targetDirectionErringInterpolant * 150f;
+                Vector2 idealVelocity = SequentialDashes_DashDirection.ToRotationVector2() * 125f + targetDirectionErring;
+
+                NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, dashInterpolant * 0.2f);
                 NPC.damage = NPC.defDamage;
                 DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, 1f, 0.3f);
             }

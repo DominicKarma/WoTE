@@ -33,7 +33,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.RegisterTransition(EmpressAIType.ReleaseLanceWallsFromBelow, null, false, () =>
             {
-                return AITimer >= 360;
+                return AITimer >= 300;
             }, () =>
             {
                 TeleportTo(Target.Center - Vector2.UnitY * 350f);
