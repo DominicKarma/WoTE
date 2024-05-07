@@ -49,7 +49,7 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer % 4 == 3 && AITimer <= 90)
             {
                 Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / 45f).ToRotationVector2() * 10.5f;
-                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, boltVelocity, ProjectileID.HallowBossRainbowStreak, 150, 0f, -1, NPC.target, AITimer / 45f % 1f);
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), 150, 0f, -1, NPC.target, AITimer / 45f % 1f);
             }
         }
     }
