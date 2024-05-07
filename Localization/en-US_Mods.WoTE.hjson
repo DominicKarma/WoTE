@@ -1,2 +1,6 @@
-NPCs.EmpressOfLight.DisplayName: Empress Of Light
+NPCs: {
+	EmpressOfLight.DisplayName: Empress Of Light
+	Lacewing.DisplayName: Lacewing
+}
+
 Projectiles.PrismaticBolt.DisplayName: Prismatic Bolt

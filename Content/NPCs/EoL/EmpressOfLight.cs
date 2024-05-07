@@ -103,7 +103,7 @@ namespace WoTE.Content.NPCs.EoL
         public override void SetDefaults()
         {
             NPC.npcSlots = 100f;
-            NPC.damage = 300;
+            NPC.damage = 200;
             NPC.width = 100;
             NPC.height = 100;
             NPC.defense = 100;
@@ -115,7 +115,6 @@ namespace WoTE.Content.NPCs.EoL
             NPC.aiStyle = -1;
             AIType = -1;
             NPC.knockBackResist = 0f;
-            NPC.canGhostHeal = false;
             NPC.boss = true;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
@@ -181,6 +180,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.defense = NPC.defDefense;
             NPC.dontTakeDamage = false;
             NPC.immortal = false;
+            NPC.hide = false;
             NPC.ShowNameOnHover = true;
         }
 
