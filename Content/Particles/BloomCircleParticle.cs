@@ -65,7 +65,7 @@ namespace WoTE.Content.Particles
 
         public override void Update()
         {
-            Velocity *= 0.98f;
+            Velocity *= 0.96f;
             Scale = Vector2.One * EasingCurves.Quadratic.Evaluate(EasingType.Out, StartingScale, 0f, LifetimeRatio);
 
             float fadeOutInterpolant = Utilities.InverseLerp(0f, 0.54f, LifetimeRatio);

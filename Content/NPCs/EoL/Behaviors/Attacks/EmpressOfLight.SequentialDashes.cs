@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.Particles;
 using WoTE.Content.Particles.Metaballs;
 
 namespace WoTE.Content.NPCs.EoL
@@ -70,7 +71,7 @@ namespace WoTE.Content.NPCs.EoL
             {
                 float dashInterpolant = Utilities.InverseLerp(0f, 10f, AITimer - SequentialDashes_RedirectTime);
                 float targetDirectionErringInterpolant = Utilities.InverseLerp(0f, SequentialDashes_DashTime, AITimer - SequentialDashes_RedirectTime) * Utilities.InverseLerp(200f, 400f, NPC.Distance(Target.Center));
-                Vector2 targetDirectionErring = NPC.SafeDirectionTo(Target.Center) * targetDirectionErringInterpolant * 150f;
+                Vector2 targetDirectionErring = NPC.SafeDirectionTo(Target.Center) * targetDirectionErringInterpolant * 100f;
                 Vector2 idealVelocity = SequentialDashes_DashDirection.ToRotationVector2() * 125f + targetDirectionErring;
 
                 NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, dashInterpolant * 0.2f);
@@ -78,7 +79,15 @@ namespace WoTE.Content.NPCs.EoL
                 DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, 1f, 0.3f);
 
                 if (AITimer % 5 == 0)
-                    ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(75f, 75f) - NPC.velocity, Vector2.Zero, 120f, 1f, 0.1f, 0.014f);
+                    ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(75f, 75f) - NPC.velocity, Vector2.Zero, 120f, 1f, 0.1f, 0.016f);
+
+                for (int i = 0; i < 5; i++)
+                {
+                    Vector2 particleVelocity = -NPC.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(15f, 25f) + Main.rand.NextVector2Circular(3f, 3f);
+                    Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.67f) * 0.8f;
+                    BloomCircleParticle particle = new(NPC.Center + Main.rand.NextVector2Circular(80f, 80f), particleVelocity, Main.rand.NextFloat(0.015f, 0.042f), Color.Wheat, particleColor, 120, 1.8f, 1.75f);
+                    particle.Spawn();
+                }
             }
             else if (AITimer <= SequentialDashes_RedirectTime + SequentialDashes_DashTime + SequentialDashes_SlowDownTime)
             {
