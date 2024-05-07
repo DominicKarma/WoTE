@@ -37,7 +37,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of dashes that should be performed during the Empress' Butterfly Burst Dashes attack.
         /// </summary>
-        public static int ButterflyBurstDashes_DashCount => 41556;
+        public static int ButterflyBurstDashes_DashCount => 4;
 
         /// <summary>
         /// The amount of butterflies the Empress explodes into during her Butterfly Burst Dashes attack.
