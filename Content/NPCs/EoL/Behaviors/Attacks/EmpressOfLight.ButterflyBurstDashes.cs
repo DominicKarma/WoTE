@@ -1,5 +1,6 @@
 ﻿using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -82,6 +83,8 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.Opacity = Utilities.InverseLerp(32f, 0f, NPC.CountNPCS(ModContent.NPCType<Lacewing>()));
                 if (NPC.Opacity <= 0f)
                     NPC.Center = Target.Center - Vector2.UnitY * 300f;
+                if (NPC.Opacity >= 1f)
+                    ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 9f);
 
                 NPC.hide = NPC.Opacity <= 0f;
                 NPC.ShowNameOnHover = NPC.Opacity >= 0.4f;
