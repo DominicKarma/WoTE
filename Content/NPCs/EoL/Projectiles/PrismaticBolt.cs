@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.Particles;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -70,6 +71,15 @@ namespace WoTE.Content.NPCs.EoL
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
+            if (Main.rand.NextBool(2) && Projectile.velocity.Length() >= 12f)
+            {
+                float sinusoidalAngle = CalculateSinusoidalOffset(0.4f) * 0.7f;
+                Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(sinusoidalAngle) * Main.rand.NextFloat(2.5f, 3.3f) + Main.rand.NextVector2Circular(1.6f, 1.6f);
+                Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.8f) * 0.8f;
+                BloomCircleParticle particle = new(Projectile.Center + Main.rand.NextVector2Circular(30f, 30f), particleVelocity, 0.028f, Color.Wheat, particleColor, 60, 1.8f, 1.75f);
+                particle.Spawn();
+            }
+
             Time++;
         }
 
@@ -89,7 +99,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public float CalculateSinusoidalOffset(float completionRatio)
         {
-            return MathF.Sin(MathHelper.TwoPi * completionRatio + Main.GlobalTimeWrappedHourly * -9f + Projectile.identity) * Utilities.InverseLerp(0.01f, 0.9f, completionRatio);
+            return MathF.Sin(MathHelper.TwoPi * completionRatio + Main.GlobalTimeWrappedHourly * -12f + Projectile.identity) * Utilities.InverseLerp(0.01f, 0.9f, completionRatio);
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)

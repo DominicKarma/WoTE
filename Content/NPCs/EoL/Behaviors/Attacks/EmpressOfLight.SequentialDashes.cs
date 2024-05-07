@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.Particles.Metaballs;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -75,6 +76,9 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, dashInterpolant * 0.2f);
                 NPC.damage = NPC.defDamage;
                 DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, 1f, 0.3f);
+
+                if (AITimer % 5 == 0)
+                    ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(75f, 75f) - NPC.velocity, Vector2.Zero, 120f, 1f, 0.1f, 0.014f);
             }
             else if (AITimer <= SequentialDashes_RedirectTime + SequentialDashes_DashTime + SequentialDashes_SlowDownTime)
             {

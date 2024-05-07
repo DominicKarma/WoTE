@@ -1,9 +1,33 @@
 {
   "frames": {
-    "AngularBloomRing.png": {
+    "BloomCircle.png": {
       "frame": {
         "x": 0,
         "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "AngularBloomRing.png": {
+      "frame": {
+        "x": 0,
+        "y": 200,
         "w": 190,
         "h": 190
       },
@@ -31,8 +55,8 @@
     "image": "texture.png",
     "format": "RGBA8888",
     "size": {
-      "w": 190,
-      "h": 190
+      "w": 200,
+      "h": 390
     },
     "scale": 1
   }
