@@ -164,6 +164,13 @@ namespace WoTE.Content.NPCs.EoL
 
             // Emit light.
             Lighting.AddLight(NPC.Center, Vector3.One * NPC.Opacity);
+
+            // The ambient sounds of these things absolutely kill the mood of the fight.
+            foreach (Projectile proj in Main.ActiveProjectiles)
+            {
+                if (proj.type == ProjectileID.FallingStar)
+                    proj.active = false;
+            }
         }
 
         /// <summary>
