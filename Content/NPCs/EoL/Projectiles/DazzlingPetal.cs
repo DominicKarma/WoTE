@@ -89,8 +89,8 @@ namespace WoTE.Content.NPCs.EoL
             // SPIN
             // 2
             // WIN
-            float spinSpeed = Utilities.InverseLerp(0f, TwirlingPetalSun_TwirlTime, Time) * 0.033f;
-            DirectionOffsetAngle += MathF.Sqrt(1f - FlareInterpolant) * spinSpeed;
+            float spinSpeed = MathF.Sqrt(1f - FlareInterpolant) * Utilities.InverseLerp(0f, TwirlingPetalSun_TwirlTime, Time) * 0.033f;
+            DirectionOffsetAngle += spinSpeed;
 
             // Extend outward.
             float idealPetalLength = Utilities.InverseLerp(0f, 50f, Time).Squared() * 1000f;
@@ -125,10 +125,11 @@ namespace WoTE.Content.NPCs.EoL
 
         public float PetalWidthFunction(float completionRatio)
         {
+            float fadeInWidthFactor = Utilities.InverseLerp(0f, 75f, Time);
             float tipWidthFactor = MathF.Pow(Utilities.InverseLerp(0.95f, 0f, completionRatio), 0.65f) * MathF.Pow(Utilities.InverseLerp(0f, 0.54f, completionRatio), 0.4f);
-
-            float baseWidth = Projectile.width * MathHelper.Lerp(1f, 2f, FlareInterpolant);
-            return baseWidth * tipWidthFactor;
+            float flareWidthFactor = MathHelper.Lerp(1f, 2f, FlareInterpolant);
+            float baseWidth = Projectile.width;
+            return baseWidth * tipWidthFactor * flareWidthFactor * fadeInWidthFactor;
         }
 
         public Color PetalColorFunction(float completionRatio)

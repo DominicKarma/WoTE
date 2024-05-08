@@ -13,12 +13,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of time petals summoned by the Empress should spend twirling.
         /// </summary>
-        public static int TwirlingPetalSun_TwirlTime => Utilities.SecondsToFrames(1.5f);
+        public static int TwirlingPetalSun_TwirlTime => Utilities.SecondsToFrames(1.3f);
 
         /// <summary>
         /// The amount of time petals summoned by the Empress should spend transforming into flames.
         /// </summary>
-        public static int TwirlingPetalSun_FlareTransformTime => Utilities.SecondsToFrames(1.1f);
+        public static int TwirlingPetalSun_FlareTransformTime => Utilities.SecondsToFrames(0.8f);
 
         /// <summary>
         /// The amount of time fire petals summoned by the Empress should spend retracting inward.
@@ -94,7 +94,7 @@ namespace WoTE.Content.NPCs.EoL
                 }
             }
 
-            NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.012f);
+            NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.016f);
             NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * 2.5f, 0.03f);
         }
     }
