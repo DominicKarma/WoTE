@@ -31,6 +31,11 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static int ConvergingTerraprismas_AttackTransitionDelay => Utilities.SecondsToFrames(0.4f);
 
+        /// <summary>
+        /// The amount of Terraprisma instances the Empress summons for her Converging Terraprismas attack.
+        /// </summary>
+        public static int ConvergingTerraprismas_TerraprismaCount => 6;
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_ConvergingTerraprismas()
         {
@@ -64,7 +69,7 @@ namespace WoTE.Content.NPCs.EoL
             {
                 IProjOwnedByBoss<EmpressOfLight>.KillAll();
 
-                int terraprismaCount = 6;
+                int terraprismaCount = ConvergingTerraprismas_TerraprismaCount;
                 for (int i = 0; i < terraprismaCount; i++)
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<SpinningTerraprisma>(), 200, 0f, -1, i / (float)terraprismaCount, MathHelper.TwoPi * i / terraprismaCount);
             }
