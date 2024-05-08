@@ -38,6 +38,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             ProjectileID.Sets.TrailingMode[Type] = 2;
             ProjectileID.Sets.TrailCacheLength[Type] = 30;
+            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 1100;
         }
 
         public override void SetDefaults()
