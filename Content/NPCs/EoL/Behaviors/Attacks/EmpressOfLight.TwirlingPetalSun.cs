@@ -10,15 +10,40 @@ namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
-        public static int TwirlingPetalSun_TwirlTime => Utilities.SecondsToFrames(1.75f);
+        /// <summary>
+        /// The amount of time petals summoned by the Empress should spend twirling.
+        /// </summary>
+        public static int TwirlingPetalSun_TwirlTime => Utilities.SecondsToFrames(1.5f);
 
-        public static int TwirlingPetalSun_FlareTransformTime => Utilities.SecondsToFrames(1.35f);
+        /// <summary>
+        /// The amount of time petals summoned by the Empress should spend transforming into flames.
+        /// </summary>
+        public static int TwirlingPetalSun_FlareTransformTime => Utilities.SecondsToFrames(1.1f);
 
+        /// <summary>
+        /// The amount of time fire petals summoned by the Empress should spend retracting inward.
+        /// </summary>
         public static int TwirlingPetalSun_FlareRetractTime => Utilities.SecondsToFrames(0.39f);
 
+        /// <summary>
+        /// The amount of time fire petals summoned by the Empress should spend bursting outward.
+        /// </summary>
         public static int TwirlingPetalSun_BurstTime => Utilities.SecondsToFrames(0.1f);
 
+        /// <summary>
+        /// The amount of time the Empress should wait after the twirling petals burst to choose a new attack.
+        /// </summary>
         public static int TwirlingPetalSun_AttackTransitionDelay => Utilities.SecondsToFrames(2f);
+
+        /// <summary>
+        /// The amount of petals the Empress summons during the Twirling Petal Sun attack.
+        /// </summary>
+        public static int TwirlingPetalSun_PetalCount => 8;
+
+        /// <summary>
+        /// The amount of prismatic bolt created during the Twirling Petal Sun attack when the petal flares burst outward.
+        /// </summary>
+        public static int TwirlingPetalSun_PrismaticBoltCount => 13;
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_TwirlingPetalSun()
@@ -46,10 +71,11 @@ namespace WoTE.Content.NPCs.EoL
             {
                 SoundEngine.PlaySound(SoundID.Item159 with { MaxInstances = 0 });
 
-                float petalOffsetAngle = NPC.AngleTo(Target.Center);
-                for (int i = 0; i < 8; i++)
+                float petalOffsetAngle = NPC.AngleTo(Target.Center) + MathHelper.Pi / TwirlingPetalSun_PetalCount;
+                for (int i = 0; i < TwirlingPetalSun_PetalCount; i++)
                 {
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DazzlingPetal>(), 200, 0f, -1, MathHelper.TwoPi * i / 8f + petalOffsetAngle);
+                    float petalDirection = MathHelper.TwoPi * i / TwirlingPetalSun_PetalCount + petalOffsetAngle;
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DazzlingPetal>(), 200, 0f, -1, petalDirection);
                 }
                 AITimer = 2;
             }
@@ -57,10 +83,14 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer == TwirlingPetalSun_TwirlTime + TwirlingPetalSun_FlareTransformTime + TwirlingPetalSun_FlareRetractTime + TwirlingPetalSun_BurstTime)
             {
                 SoundEngine.PlaySound(SoundID.Item74);
-                for (int i = 0; i < 12; i++)
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Vector2 boltVelocity = (MathHelper.TwoPi * i / 12f).ToRotationVector2() * 12f + Main.rand.NextVector2Circular(3.5f, 3.5f);
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), 200, 0f, -1, NPC.target);
+                    for (int i = 0; i < TwirlingPetalSun_PrismaticBoltCount; i++)
+                    {
+                        Vector2 boltVelocity = (MathHelper.TwoPi * i / TwirlingPetalSun_PrismaticBoltCount).ToRotationVector2() * 12f + Main.rand.NextVector2Circular(3.5f, 3.5f);
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), 200, 0f, -1, NPC.target);
+                    }
                 }
             }
 

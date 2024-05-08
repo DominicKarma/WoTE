@@ -24,7 +24,7 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine = new(new(EmpressAIType.Awaken));
             StateMachine.OnStateTransition += ResetGenericVariables;
 
-            // Register all nameless deity states in the machine.
+            // Register all states in the state machine.
             for (int i = 0; i < (int)EmpressAIType.Count; i++)
                 StateMachine.RegisterState(new((EmpressAIType)i));
 

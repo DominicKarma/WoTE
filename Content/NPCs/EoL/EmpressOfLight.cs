@@ -23,7 +23,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             get
             {
-                // Add the relevant phase cycle if it has been exhausted, to ensure that Nameless' attacks are cyclic.
+                // Add the relevant phase cycle if it has been exhausted, to ensure that the Empress' attacks are cyclic.
                 if ((StateMachine?.StateStack?.Count ?? 1) <= 0)
                     StateMachine?.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
 

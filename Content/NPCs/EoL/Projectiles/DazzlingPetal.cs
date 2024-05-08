@@ -86,31 +86,41 @@ namespace WoTE.Content.NPCs.EoL
 
             FlareInterpolant = MathF.Pow(Utilities.InverseLerp(0f, TwirlingPetalSun_FlareTransformTime, Time - TwirlingPetalSun_TwirlTime), 0.85f);
 
+            // SPIN
+            // 2
+            // WIN
             float spinSpeed = Utilities.InverseLerp(0f, TwirlingPetalSun_TwirlTime, Time) * 0.033f;
             DirectionOffsetAngle += MathF.Sqrt(1f - FlareInterpolant) * spinSpeed;
 
+            // Extend outward.
             float idealPetalLength = Utilities.InverseLerp(0f, 50f, Time).Squared() * 1000f;
             idealPetalLength -= Utilities.InverseLerp(0f, TwirlingPetalSun_FlareRetractTime, Time - TwirlingPetalSun_TwirlTime - TwirlingPetalSun_FlareTransformTime).Squared() * 500f;
             idealPetalLength += Utilities.InverseLerp(0f, TwirlingPetalSun_BurstTime, Time - TwirlingPetalSun_TwirlTime - TwirlingPetalSun_FlareTransformTime - TwirlingPetalSun_FlareRetractTime).Squared() * 4000f;
-
             PetalLength = MathHelper.Lerp(PetalLength, idealPetalLength, 0.2f);
 
             VanishInterpolant = Utilities.InverseLerp(0f, 24f, Time - TwirlingPetalSun_TwirlTime - TwirlingPetalSun_FlareTransformTime - TwirlingPetalSun_FlareRetractTime - TwirlingPetalSun_BurstTime).Squared();
 
             if (Time == TwirlingPetalSun_TwirlTime + TwirlingPetalSun_FlareTransformTime + TwirlingPetalSun_FlareRetractTime + TwirlingPetalSun_BurstTime)
-            {
-                ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 7f);
-                for (int i = 0; i < 3; i++)
-                {
-                    Vector2 boltVelocity = Projectile.velocity.RotatedBy(MathHelper.Lerp(-0.09f, 0.09f, i / 2f)) * 4f;
-                    Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center + boltVelocity * 3f, boltVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), 180, 0f, -1, -Main.rand.NextFloat(0.12f));
-                }
-            }
+                CreateRainbowBurst();
 
             Time++;
 
             if (VanishInterpolant >= 1f)
                 Projectile.Kill();
+        }
+
+        public void CreateRainbowBurst()
+        {
+            ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 7f);
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+
+            for (int i = 0; i < 3; i++)
+            {
+                Vector2 boltVelocity = Projectile.velocity.RotatedBy(MathHelper.Lerp(-0.09f, 0.09f, i / 2f)) * 4f;
+                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center + boltVelocity * 3f, boltVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), 180, 0f, -1, -Main.rand.NextFloat(0.12f));
+            }
         }
 
         public float PetalWidthFunction(float completionRatio)

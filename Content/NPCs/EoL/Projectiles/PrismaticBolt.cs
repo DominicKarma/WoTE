@@ -72,7 +72,7 @@ namespace WoTE.Content.NPCs.EoL
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
-            if (Main.rand.NextBool(2) && Projectile.velocity.Length() >= 12f)
+            if (Main.rand.NextBool() && Projectile.velocity.Length() >= 12f)
             {
                 float sinusoidalAngle = CalculateSinusoidalOffset(0.4f) * 0.7f;
                 Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(sinusoidalAngle) * Main.rand.NextFloat(2.5f, 3.3f) + Main.rand.NextVector2Circular(1.6f, 1.6f);
