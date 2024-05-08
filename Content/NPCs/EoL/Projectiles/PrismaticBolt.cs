@@ -62,12 +62,12 @@ namespace WoTE.Content.NPCs.EoL
 
             if (Time <= 90)
             {
-                float homingSharpnessInterpolant = Utils.Remap(Time, 0f, 45f, 0.03f, 0.1f);
-                Vector2 idealVelocity = Projectile.SafeDirectionTo(Target.Center) * 50f;
+                float homingSharpnessInterpolant = Utils.Remap(Time, 0f, 75f, 0.003f, 0.13f);
+                Vector2 idealVelocity = Projectile.SafeDirectionTo(Target.Center) * 30f;
                 Projectile.velocity = Vector2.SmoothStep(Projectile.velocity, idealVelocity, homingSharpnessInterpolant);
             }
-            else if (Projectile.velocity.Length() <= 40f)
-                Projectile.velocity *= 1.025f;
+            else if (Projectile.velocity.Length() <= 48f)
+                Projectile.velocity *= 1.028f;
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 

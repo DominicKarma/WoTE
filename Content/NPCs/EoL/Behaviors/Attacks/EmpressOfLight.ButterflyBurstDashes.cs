@@ -18,7 +18,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' butterflies spend redirecting during her Butterfly Burst Dashes attack.
         /// </summary>
-        public static int ButterflyBurstDashes_RedirectTime => Utilities.SecondsToFrames(0.9f);
+        public static int ButterflyBurstDashes_RedirectTime => Utilities.SecondsToFrames(1.1f);
 
         /// <summary>
         /// How long the Empress' butterflies spend repositioning for the dash during her Butterfly Burst Dashes attack.
@@ -38,7 +38,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of dashes that should be performed during the Empress' Butterfly Burst Dashes attack.
         /// </summary>
-        public static int ButterflyBurstDashes_DashCount => 4;
+        public static int ButterflyBurstDashes_DashCount => 3;
 
         /// <summary>
         /// The amount of butterflies the Empress explodes into during her Butterfly Burst Dashes attack.

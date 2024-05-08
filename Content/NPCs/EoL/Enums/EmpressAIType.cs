@@ -13,6 +13,7 @@
         ButterflyBurstDashes,
         OutwardRainbows,
         ConvergingTerraprismas,
+        PrismaticBoltSpin,
         TwirlingPetalSun,
 
         // Intermediate states.

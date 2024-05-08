@@ -48,7 +48,7 @@ namespace WoTE.Content.NPCs.EoL
                 SoundEngine.PlaySound(SoundID.Item164, NPC.Center);
 
             Vector2 handPosition = NPC.Center + new Vector2(30f, -64f).RotatedBy(NPC.rotation);
-            if (AITimer % 4 == 3 && AITimer <= 90)
+            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 4 == 3 && AITimer <= 90)
             {
                 Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / 45f).ToRotationVector2() * 10.5f;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), 150, 0f, -1, NPC.target, AITimer / 45f % 1f);

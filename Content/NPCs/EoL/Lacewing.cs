@@ -233,7 +233,7 @@ namespace WoTE.Content.NPCs.EoL
             }
             else if (wrappedAITimer <= redirectTime)
             {
-                float flySpeedInterpolant = MathHelper.Lerp(0.32f, 0.08f, Utilities.Convert01To010(wrappedAITimer / (float)redirectTime));
+                float flySpeedInterpolant = MathHelper.Lerp(0.32f, 0.04f, Utilities.Convert01To010(wrappedAITimer / (float)redirectTime));
 
                 // Store the player's direction at the start of the butterfly's dash.
                 if (wrappedAITimer <= 1)

@@ -36,11 +36,11 @@ namespace WoTE.Content.NPCs.EoL
             float cutoffYInterpolant = EasingCurves.Quadratic.Evaluate(EasingType.InOut, TeleportCompletionRatio);
             if (TeleportCompletionRatio > 0f && TeleportCompletionRatio < 1f)
             {
-                DrawInstance(NPC.Center - screenPos, Color.White * (1f - illusionInterpolant), cutoffYInterpolant, false);
-                DrawInstance(TeleportDestination - screenPos, Color.White, 1f - cutoffYInterpolant, false);
+                DrawInstance(NPC.Center - screenPos, Color.White * (1f - illusionInterpolant), NPC.rotation, cutoffYInterpolant, false);
+                DrawInstance(TeleportDestination - screenPos, Color.White, NPC.rotation, 1f - cutoffYInterpolant, false);
             }
             else
-                DrawInstance(NPC.Center - screenPos, Color.White, 0f, false);
+                DrawInstance(NPC.Center - screenPos, Color.White, NPC.rotation, 0f, false);
 
             if (DashAfterimageInterpolant > 0f)
                 DrawAfterimageVisuals(screenPos, illusionInterpolant);
@@ -55,9 +55,10 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         /// <param name="drawPosition">The draw position of the Empress instance.</param>
         /// <param name="color">The color of the Empress instance.</param>
+        /// <param name="cutoffY">The instance's rotation.</param>
         /// <param name="cutoffY">The Y cutoff interpolant value.</param>
         /// <param name="invertDisappearanceDirection">Whether the direction of disappearance should be inverted.</param>
-        public void DrawInstance(Vector2 drawPosition, Color color, float cutoffY, bool invertDisappearanceDirection)
+        public void DrawInstance(Vector2 drawPosition, Color color, float rotation, float cutoffY, bool invertDisappearanceDirection)
         {
             ManagedShader teleportShader = ShaderManager.GetShader("WoTE.EmpressTeleportDisappearShader");
             teleportShader.TrySetParameter("cutoffY", cutoffY);
@@ -66,7 +67,7 @@ namespace WoTE.Content.NPCs.EoL
             teleportShader.Apply();
 
             SpriteEffects direction = NPC.spriteDirection.ToSpriteDirection();
-            Main.EntitySpriteDraw(EmpressOfLightTargetManager.EmpressTarget, drawPosition, null, NPC.GetAlpha(color), NPC.rotation, EmpressOfLightTargetManager.EmpressTarget.Size() * 0.5f, NPC.scale, direction, 0f);
+            Main.EntitySpriteDraw(EmpressOfLightTargetManager.EmpressTarget, drawPosition, null, NPC.GetAlpha(color), rotation, EmpressOfLightTargetManager.EmpressTarget.Size() * 0.5f, NPC.scale, direction, 0f);
 
             DrawTeleportRing(drawPosition, cutoffY, invertDisappearanceDirection);
         }
@@ -83,7 +84,7 @@ namespace WoTE.Content.NPCs.EoL
                 float opacity = Utilities.InverseLerp(NPC.oldPos.Length, 1f, i) * DashAfterimageInterpolant * 0.8f;
                 Vector2 drawPosition = Vector2.Lerp(NPC.oldPos[i] + NPC.Size * 0.5f, NPC.Center, 0f) - screenPos;
                 Color afterimageColor = Main.hslToRgb((i + 5f) / 10f - Main.GlobalTimeWrappedHourly * 0.2f, 0.7f, 0.5f, 0) * opacity;
-                DrawInstance(drawPosition, afterimageColor, 0f, false);
+                DrawInstance(drawPosition, afterimageColor, NPC.oldRot[i], 0f, false);
             }
 
             for (int i = 0; i < 25; i++)
@@ -98,7 +99,7 @@ namespace WoTE.Content.NPCs.EoL
 
                 Color illusionColor = Main.hslToRgb((i + 5f) / 10f, 0.7f, 0.5f) * illusionInterpolant;
 
-                DrawInstance(illusionDrawPosition, illusionColor with { A = 0 }, 0f, false);
+                DrawInstance(illusionDrawPosition, illusionColor with { A = 0 }, NPC.rotation, 0f, false);
             }
         }
 
