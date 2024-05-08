@@ -90,7 +90,7 @@ namespace WoTE.Content.NPCs.EoL
 
             NPCID.Sets.BossHeadTextures[Type] = NPCID.Sets.BossHeadTextures[NPCID.HallowBoss];
 
-            var npcToBossHead = (IDictionary<int, int>)typeof(NPCHeadLoader).GetField("npcToBossHead", Utilities.UniversalBindingFlags)!.GetValue(null)!;
+            IDictionary<int, int> npcToBossHead = (IDictionary<int, int>)(typeof(NPCHeadLoader)?.GetField("npcToBossHead", Utilities.UniversalBindingFlags)?.GetValue(null) ?? new Dictionary<int, int>());
             npcToBossHead[Type] = NPCID.Sets.BossHeadTextures[Type];
 
             Main.npcFrameCount[Type] = 2;
