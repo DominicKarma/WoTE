@@ -110,7 +110,10 @@ namespace WoTE.Content.NPCs.EoL
             NPC.SetLifeMaxByMode(200000, 300000, 400000);
 
             if (Main.expertMode)
+            {
+                NPC.lifeMax /= 2;
                 NPC.damage = 125;
+            }
 
             NPC.aiStyle = -1;
             AIType = -1;
