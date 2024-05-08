@@ -12,9 +12,9 @@ namespace WoTE.Content.NPCs.EoL
     public partial class EmpressOfLight : ModNPC
     {
         /// <summary>
-        /// How long it takes for Terraprismas summoned by the Empress to undo their squish 3D visual.
+        /// How long it takes for Terraprismas summoned by the Empress to undo their 3D orbit squish visual and transition to a purely 2D spin.
         /// </summary>
-        public static int ConvergingTerraprismas_SquishDissipateTime => Utilities.SecondsToFrames(0.5f);
+        public static int ConvergingTerraprismas_OrbitSquishDissipateTime => Utilities.SecondsToFrames(0.5f);
 
         /// <summary>
         /// How long Terraprismas summoned by the Empress spend spinning around.
@@ -35,6 +35,21 @@ namespace WoTE.Content.NPCs.EoL
         /// The amount of Terraprisma instances the Empress summons for her Converging Terraprismas attack.
         /// </summary>
         public static int ConvergingTerraprismas_TerraprismaCount => 6;
+
+        /// <summary>
+        /// How long Terraprismas summoned by the Empress take to fade in.
+        /// </summary>
+        public static int ConvergingTerraprismas_TerraprismaFadeInTime => Utilities.SecondsToFrames(0.25f);
+
+        /// <summary>
+        /// The standard radius of Terraprismas summoned by the Empresss during her Converging Terraprismas attack relative to the target's center.
+        /// </summary>
+        public static float ConvergingTerraprismas_InitialRadius => 350f;
+
+        /// <summary>
+        /// The maximum radius of Terraprismas summoned by the Empresss during her Converging Terraprismas attack relative to the target's center. This value is reached as Terraprismas reel back in anticipation of their dash.
+        /// </summary>
+        public static float ConvergingTerraprismas_ReelBackRadius => 850f;
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_ConvergingTerraprismas()
@@ -59,13 +74,10 @@ namespace WoTE.Content.NPCs.EoL
             NPC.rotation = NPC.velocity.X * 0.00175f;
             NPC.velocity *= 0.95f;
 
-            if (AITimer >= 3601)
-                AITimer = 0;
-
             if (AITimer == ConvergingTerraprismas_SpinTime - Utilities.SecondsToFrames(0.23f))
                 SoundEngine.PlaySound(SoundID.Item162);
 
-            if (AITimer == 1 || (Main.mouseRight && Main.mouseRightRelease))
+            if (AITimer == 1)
             {
                 IProjOwnedByBoss<EmpressOfLight>.KillAll();
 

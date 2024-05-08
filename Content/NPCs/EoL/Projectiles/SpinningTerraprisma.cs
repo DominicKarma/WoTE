@@ -83,49 +83,81 @@ namespace WoTE.Content.NPCs.EoL
             }
 
             Time++;
+            Projectile.Opacity = Utilities.InverseLerp(0f, ConvergingTerraprismas_TerraprismaFadeInTime, Time);
 
             if (Time >= ConvergingTerraprismas_SpinTime + ConvergingTerraprismas_ReelBackTime)
             {
-                Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(3f, 7f) + Main.rand.NextVector2Circular(2f, 2f);
-                Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.67f) * 0.8f;
-                BloomCircleParticle particle = new(Projectile.Center + Main.rand.NextVector2Circular(20f, 20f), particleVelocity, Main.rand.NextFloat(0.02f, 0.05f), Color.Wheat, particleColor, 40, 1.6f, 1.75f);
-                particle.Spawn();
-
-                DashVisualsIntensity = 1f;
-                Projectile.velocity += Projectile.velocity.SafeNormalize(Vector2.Zero) * 5f;
+                HandlePostDashEffects();
                 return;
             }
 
+            SpinAroundTarget();
+            if (Time == ConvergingTerraprismas_SpinTime + ConvergingTerraprismas_ReelBackTime - 1f)
+                PerformDash();
+        }
+
+        /// <summary>
+        /// Makes this sword spin around a designated target.
+        /// </summary>
+        public void SpinAroundTarget()
+        {
+            if (Myself is null)
+                return;
+
+            // Lock the spin center on the player at first.
+            // This grip is loosened as the terraprismas reel back.
             Vector2 spinCenter = Main.player[Myself.target].Center;
             SpinCenter = Vector2.Lerp(SpinCenter, spinCenter, Utilities.InverseLerp(ConvergingTerraprismas_ReelBackTime, 0f, Time - ConvergingTerraprismas_SpinTime));
 
+            // Make the spin speed go from slow to super fast over the duration of the spin animation.
             float spinSpeed = Utilities.InverseLerpBump(-ConvergingTerraprismas_SpinTime, 0f, 0f, 17f, Time - ConvergingTerraprismas_SpinTime).Squared() * MathHelper.TwoPi / 25f;
-            spinSpeed += Utilities.InverseLerp(ConvergingTerraprismas_SpinTime * 0.5f, 0f, Time) * MathHelper.TwoPi / 45f;
 
-            float squishInterpolant = Utilities.InverseLerp(0f, -ConvergingTerraprismas_SquishDissipateTime, Time - ConvergingTerraprismas_SpinTime) * 0.3f;
-            float reelBackInterpolant = MathHelper.SmoothStep(0f, 1f, Utilities.InverseLerp(0f, ConvergingTerraprismas_ReelBackTime, Time - ConvergingTerraprismas_SpinTime)).Squared();
-            float radius = 350f + reelBackInterpolant * 500f;
-            squishInterpolant += (1f - reelBackInterpolant) * 0.25f;
+            // This ensures that the spin starts out at a moderate speed, rather than at no speed at all. This makes the attack look a bit more interesting at the start.
+            spinSpeed += Utilities.InverseLerp(ConvergingTerraprismas_SpinTime * 0.5f, 0f, Time) * MathHelper.TwoPi / 45f;
 
             SpinAngle += spinSpeed;
 
-            Vector2 orbitOffset = SpinAngle.ToRotationVector2() * new Vector2(1f, 1f - squishInterpolant) * radius;
+            float orbitSquishInterpolant = Utilities.InverseLerp(0f, -ConvergingTerraprismas_OrbitSquishDissipateTime, Time - ConvergingTerraprismas_SpinTime) * 0.3f;
+            float reelBackInterpolant = MathHelper.SmoothStep(0f, 1f, Utilities.InverseLerp(0f, ConvergingTerraprismas_ReelBackTime, Time - ConvergingTerraprismas_SpinTime)).Squared();
+            float radius = MathHelper.Lerp(ConvergingTerraprismas_InitialRadius, ConvergingTerraprismas_ReelBackRadius, reelBackInterpolant);
+            orbitSquishInterpolant += (1f - reelBackInterpolant) * 0.25f;
 
+            Vector2 orbitOffset = SpinAngle.ToRotationVector2() * new Vector2(1f, 1f - orbitSquishInterpolant) * radius;
             Projectile.Center = SpinCenter + orbitOffset;
             Projectile.rotation = Projectile.AngleTo(spinCenter);
+
+            // Use a scaling illusion to give the impression of the swords existing in 3D space.
+            // This gets undone as the swords reel back, since it'd be really silly for them to be tiny or big after they've dashed in 2D space.
             Projectile.scale = MathHelper.Lerp(0.5f, 1.5f, Utilities.Sin01(SpinAngle)) * Utilities.InverseLerp(0f, 8f, Time);
             Projectile.scale = MathHelper.Lerp(Projectile.scale, 1f, reelBackInterpolant);
-            Projectile.Opacity = Utilities.InverseLerp(0f, 15f, Time);
+        }
 
-            if (Time == ConvergingTerraprismas_SpinTime + ConvergingTerraprismas_ReelBackTime - 1f)
-            {
-                ModContent.GetInstance<DistortionMetaball>().CreateParticle(Projectile.Center + Main.rand.NextVector2Circular(50f, 50f), Vector2.Zero, 30f, 0.75f, 0.25f, 0.02f);
+        /// <summary>
+        /// Handles post-dash effects for this sword, such as enabling the trail and emitting particles.
+        /// </summary>
+        public void HandlePostDashEffects()
+        {
+            Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.7f) * 0.8f;
+            Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(3f, 7f) + Main.rand.NextVector2Circular(2f, 2f);
+            Vector2 particleSpawnPosition = Projectile.Center + Main.rand.NextVector2Circular(20f, 20f);
+            BloomCircleParticle particle = new(particleSpawnPosition, particleVelocity, Main.rand.NextFloat(0.02f, 0.05f), Color.Wheat, particleColor, 40, 1.6f, 1.75f);
+            particle.Spawn();
 
-                Projectile.oldRot = new float[Projectile.oldRot.Length];
-                Projectile.oldPos = new Vector2[Projectile.oldPos.Length];
-                Projectile.velocity = Projectile.rotation.ToRotationVector2() * 50f;
-                Projectile.netUpdate = true;
-            }
+            DashVisualsIntensity = 1f;
+            Projectile.velocity += Projectile.velocity.SafeNormalize(Vector2.Zero) * 5f;
+        }
+
+        /// <summary>
+        /// Makes this Terraprisma perform its dash. This also prepares it for post-dash effects later, such as by resetting the <see cref="Projectile.oldPos"/> cache.
+        /// </summary>
+        public void PerformDash()
+        {
+            ModContent.GetInstance<DistortionMetaball>().CreateParticle(Projectile.Center + Main.rand.NextVector2Circular(50f, 50f), Vector2.Zero, 30f, 0.75f, 0.25f, 0.02f);
+
+            Projectile.oldRot = new float[Projectile.oldRot.Length];
+            Projectile.oldPos = new Vector2[Projectile.oldPos.Length];
+            Projectile.velocity = Projectile.rotation.ToRotationVector2() * 50f;
+            Projectile.netUpdate = true;
         }
 
         public override Color? GetAlpha(Color lightColor) => lightColor * Projectile.Opacity;
