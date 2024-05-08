@@ -77,7 +77,7 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer == ConvergingTerraprismas_SpinTime - Utilities.SecondsToFrames(0.23f))
                 SoundEngine.PlaySound(SoundID.Item162);
 
-            if (AITimer == 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == 1)
             {
                 IProjOwnedByBoss<EmpressOfLight>.KillAll();
 
