@@ -76,7 +76,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override Color? GetAlpha(Color lightColor) => Color.White * Projectile.Opacity;
 
-        public float BoltWidthFunction(float completionRatio)
+        public float RainbowWidthFunction(float completionRatio)
         {
             float baseWidth = Projectile.width;
             float tipCutFactor = MathF.Pow(Utilities.InverseLerp(0.04f, 0.3f, completionRatio), 0.6f);
@@ -84,7 +84,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             return baseWidth * tipCutFactor * slownessFactor * Projectile.scale;
         }
 
-        public Color BoltColorFunction(float completionRatio)
+        public Color RainbowColorFunction(float completionRatio)
         {
             return Projectile.GetAlpha(Color.White);
         }
@@ -98,7 +98,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             trailShader.TrySetParameter("hueOffset", HueInterpolant);
             trailShader.Apply();
 
-            PrimitiveSettings settings = new(BoltWidthFunction, BoltColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);
+            PrimitiveSettings settings = new(RainbowWidthFunction, RainbowColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 30);
         }
     }

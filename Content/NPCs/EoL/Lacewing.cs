@@ -225,7 +225,8 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.SmoothFlyNear(EmpressOfLight.Myself.Center, 0.3f, 0.7f);
                 if (NPC.WithinRange(EmpressOfLight.Myself.Center, 80f))
                 {
-                    ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.2f, 0.03f);
+                    if (Main.rand.NextBool(10))
+                        ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.2f, 0.03f);
                     NPC.active = false;
                 }
                 NPC.damage = 0;

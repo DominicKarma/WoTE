@@ -2,17 +2,20 @@
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.Particles;
+using WoTE.Content.Particles.Metaballs;
 using static WoTE.Content.NPCs.EoL.EmpressOfLight;
 
 namespace WoTE.Content.NPCs.EoL
 {
-    public class SpinningTerraprisma : ModProjectile, IProjOwnedByBoss<EmpressOfLight>
+    public class SpinningTerraprisma : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<EmpressOfLight>
     {
         /// <summary>
         /// The bloom texture for this sword.
@@ -25,9 +28,9 @@ namespace WoTE.Content.NPCs.EoL
         public Vector2 SpinCenter;
 
         /// <summary>
-        /// How long this sword has existed for, in frames.
+        /// The intensity of dash visuals.
         /// </summary>
-        public ref float Time => ref Projectile.localAI[0];
+        public ref float DashVisualsIntensity => ref Projectile.localAI[0];
 
         /// <summary>
         /// The hue interpolant of this sword.
@@ -40,16 +43,16 @@ namespace WoTE.Content.NPCs.EoL
         public ref float SpinAngle => ref Projectile.ai[1];
 
         /// <summary>
-        /// The Z position of this sword.
+        /// How long this sword has existed for, in frames.
         /// </summary>
-        public ref float ZPosition => ref Projectile.ai[2];
+        public ref float Time => ref Projectile.ai[2];
 
         public override string Texture => $"Terraria/Images/Projectile_{ProjectileID.EmpressBlade}";
 
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 8;
+            ProjectileID.Sets.TrailCacheLength[Type] = 9;
             ProjectileID.Sets.DrawScreenCheckFluff[Type] = 2400;
 
             if (Main.netMode != NetmodeID.Server)
@@ -64,6 +67,7 @@ namespace WoTE.Content.NPCs.EoL
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
+            Projectile.timeLeft = ConvergingTerraprismas_SpinTime + ConvergingTerraprismas_ReelBackTime + ConvergingTerraprismas_AttackTransitionDelay;
         }
 
         public override void SendExtraAI(BinaryWriter writer) => writer.WriteVector2(SpinCenter);
@@ -82,6 +86,12 @@ namespace WoTE.Content.NPCs.EoL
 
             if (Time >= ConvergingTerraprismas_SpinTime + ConvergingTerraprismas_ReelBackTime)
             {
+                Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(3f, 7f) + Main.rand.NextVector2Circular(2f, 2f);
+                Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.67f) * 0.8f;
+                BloomCircleParticle particle = new(Projectile.Center + Main.rand.NextVector2Circular(20f, 20f), particleVelocity, Main.rand.NextFloat(0.02f, 0.05f), Color.Wheat, particleColor, 40, 1.6f, 1.75f);
+                particle.Spawn();
+
+                DashVisualsIntensity = 1f;
                 Projectile.velocity += Projectile.velocity.SafeNormalize(Vector2.Zero) * 5f;
                 return;
             }
@@ -108,7 +118,14 @@ namespace WoTE.Content.NPCs.EoL
             Projectile.Opacity = Utilities.InverseLerp(0f, 15f, Time);
 
             if (Time == ConvergingTerraprismas_SpinTime + ConvergingTerraprismas_ReelBackTime - 1f)
+            {
+                ModContent.GetInstance<DistortionMetaball>().CreateParticle(Projectile.Center + Main.rand.NextVector2Circular(50f, 50f), Vector2.Zero, 30f, 0.75f, 0.25f, 0.02f);
+
+                Projectile.oldRot = new float[Projectile.oldRot.Length];
+                Projectile.oldPos = new Vector2[Projectile.oldPos.Length];
                 Projectile.velocity = Projectile.rotation.ToRotationVector2() * 50f;
+                Projectile.netUpdate = true;
+            }
         }
 
         public override Color? GetAlpha(Color lightColor) => lightColor * Projectile.Opacity;
@@ -134,6 +151,32 @@ namespace WoTE.Content.NPCs.EoL
             Main.EntitySpriteDraw(sword, drawPosition, null, Projectile.GetAlpha(Color.White with { A = 128 }) * Projectile.Opacity.Squared(), Projectile.rotation, sword.Size() * 0.5f, scale, 0);
 
             return false;
+        }
+
+        public float TrailWidthFunction(float completionRatio)
+        {
+            float baseWidth = Projectile.width * 0.4f;
+            return baseWidth;
+        }
+
+        public Color TrailColorFunction(float completionRatio)
+        {
+            return Projectile.GetAlpha(Main.hslToRgb(HueInterpolant, 1f, 0.5f)) * Utilities.InverseLerp(0f, 0.1f, completionRatio);
+        }
+
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
+        {
+            if (DashVisualsIntensity <= 0f)
+                return;
+
+            ManagedShader trailShader = ShaderManager.GetShader("WoTE.TerraprismaDashTrailShader");
+            trailShader.SetTexture(TextureAssets.Extra[ExtrasID.MagicMissileTrailErosion], 1, SamplerState.LinearWrap);
+            trailShader.TrySetParameter("localTime", -Main.GlobalTimeWrappedHourly * 1.45f + Projectile.identity * 0.374f);
+            trailShader.TrySetParameter("hueOffset", HueInterpolant);
+            trailShader.Apply();
+
+            PrimitiveSettings settings = new(TrailWidthFunction, TrailColorFunction, _ => Projectile.Size * 0.5f - Projectile.velocity.SafeNormalize(Vector2.Zero) * 20f, Pixelate: true, Shader: trailShader);
+            PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 30);
         }
     }
 }
