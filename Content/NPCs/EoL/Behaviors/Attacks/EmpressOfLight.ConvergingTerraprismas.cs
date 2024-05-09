@@ -1,5 +1,4 @@
-﻿using Luminance.Common.DataStructures;
-using Luminance.Common.StateMachines;
+﻿using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -79,8 +78,6 @@ namespace WoTE.Content.NPCs.EoL
 
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == 1)
             {
-                IProjOwnedByBoss<EmpressOfLight>.KillAll();
-
                 int terraprismaCount = ConvergingTerraprismas_TerraprismaCount;
                 float spinAngleOffset = Main.rand.NextFloat(MathHelper.TwoPi);
                 for (int i = 0; i < terraprismaCount; i++)
