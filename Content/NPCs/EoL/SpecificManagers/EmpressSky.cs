@@ -4,6 +4,7 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
@@ -12,6 +13,43 @@ namespace WoTE.Content.NPCs.EoL
     public class EmpressSky : CustomSky
     {
         private bool skyActive;
+
+        private static int totalSpawnedRainParticles;
+
+        public struct RainParticle
+        {
+            public bool Active;
+
+            public float Scale;
+
+            public Vector2 Position;
+
+            public Vector2 Velocity;
+
+            public void Update()
+            {
+                if (!Active)
+                    return;
+
+                Position += Velocity;
+                if (Collision.SolidCollision(Position, 4, 4))
+                    Active = false;
+            }
+
+            public static void SpawnNew(Vector2 spawnPosition, Vector2 velocity, float scale)
+            {
+                totalSpawnedRainParticles++;
+                RainParticles[totalSpawnedRainParticles % RainParticles.Length] = new()
+                {
+                    Active = true,
+                    Position = spawnPosition,
+                    Velocity = velocity,
+                    Scale = scale
+                };
+            }
+        }
+
+        public static readonly RainParticle[] RainParticles = new RainParticle[2048];
 
         /// <summary>
         /// The opacity of this sky.
@@ -85,10 +123,22 @@ namespace WoTE.Content.NPCs.EoL
 
             Opacity = Utilities.Saturate(Opacity + skyActive.ToDirectionInt() * 0.05f);
 
-            Main.numClouds = 75;
+            for (int i = 0; i < RainParticles.Length; i++)
+                RainParticles[i].Update();
 
             if (!skyActive)
                 ResetVariablesWhileInactive();
+            else if (Main.LocalPlayer.Center.Y >= 3000f)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    float rainScaleInterpolant = Main.rand.NextFloat();
+                    float rainScale = MathHelper.Lerp(0.6f, 1.4f, rainScaleInterpolant);
+                    Vector2 rainVelocity = Vector2.UnitY.RotatedBy(0.15f) * MathHelper.Lerp(34f, 60f, rainScale);
+                    Vector2 rainSpawnPosition = Main.LocalPlayer.Center + new Vector2(Main.rand.NextFloatDirection() * 1300f, -1050f);
+                    RainParticle.SpawnNew(rainSpawnPosition, rainVelocity, rainScale);
+                }
+            }
         }
 
         public void ResetVariablesWhileInactive()
@@ -96,6 +146,31 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         #region Boilerplate
+
+        public override void OnLoad()
+        {
+            On_Main.DrawRain += DrawCustomRain;
+        }
+
+        private void DrawCustomRain(On_Main.orig_DrawRain orig, Main self)
+        {
+            if (Opacity > 0f)
+            {
+                Texture2D rain = TextureAssets.Rain.Value;
+                for (int i = 0; i < RainParticles.Length; i++)
+                {
+                    Rectangle frame = new(i % 3 * 4, 0, 2, i % 3 * 10 + 20);
+                    if (!RainParticles[i].Active)
+                        continue;
+
+                    var drawPosition = RainParticles[i].Position - Main.screenPosition;
+                    Main.spriteBatch.Draw(rain, drawPosition, frame, Color.Wheat * Opacity * 0.2f, RainParticles[i].Velocity.ToRotation() + MathHelper.PiOver2, frame.Size() * 0.5f, RainParticles[i].Scale, 0, 0f);
+                }
+            }
+
+            orig(self);
+        }
+
         public override void Deactivate(params object[] args) => skyActive = false;
 
         public override void Reset() => skyActive = false;
