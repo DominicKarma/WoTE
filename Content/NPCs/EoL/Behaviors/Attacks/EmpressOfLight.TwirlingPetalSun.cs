@@ -23,7 +23,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of time fire petals summoned by the Empress should spend retracting inward.
         /// </summary>
-        public static int TwirlingPetalSun_FlareRetractTime => Utilities.SecondsToFrames(0.39f);
+        public static int TwirlingPetalSun_FlareRetractTime => Utilities.SecondsToFrames(0.24f);
 
         /// <summary>
         /// The amount of time fire petals summoned by the Empress should spend bursting outward.
