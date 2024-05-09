@@ -110,10 +110,5 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             PrimitiveSettings settings = new(BoltWidthFunction, BoltColorFunction, _ => Projectile.Size * 0.5f + Projectile.velocity.SafeNormalize(Vector2.Zero) * 30f, Pixelate: true, Shader: trailShader);
             PrimitiveRenderer.RenderTrail(trailPositions, settings, 25);
         }
-
-        public override bool PreDraw(ref Color lightColor)
-        {
-            return false;
-        }
     }
 }
