@@ -70,7 +70,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public float BoltWidthFunction(float completionRatio)
         {
             float baseWidth = Projectile.width;
-            float tipCutFactor = Utilities.InverseLerp(0.035f, 0.134f, completionRatio);
+            float tipCutFactor = Utilities.InverseLerp(0.035f, 0.1f, completionRatio);
             float slownessFactor = Utils.Remap(Projectile.velocity.Length(), 3f, 9f, 0.18f, 1f);
             return baseWidth * tipCutFactor * slownessFactor;
         }
@@ -107,7 +107,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 trailPositions[i] = Projectile.oldPos[i] + perpendicular * sine;
             }
 
-            PrimitiveSettings settings = new(BoltWidthFunction, BoltColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);
+            PrimitiveSettings settings = new(BoltWidthFunction, BoltColorFunction, _ => Projectile.Size * 0.5f + Projectile.velocity.SafeNormalize(Vector2.Zero) * 30f, Pixelate: true, Shader: trailShader);
             PrimitiveRenderer.RenderTrail(trailPositions, settings, 25);
         }
 
