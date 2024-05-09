@@ -10,7 +10,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     coords = round(coords / pixelationFactor) * pixelationFactor;
     
     float rollOffset = tex2D(uvAlteringTexture, coords + float2(0.031, 0.02) * globalTime) * 0.05;
-    float2 coordsOffset = float2(globalTime * 0.025, 0) + rollOffset;
+    float2 coordsOffset = float2(globalTime * 0.009, 0) + rollOffset;
     float4 baseColor = tex2D(baseTexture, coords * float2(2.4, 1) + coordsOffset) * sampleColor;
     
     float distanceFromMoon = distance((coords - 0.5) * float2(1, 0.4) + 0.5, float2(0.5, 0.45));
