@@ -68,6 +68,7 @@ namespace WoTE.Content.NPCs.EoL
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
             Projectile.timeLeft = ConvergingTerraprismas_SpinTime + ConvergingTerraprismas_ReelBackTime + ConvergingTerraprismas_AttackTransitionDelay;
+            CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
         public override void SendExtraAI(BinaryWriter writer) => writer.WriteVector2(SpinCenter);

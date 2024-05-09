@@ -70,7 +70,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public float BoltWidthFunction(float completionRatio)
         {
             float baseWidth = Projectile.width;
-            float tipCutFactor = Utilities.InverseLerp(0.02f, 0.134f, completionRatio);
+            float tipCutFactor = Utilities.InverseLerp(0.035f, 0.134f, completionRatio);
             float slownessFactor = Utils.Remap(Projectile.velocity.Length(), 3f, 9f, 0.18f, 1f);
             return baseWidth * tipCutFactor * slownessFactor;
         }
@@ -113,24 +113,6 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
-            float hue = (Projectile.identity * 0.23f + Main.GlobalTimeWrappedHourly * 0.5f).Modulo(1f);
-            Color baseColor = Main.hslToRgb(hue, 1f, 0.85f);
-            baseColor.A = 0;
-
-            Texture2D glowTexture = TextureAssets.Extra[98].Value;
-            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
-            Vector2 origin = glowTexture.Size() * 0.5f;
-            float pulse = MathHelper.Lerp(0.8f, 1.2f, Utilities.Cos01(Main.GlobalTimeWrappedHourly % 30f * MathHelper.TwoPi * 6f));
-            float appearanceInterpolant = Utilities.InverseLerpBump(0f, 30f, Lifetime - 20f, Lifetime, Time) * pulse * 0.8f;
-            Color outerColor = baseColor * appearanceInterpolant;
-            Color innerColor = baseColor * appearanceInterpolant * 0.5f;
-            Vector2 largeScale = new Vector2(0.8f, 6f) * appearanceInterpolant;
-            Vector2 smallScale = new Vector2(0.8f, 2f) * appearanceInterpolant;
-            Main.EntitySpriteDraw(glowTexture, drawPosition, null, outerColor, MathHelper.PiOver2, origin, largeScale, 0);
-            Main.EntitySpriteDraw(glowTexture, drawPosition, null, outerColor, 0f, origin, smallScale, 0);
-            Main.EntitySpriteDraw(glowTexture, drawPosition, null, innerColor, MathHelper.PiOver2, origin, largeScale * 0.6f, 0);
-            Main.EntitySpriteDraw(glowTexture, drawPosition, null, innerColor, 0f, origin, smallScale * 0.6f, 0);
-
             return false;
         }
     }

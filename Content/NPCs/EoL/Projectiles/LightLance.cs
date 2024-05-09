@@ -68,6 +68,8 @@ namespace WoTE.Content.NPCs.EoL
 
             Projectile.timeLeft = Projectile.MaxUpdates * 120;
             Projectile.Opacity = 0f;
+
+            CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
         public override void SendExtraAI(BinaryWriter writer) => writer.Write(Time);
