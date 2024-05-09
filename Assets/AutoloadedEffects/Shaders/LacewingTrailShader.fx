@@ -56,7 +56,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float4 rainbowColor = tex2D(colorGradientTexture, coords + float2(trailTextureBrightness * 0.5 + coords.x * 0.4 - localTime * 1.5, 0)) * glow;
     
     // Combine colors.
-    return lerp(rainbowColor, trailColor, smoothstep(0, 0.5, coords.x));
+    return saturate(lerp(rainbowColor, trailColor, smoothstep(0, 0.5, coords.x))) * pow(1 - coords.x, 2) * input.Color.a;
 }
 
 technique Technique1

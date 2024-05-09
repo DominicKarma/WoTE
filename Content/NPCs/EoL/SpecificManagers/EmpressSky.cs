@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Effects;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace WoTE.Content.NPCs.EoL
@@ -67,6 +68,10 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
+            Matrix backgroundMatrix = Main.BackgroundViewMatrix.TransformationMatrix;
+            Vector3 translationDirection = new(1f, Main.BackgroundViewMatrix.Effects.HasFlag(SpriteEffects.FlipVertically) ? -1f : 1f, 1f);
+            backgroundMatrix.Translation -= Main.BackgroundViewMatrix.ZoomMatrix.Translation * translationDirection;
+
             // Prevent drawing beyond the back layer.
             if (maxDepth >= float.MaxValue && minDepth < float.MaxValue)
             {
@@ -86,14 +91,22 @@ namespace WoTE.Content.NPCs.EoL
 
                 Main.spriteBatch.Draw(moon, moonDrawPosition, null, new(200, 238, 235, 75), 0f, moon.Size() * 0.5f, 0.16f, 0, 0f);
 
-                Matrix backgroundMatrix = Main.BackgroundViewMatrix.TransformationMatrix;
-                Vector3 translationDirection = new(1f, Main.BackgroundViewMatrix.Effects.HasFlag(SpriteEffects.FlipVertically) ? -1f : 1f, 1f);
-                backgroundMatrix.Translation -= Main.BackgroundViewMatrix.ZoomMatrix.Translation * translationDirection;
-
                 // Draw clouds.
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, backgroundMatrix);
                 DrawClouds();
+
+                // Return to standard drawing.
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, backgroundMatrix);
+            }
+
+            else
+            {
+                // Draw mist
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, backgroundMatrix);
+                DrawMist();
 
                 // Return to standard drawing.
                 Main.spriteBatch.End();
@@ -113,6 +126,23 @@ namespace WoTE.Content.NPCs.EoL
             Rectangle cloudsRectangle = new(0, 0, Main.screenWidth, (int)(screenSize.Y * 0.3f));
 
             Main.spriteBatch.Draw(clouds, cloudsRectangle, new Color(17, 172, 209, 128) * Opacity);
+        }
+
+        private static void DrawMist()
+        {
+            Texture2D clouds = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/SpecificManagers/CloudTexture").Value;
+            ManagedShader mistShader = ShaderManager.GetShader("WoTE.MistBackgroundShader");
+            Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
+            Rectangle mistRectangle = new(0, (int)(screenSize.Y * 0.25f), Main.screenWidth, (int)(screenSize.Y * 0.7f));
+            mistShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.PointWrap);
+            mistShader.SetTexture(TextureAssets.Extra[ExtrasID.QueenSlimeGradient], 2, SamplerState.LinearWrap);
+            mistShader.TrySetParameter("dewAppearanceCutoffThreshold", 0.993f);
+            mistShader.TrySetParameter("baseTextureSize", mistRectangle.Size());
+            mistShader.TrySetParameter("worldOffset", Main.screenPosition / clouds.Size() * 0.05f);
+            mistShader.TrySetParameter("twinkleSpeed", 3f);
+            mistShader.Apply();
+
+            Main.spriteBatch.Draw(clouds, mistRectangle, new Color(185, 170, 237, 128) * Opacity * 0.15f);
         }
 
         public override void Update(GameTime gameTime)

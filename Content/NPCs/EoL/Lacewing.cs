@@ -116,6 +116,11 @@ namespace WoTE.Content.NPCs.EoL
         public ref float Frame => ref NPC.localAI[0];
 
         /// <summary>
+        /// The opacity of the trail for this lacewing.
+        /// </summary>
+        public ref float TrailOpacity => ref NPC.localAI[1];
+
+        /// <summary>
         /// The index of this Lacewing relative to the overall set.
         /// </summary>
         public int Index => (int)NPC.ai[1];
@@ -219,6 +224,7 @@ namespace WoTE.Content.NPCs.EoL
             int attackCycleTime = redirectTime + dashRepositionTime + dashTime + slowdownTime;
             int wrappedAITimer = AITimer % attackCycleTime;
             bool doneDashing = AITimer >= attackCycleTime * EmpressOfLight.ButterflyBurstDashes_DashCount;
+            float idealTrailOpacity = 1f;
 
             if (doneDashing)
             {
@@ -230,6 +236,7 @@ namespace WoTE.Content.NPCs.EoL
                     NPC.active = false;
                 }
                 NPC.damage = 0;
+                idealTrailOpacity = 2f;
             }
             else if (wrappedAITimer <= redirectTime)
             {
@@ -267,12 +274,15 @@ namespace WoTE.Content.NPCs.EoL
                     SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
 
                 NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 56f, 0.27f);
+                idealTrailOpacity = 2f;
             }
 
             else if (wrappedAITimer <= redirectTime + dashRepositionTime + dashTime)
                 NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 6.7f;
             else
                 NPC.velocity *= 0.5f;
+
+            TrailOpacity = MathHelper.Lerp(TrailOpacity, idealTrailOpacity, 0.15f);
         }
 
         public override void FindFrame(int frameHeight)
@@ -314,8 +324,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public Color TrailColorFunction(float completionRatio)
         {
-            float hue = (Index / (float)EmpressOfLight.ButterflyBurstDashes_ButterflyCount * 2f + completionRatio * 0.12f) % 1f;
-            return Main.hslToRgb(hue, 1f, 0.5f - completionRatio * 0.2f);
+            return Color.White * TrailOpacity;
         }
 
         public float CalculateSinusoidalOffset(float completionRatio)
