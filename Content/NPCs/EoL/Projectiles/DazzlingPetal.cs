@@ -93,7 +93,7 @@ namespace WoTE.Content.NPCs.EoL
             DirectionOffsetAngle += spinSpeed;
 
             // Extend outward.
-            float idealPetalLength = Utilities.InverseLerp(0f, 50f, Time).Squared() * 1000f;
+            float idealPetalLength = Utilities.InverseLerp(0f, 60f, Time).Cubed() * 1000f;
             idealPetalLength -= Utilities.InverseLerp(0f, TwirlingPetalSun_FlareRetractTime, Time - TwirlingPetalSun_TwirlTime - TwirlingPetalSun_FlareTransformTime).Squared() * 500f;
             idealPetalLength += Utilities.InverseLerp(0f, TwirlingPetalSun_BurstTime, Time - TwirlingPetalSun_TwirlTime - TwirlingPetalSun_FlareTransformTime - TwirlingPetalSun_FlareRetractTime).Squared() * 4000f;
             PetalLength = MathHelper.Lerp(PetalLength, idealPetalLength, 0.2f);
