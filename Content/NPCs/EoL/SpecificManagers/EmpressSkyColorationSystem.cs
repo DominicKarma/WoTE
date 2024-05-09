@@ -8,7 +8,7 @@ namespace WoTE.Content.NPCs.EoL
         public override void ModifySunLightColor(ref Color tileColor, ref Color backgroundColor)
         {
             backgroundColor = Color.Lerp(backgroundColor, Color.Silver, EmpressSky.Opacity * 0.15f);
-            tileColor = Color.Lerp(tileColor, new(20, 120, 255), EmpressSky.Opacity * 0.25f);
+            tileColor = Color.Lerp(tileColor, Color.Lavender, EmpressSky.Opacity * 0.25f);
         }
     }
 }
