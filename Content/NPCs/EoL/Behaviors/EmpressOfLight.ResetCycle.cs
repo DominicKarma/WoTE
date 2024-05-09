@@ -14,7 +14,6 @@ namespace WoTE.Content.NPCs.EoL
                 StateMachine.StateStack.Clear();
 
                 List<EmpressAIType> phaseCycle = [EmpressAIType.SequentialDashes, EmpressAIType.BasicPrismaticBolts, EmpressAIType.ButterflyBurstDashes, EmpressAIType.TwirlingPetalSun, EmpressAIType.ConvergingTerraprismas, EmpressAIType.OutwardRainbows];
-                phaseCycle = [EmpressAIType.Awaken];
 
                 // Supply the state stack with the attack cycle.
                 for (int i = phaseCycle.Count - 1; i >= 0; i--)
