@@ -14,14 +14,29 @@ namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
+        /// <summary>
+        /// How long the Empress spends redirecting during her Swirling Star Burst attack.
+        /// </summary>
         public static int SwirlingStarBurst_RedirectTime => Utilities.SecondsToFrames(0.583f);
 
+        /// <summary>
+        /// How long the Empress waits before releasing star bursts during her Swirling Star Burst attack.
+        /// </summary>
         public static int SwirlingStarBurst_BurstDelay => Utilities.SecondsToFrames(0.5f);
 
+        /// <summary>
+        /// How long the Empress waits after firing star bursts to either fire another one or choose a new attack during her Swirling Star Burst attack.
+        /// </summary>
         public static int SwirlingStarBurst_AttackRestartDelay => Utilities.SecondsToFrames(0.75f);
 
-        public static int SwirlingStarBurst_BurstCount => 3;
+        /// <summary>
+        /// The amount of bursts the Empress performs during her Swirling Star Burst attack before choosing a new attack.
+        /// </summary>
+        public static int SwirlingStarBurst_BurstCount => 2;
 
+        /// <summary>
+        /// The horizontal hover direction as used for redirect positions during her Swirling Star Burst attack.
+        /// </summary>
         public ref float SwirlingStarBurst_HorizontalHoverDirection => ref NPC.ai[0];
 
         [AutomatedMethodInvoke]
@@ -114,7 +129,9 @@ namespace WoTE.Content.NPCs.EoL
                     float shootOffsetAngle = NPC.AngleTo(Target.Center);
                     for (int i = 0; i < 30; i++)
                     {
-                        Vector2 shootVelocity = StarPolarEquation(5, MathHelper.TwoPi * i / 30f + shootOffsetAngle) * 0.45f;
+                        float shootAngle = MathHelper.TwoPi * i / 30f + shootOffsetAngle;
+                        Vector2 shootVelocity = StarPolarEquation(5, shootAngle) * 0.45f;
+
                         Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<StarBolt>(), 200, 0f);
                     }
                 }
