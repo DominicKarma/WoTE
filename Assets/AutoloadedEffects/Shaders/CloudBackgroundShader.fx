@@ -2,9 +2,13 @@ sampler baseTexture : register(s0);
 sampler uvAlteringTexture : register(s1);
 
 float globalTime;
+float2 baseTextureSize;
 
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
+    float2 pixelationFactor = 1.1 / baseTextureSize;
+    coords = round(coords / pixelationFactor) * pixelationFactor;
+    
     float rollOffset = tex2D(uvAlteringTexture, coords + float2(0.031, 0.02) * globalTime) * 0.05;
     float2 coordsOffset = float2(globalTime * 0.025, 0) + rollOffset;
     float4 baseColor = tex2D(baseTexture, coords * float2(2.4, 1) + coordsOffset) * sampleColor;
