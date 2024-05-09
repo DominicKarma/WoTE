@@ -11,6 +11,11 @@ namespace WoTE.Content.NPCs.EoL
     public partial class EmpressOfLight : ModNPC
     {
         /// <summary>
+        /// The amount of time the Empress waits before she summons petals.
+        /// </summary>
+        public static int TwirlingPetalSun_PetalSummonDelay => Utilities.SecondsToFrames(1f);
+
+        /// <summary>
         /// The amount of time petals summoned by the Empress should spend twirling.
         /// </summary>
         public static int TwirlingPetalSun_TwirlTime => Utilities.SecondsToFrames(1.3f);
@@ -50,7 +55,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.RegisterTransition(EmpressAIType.TwirlingPetalSun, null, false, () =>
             {
-                return AITimer >= TwirlingPetalSun_TwirlTime + TwirlingPetalSun_FlareTransformTime + TwirlingPetalSun_FlareRetractTime + TwirlingPetalSun_BurstTime + TwirlingPetalSun_AttackTransitionDelay;
+                return AITimer >= TwirlingPetalSun_PetalSummonDelay + TwirlingPetalSun_TwirlTime + TwirlingPetalSun_FlareTransformTime + TwirlingPetalSun_FlareRetractTime + TwirlingPetalSun_BurstTime + TwirlingPetalSun_AttackTransitionDelay;
             });
 
             StateMachine.RegisterStateBehavior(EmpressAIType.TwirlingPetalSun, DoBehavior_TwirlingPetalSun);
@@ -67,7 +72,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.spriteDirection = 1;
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
-            if (AITimer == 1)
+            if (AITimer == TwirlingPetalSun_PetalSummonDelay)
             {
                 SoundEngine.PlaySound(SoundID.Item159 with { MaxInstances = 0 });
 
@@ -77,10 +82,9 @@ namespace WoTE.Content.NPCs.EoL
                     float petalDirection = MathHelper.TwoPi * i / TwirlingPetalSun_PetalCount + petalOffsetAngle;
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DazzlingPetal>(), 200, 0f, -1, petalDirection);
                 }
-                AITimer = 2;
             }
 
-            if (AITimer == TwirlingPetalSun_TwirlTime + TwirlingPetalSun_FlareTransformTime + TwirlingPetalSun_FlareRetractTime + TwirlingPetalSun_BurstTime)
+            if (AITimer == TwirlingPetalSun_PetalSummonDelay + TwirlingPetalSun_TwirlTime + TwirlingPetalSun_FlareTransformTime + TwirlingPetalSun_FlareRetractTime + TwirlingPetalSun_BurstTime)
             {
                 SoundEngine.PlaySound(SoundID.Item74);
 
@@ -94,8 +98,8 @@ namespace WoTE.Content.NPCs.EoL
                 }
             }
 
-            NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.016f);
-            NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * 2.5f, 0.03f);
+            NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.013f);
+            NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * 2f, 0.03f);
         }
     }
 }

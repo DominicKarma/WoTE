@@ -10,6 +10,7 @@ Projectiles: {
 	AcceleratingRainbow.DisplayName: Accelerating Rainbow
 	SpinningTerraprisma.DisplayName: Spinning Terraprisma
 	DazzlingPetal.DisplayName: Dazzling Petal
+	StarBolt.DisplayName: Star Bolt
 }
 
 Configs: {

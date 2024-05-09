@@ -15,6 +15,7 @@
         ConvergingTerraprismas,
         PrismaticBoltSpin,
         TwirlingPetalSun,
+        SwirlingStarBurst,
 
         // Intermediate states.
         Teleport,
