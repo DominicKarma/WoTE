@@ -156,6 +156,9 @@ namespace WoTE.Content.NPCs.EoL
 
             DashAfterimageInterpolant = Utilities.Saturate(DashAfterimageInterpolant - 0.01f);
 
+            Main.windSpeedTarget = 0.04f;
+            Main.moonPhase = 4;
+
             StateMachine.PerformBehaviors();
             StateMachine.PerformStateTransitionCheck();
 
