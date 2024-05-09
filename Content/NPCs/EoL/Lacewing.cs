@@ -225,7 +225,7 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.SmoothFlyNear(EmpressOfLight.Myself.Center, 0.3f, 0.7f);
                 if (NPC.WithinRange(EmpressOfLight.Myself.Center, 80f))
                 {
-                    if (Main.rand.NextBool(10))
+                    if (Main.rand.NextBool(6))
                         ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.2f, 0.03f);
                     NPC.active = false;
                 }
@@ -233,15 +233,16 @@ namespace WoTE.Content.NPCs.EoL
             }
             else if (wrappedAITimer <= redirectTime)
             {
-                float flySpeedInterpolant = MathHelper.Lerp(0.32f, 0.04f, Utilities.Convert01To010(wrappedAITimer / (float)redirectTime));
+                float flySpeedInterpolant = MathHelper.Lerp(0.245f, 0.04f, Utilities.Convert01To010(wrappedAITimer / (float)redirectTime));
+                flySpeedInterpolant *= Utilities.InverseLerp(0f, 9f, wrappedAITimer);
 
                 // Store the player's direction at the start of the butterfly's dash.
                 if (wrappedAITimer <= 1)
-                    PlayerDirectionAtStartOfDash = target.velocity.ToRotation();
+                    PlayerDirectionAtStartOfDash = target.velocity.SafeNormalize((PlayerDirectionAtStartOfDash + MathHelper.PiOver4).ToRotationVector2()).ToRotation();
 
                 // Decide where to hover.
                 Vector2 baseDirectionOffset = PlayerDirectionAtStartOfDash.ToRotationVector2();
-                Vector2 hoverOffset = (baseDirectionOffset * new Vector2(620f, 400f)).RotatedBy(StandardHoverOffsetAngle);
+                Vector2 hoverOffset = (baseDirectionOffset * new Vector2(650f, 530f)).RotatedBy(StandardHoverOffsetAngle);
                 hoverOffset += (NPC.whoAmI * 2f).ToRotationVector2() * 80f;
 
                 // Prevent moving past the player when moving to the hover position.
@@ -249,6 +250,12 @@ namespace WoTE.Content.NPCs.EoL
                     hoverOffset *= -1f;
 
                 Vector2 hoverDestination = target.Center + hoverOffset;
+
+                float swerveOffsetDistance = MathF.Sin(NPC.Distance(hoverDestination) * 0.024f + NPC.whoAmI * 4f + wrappedAITimer * 0.012f) * 120f;
+                Vector2 swerveOffset = NPC.SafeDirectionTo(hoverDestination).RotatedBy(MathHelper.PiOver2) * swerveOffsetDistance;
+                hoverDestination += swerveOffset;
+
+                NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.04f);
                 NPC.SmoothFlyNear(hoverDestination, flySpeedInterpolant, 1f - flySpeedInterpolant);
 
                 NPC.damage = 0;
@@ -259,7 +266,7 @@ namespace WoTE.Content.NPCs.EoL
                 if (wrappedAITimer == redirectTime + 1 && Index == 0)
                     SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
 
-                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 70f, 0.27f);
+                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 56f, 0.27f);
             }
 
             else if (wrappedAITimer <= redirectTime + dashRepositionTime + dashTime)
@@ -361,7 +368,7 @@ namespace WoTE.Content.NPCs.EoL
             }
 
             PrimitiveSettings settings = new(TrailWidthFunction, TrailColorFunction, _ => NPC.Size * 0.5f, Pixelate: true, Shader: trailShader);
-            PrimitiveRenderer.RenderTrail(trailPositions, settings, 25);
+            PrimitiveRenderer.RenderTrail(trailPositions, settings, 31);
         }
     }
 }
