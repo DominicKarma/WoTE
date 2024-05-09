@@ -11,3 +11,14 @@ Projectiles: {
 	SpinningTerraprisma.DisplayName: Spinning Terraprisma
 	DazzlingPetal.DisplayName: Dazzling Petal
 }
+
+Configs: {
+	WoTEConfig: {
+		DisplayName: Client-side Config
+
+		PhotosensitivityMode: {
+			Label: Photosensitivity Mode
+			Tooltip: Whether certain noticeably fast or visually intense effects should be toned done for photosensitivity reasons
+		}
+	}
+}

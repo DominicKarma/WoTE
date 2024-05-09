@@ -13,6 +13,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using WoTE.Content.Particles.Metaballs;
+using WoTE.Core.Configuration;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -281,6 +282,9 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 6.7f;
             else
                 NPC.velocity *= 0.5f;
+
+            if (WoTEConfig.Instance.PhotosensitivityMode)
+                idealTrailOpacity *= 0.5f;
 
             TrailOpacity = MathHelper.Lerp(TrailOpacity, idealTrailOpacity, 0.15f);
         }
