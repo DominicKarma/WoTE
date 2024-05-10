@@ -37,8 +37,6 @@ namespace WoTE.Content.NPCs.EoL
                 }
                 while (statesToAvoid.Contains(phaseCycle[0]));
 
-                phaseCycle = [EmpressAIType.ButterflyBurstDashes];
-
                 for (int i = phaseCycle.Length - 1; i >= 0; i--)
                     StateMachine.StateStack.Push(StateMachine.StateRegistry[phaseCycle[i]]);
             });
