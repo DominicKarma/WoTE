@@ -154,7 +154,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.damage = 200;
             NPC.width = 20;
             NPC.height = 20;
-            NPC.defense = 0;
+            NPC.defense = 25;
             NPC.SetLifeMaxByMode(200000, 300000, 400000);
 
             if (Main.expertMode)
@@ -197,6 +197,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.realLife = EmpressOfLight.Myself.whoAmI;
             NPC.life = EmpressOfLight.Myself.life;
             NPC.lifeMax = EmpressOfLight.Myself.lifeMax;
+            NPC.defense = NPC.defDefense;
             NPC.target = EmpressOfLight.Myself.target;
             Player target = Main.player[NPC.target];
 
@@ -282,6 +283,7 @@ namespace WoTE.Content.NPCs.EoL
                     SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
 
                 NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 54f, 0.27f);
+                NPC.defense = 90;
                 idealTrailOpacity = 2f;
             }
 
