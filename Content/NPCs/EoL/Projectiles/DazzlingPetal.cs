@@ -19,17 +19,28 @@ namespace WoTE.Content.NPCs.EoL
     {
         public PixelationPrimitiveLayer LayerToRenderTo => PixelationPrimitiveLayer.AfterNPCs;
 
+        /// <summary>
+        /// The heat flare conversion interpolant of this petal.
+        /// </summary>
         public float FlareInterpolant
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// The vanish interpolant of this petal.
+        /// </summary>
         public float VanishInterpolant
         {
             get;
             set;
         }
+
+        /// <summary>
+        /// The length factor of this petal as it contracts due to heating up.
+        /// </summary>
+        public float PetalLengthFactor => MathHelper.Lerp(1f, 0.4f, FlareInterpolant);
 
         /// <summary>
         /// The directional offset angle of this petal.
@@ -153,8 +164,7 @@ namespace WoTE.Content.NPCs.EoL
             trailShader.SetTexture(TextureAssets.Extra[ExtrasID.FlameLashTrailShape], 2, SamplerState.LinearWrap);
             trailShader.Apply();
 
-            float petalLengthFactor = MathHelper.Lerp(1f, 0.4f, FlareInterpolant.Squared());
-            List<Vector2> controlPoints = Projectile.GetLaserControlPoints(Projectile.oldPos.Length, PetalLength * petalLengthFactor);
+            List<Vector2> controlPoints = Projectile.GetLaserControlPoints(Projectile.oldPos.Length, PetalLength * PetalLengthFactor);
             for (int i = 0; i < controlPoints.Count; i++)
             {
                 float angularOffset = MathHelper.WrapAngle(Projectile.oldRot[i] - Projectile.rotation);
@@ -171,8 +181,9 @@ namespace WoTE.Content.NPCs.EoL
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            Vector2 start = Projectile.Center + Projectile.velocity * VanishInterpolant * PetalLength;
-            Vector2 end = Projectile.Center + Projectile.velocity * PetalLength;
+            Vector2 start = Projectile.Center + Projectile.velocity * VanishInterpolant * PetalLength * PetalLengthFactor;
+            Vector2 end = Projectile.Center + Projectile.velocity * PetalLength * PetalLengthFactor;
+
             float _ = 0f;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, 36f, ref _);
         }
