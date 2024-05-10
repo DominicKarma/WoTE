@@ -248,11 +248,7 @@ namespace WoTE.Content.NPCs.EoL
             Myself = NPC;
 
             PerformPreUpdateResets();
-
-            DashAfterimageInterpolant = Utilities.Saturate(DashAfterimageInterpolant - 0.01f);
-
-            Main.windSpeedTarget = 0.04f;
-            Main.moonPhase = 4;
+            HandleMiscAmbienceTweaks();
 
             IdealDrizzleVolume = StandardDrizzleVolume;
             StateMachine.PerformBehaviors();
@@ -266,10 +262,19 @@ namespace WoTE.Content.NPCs.EoL
             // Increment timers.
             AITimer++;
 
-            // Emit light.
             Lighting.AddLight(NPC.Center, Vector3.One * NPC.Opacity);
+        }
+
+        /// <summary>
+        /// Performs various ambience related changes to the world while the Empress is present.
+        /// </summary>
+        public static void HandleMiscAmbienceTweaks()
+        {
+            Main.windSpeedTarget = 0.04f;
+            Main.moonPhase = 4;
 
             // The ambient sounds of these things absolutely kill the mood of the fight.
+            // Kill them.
             foreach (Projectile proj in Main.ActiveProjectiles)
             {
                 if (proj.type == ProjectileID.FallingStar)
@@ -293,6 +298,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.immortal = false;
             NPC.hide = false;
             NPC.ShowNameOnHover = true;
+            DashAfterimageInterpolant = Utilities.Saturate(DashAfterimageInterpolant - 0.01f);
         }
 
         /// <summary>
