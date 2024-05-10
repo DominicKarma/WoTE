@@ -249,6 +249,8 @@ namespace WoTE.Content.NPCs.EoL
                 {
                     PlayerDirectionAtStartOfDash = target.velocity.SafeNormalize((PlayerDirectionAtStartOfDash + MathHelper.PiOver4).ToRotationVector2()).ToRotation();
 
+                    // Ensure that the first dash is consistent, at a horizontal angle.
+                    // This is done to give the player an easier chance at initially reacting to the attack.
                     if (AITimer <= 5)
                         PlayerDirectionAtStartOfDash = 0f;
                 }
