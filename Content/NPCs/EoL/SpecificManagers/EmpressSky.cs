@@ -85,11 +85,11 @@ namespace WoTE.Content.NPCs.EoL
                 Vector2 moonDrawPosition = Main.ScreenSize.ToVector2() * new Vector2(0.5f, 0.115f);
 
                 Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
-                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, Color.Silver with { A = 0 } * 0.6f, 0f, bloom.Size() * 0.5f, 2f, 0, 0f);
-                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, Color.Silver with { A = 0 } * 0.31f, 0f, bloom.Size() * 0.5f, 3.3f, 0, 0f);
-                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, new Color(17, 172, 209, 0) * 0.15f, 0f, bloom.Size() * 0.5f, 6f, 0, 0f);
+                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, Color.Silver with { A = 0 } * Opacity * 0.6f, 0f, bloom.Size() * 0.5f, 2f, 0, 0f);
+                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, Color.Silver with { A = 0 } * Opacity * 0.31f, 0f, bloom.Size() * 0.5f, 3.3f, 0, 0f);
+                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, new Color(17, 172, 209, 0) * Opacity * 0.15f, 0f, bloom.Size() * 0.5f, 6f, 0, 0f);
 
-                Main.spriteBatch.Draw(moon, moonDrawPosition, null, new(200, 238, 235, 75), 0f, moon.Size() * 0.5f, 0.11f, 0, 0f);
+                Main.spriteBatch.Draw(moon, moonDrawPosition, null, new Color(200, 238, 235, 75) * Opacity, 0f, moon.Size() * 0.5f, 0.11f, 0, 0f);
 
                 // Draw clouds.
                 Main.spriteBatch.End();

@@ -16,7 +16,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float distanceFromMoon = distance((coords - 0.5) * float2(1, 0.4) + 0.5, float2(0.5, 0.45));
     float opacity = pow(coords.y, 1.6) * smoothstep(1, 0.7, coords.y + baseColor.b * 0.4) * smoothstep(0.07, 0.17, distanceFromMoon);
     
-    return baseColor * opacity + float4(0.4, 0.5, 0.6, 0) * opacity;
+    return baseColor * opacity + float4(0.4, 0.5, 0.6, 0) * opacity * sampleColor.a;
 }
 technique Technique1
 {
