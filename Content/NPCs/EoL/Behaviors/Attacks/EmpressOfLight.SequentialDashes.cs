@@ -44,6 +44,11 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static int SequentialDashes_DashCount => 3;
 
+        /// <summary>
+        /// The speed of dashes performed by the Empress during her Sequential Dashes attack.
+        /// </summary>
+        public static float SequentialDashes_DashSpeed => 78f;
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_SequentialDashes()
         {
@@ -65,29 +70,11 @@ namespace WoTE.Content.NPCs.EoL
                 DoBehavior_SequentialDashes_Redirect();
 
                 if (AITimer == SequentialDashes_RedirectTime)
-                    DoBehavior_SequentialDashes_PerformDashEffects();
+                    DoBehavior_SequentialDashes_PerformStartDashEffects();
             }
             else if (AITimer <= SequentialDashes_RedirectTime + SequentialDashes_DashTime)
             {
-                float dashInterpolant = Utilities.InverseLerp(0f, 6f, AITimer - SequentialDashes_RedirectTime);
-                float targetDirectionErringInterpolant = Utilities.InverseLerp(0f, SequentialDashes_DashTime, AITimer - SequentialDashes_RedirectTime) * Utilities.InverseLerp(200f, 400f, NPC.Distance(Target.Center));
-                Vector2 targetDirectionErring = NPC.SafeDirectionTo(Target.Center) * targetDirectionErringInterpolant * 50f;
-                Vector2 idealVelocity = SequentialDashes_DashDirection.ToRotationVector2() * 76f + targetDirectionErring;
-
-                NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, dashInterpolant * 0.6f);
-                NPC.damage = NPC.defDamage;
-                DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, 1f, 0.3f);
-
-                if (AITimer % 5 == 0)
-                    ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(75f, 75f) - NPC.velocity, Vector2.Zero, 120f, 1f, 0.1f, 0.016f);
-
-                for (int i = 0; i < 5; i++)
-                {
-                    Vector2 particleVelocity = -NPC.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(15f, 25f) + Main.rand.NextVector2Circular(3f, 3f);
-                    Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.67f) * 0.8f;
-                    BloomCircleParticle particle = new(NPC.Center + Main.rand.NextVector2Circular(80f, 80f), particleVelocity, Main.rand.NextFloat(0.015f, 0.042f), Color.Wheat, particleColor, 120, 1.8f, 1.75f);
-                    particle.Spawn();
-                }
+                DoBehavior_SequentialDashes_PerformDash();
             }
             else if (AITimer <= SequentialDashes_RedirectTime + SequentialDashes_DashTime + SequentialDashes_SlowDownTime)
             {
@@ -130,14 +117,13 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// Performs frame-one effects for the Empress' dashes during the Sequential Dashes attack.
         /// </summary>
-        public void DoBehavior_SequentialDashes_PerformDashEffects()
+        public void DoBehavior_SequentialDashes_PerformStartDashEffects()
         {
             // Reset the old position and rotation arrays, to ensure that the dash starts off with a brand new
             // afterimage state.
             NPC.oldRot = new float[NPC.oldRot.Length];
             NPC.oldPos = new Vector2[NPC.oldPos.Length];
 
-            // Release everlasting rainbows outward.
             // TODO -- Probably replace this with something better sometime later?
             SoundEngine.PlaySound(SoundID.Item160 with { MaxInstances = 0 });
 
@@ -145,6 +131,32 @@ namespace WoTE.Content.NPCs.EoL
             NPC.netUpdate = true;
 
             ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 4f);
+        }
+
+        /// <summary>
+        /// Performs during-dash effects for the Empress' during the Sequential Dashes attack.
+        /// </summary>
+        public void DoBehavior_SequentialDashes_PerformDash()
+        {
+            float dashInterpolant = Utilities.InverseLerp(0f, 6f, AITimer - SequentialDashes_RedirectTime);
+            float targetDirectionErringInterpolant = Utilities.InverseLerp(0f, SequentialDashes_DashTime, AITimer - SequentialDashes_RedirectTime) * Utilities.InverseLerp(200f, 400f, NPC.Distance(Target.Center));
+            Vector2 targetDirectionErring = NPC.SafeDirectionTo(Target.Center) * targetDirectionErringInterpolant;
+            Vector2 idealVelocity = (SequentialDashes_DashDirection.ToRotationVector2() + targetDirectionErring * 0.66f) * SequentialDashes_DashSpeed;
+
+            NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, dashInterpolant * 0.6f);
+            NPC.damage = NPC.defDamage;
+            DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, 1f, 0.3f);
+
+            if (AITimer % 5 == 0)
+                ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(75f, 75f) - NPC.velocity, Vector2.Zero, 120f, 1f, 0.1f, 0.016f);
+
+            for (int i = 0; i < 5; i++)
+            {
+                Vector2 particleVelocity = -NPC.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(15f, 25f) + Main.rand.NextVector2Circular(3f, 3f);
+                Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.67f) * 0.8f;
+                BloomCircleParticle particle = new(NPC.Center + Main.rand.NextVector2Circular(80f, 80f), particleVelocity, Main.rand.NextFloat(0.015f, 0.042f), Color.Wheat, particleColor, 120, 1.8f, 1.75f);
+                particle.Spawn();
+            }
         }
     }
 }
