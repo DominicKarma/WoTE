@@ -188,9 +188,6 @@ namespace WoTE.Content.NPCs.EoL
             Vector2 left = petalPoint - perpendicular * petalWidth;
             Vector2 right = petalPoint + perpendicular * petalWidth;
 
-            Dust.QuickDust(left, Color.Green);
-            Dust.QuickDust(right, Color.Green);
-
             float _ = 0f;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), left, right, 6f, ref _);
         }
