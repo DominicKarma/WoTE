@@ -182,7 +182,7 @@ namespace WoTE.Content.NPCs.EoL
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             Vector2 start = Projectile.Center + Projectile.velocity * VanishInterpolant * PetalLength * PetalLengthFactor;
-            Vector2 end = Projectile.Center + Projectile.velocity * PetalLength * PetalLengthFactor;
+            Vector2 end = Projectile.Center + Projectile.velocity * PetalLength * PetalLengthFactor * 0.85f;
 
             float _ = 0f;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, 36f, ref _);
