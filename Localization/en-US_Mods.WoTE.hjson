@@ -11,6 +11,7 @@ Projectiles: {
 	SpinningTerraprisma.DisplayName: Spinning Terraprisma
 	DazzlingPetal.DisplayName: Dazzling Petal
 	StarBolt.DisplayName: Star Bolt
+	PrismaticBurst.DisplayName: Prismatic Burst
 }
 
 Configs: {

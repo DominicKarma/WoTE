@@ -98,6 +98,8 @@ namespace WoTE.Content.NPCs.EoL
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 return;
 
+            Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<PrismaticBurst>(), 0, 0f);
+
             int lacewingHealth = (int)MathF.Ceiling(NPC.life / (float)ButterflyBurstDashes_ButterflyCount);
             for (int i = 0; i < ButterflyBurstDashes_ButterflyCount; i++)
             {
