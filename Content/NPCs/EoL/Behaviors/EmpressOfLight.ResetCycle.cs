@@ -8,6 +8,9 @@ namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
+        /// <summary>
+        /// The set of phase 1 attack combinations that may be selected.
+        /// </summary>
         public static List<EmpressAIType[]> Phase1AttackCombos => new()
         {
             new EmpressAIType[] { EmpressAIType.BasicPrismaticBolts, EmpressAIType.ButterflyBurstDashes },
