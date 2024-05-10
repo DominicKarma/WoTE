@@ -70,8 +70,10 @@ namespace WoTE.Content.NPCs.EoL
                 if (AITimer == ButterflyBurstDashes_ButterflyTransitionDelay)
                     DoBehavior_ButterflyBurstDashes_SummonLacewings();
 
+                int attackCycleTime = ButterflyBurstDashes_RedirectTime + ButterflyBurstDashes_DashRepositionTime + ButterflyBurstDashes_DashTime + ButterflyBurstDashes_DashSlowdownTime;
+                bool doneDashing = AITimer >= attackCycleTime * ButterflyBurstDashes_DashCount;
                 int lacewingCount = NPC.CountNPCS(ModContent.NPCType<Lacewing>());
-                if (lacewingCount >= 1)
+                if (lacewingCount >= 1 && !doneDashing)
                     DoBehavior_ButterflyBurstDashes_InheritHP();
 
                 NPC.Opacity = lacewingCount >= 1 ? 0f : 1f;
