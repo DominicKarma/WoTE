@@ -6,10 +6,22 @@ namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
-        public readonly List<EmpressAIType> PreviousStates = [];
-
         private PushdownAutomata<EntityAIState<EmpressAIType>, EmpressAIType> stateMachine;
 
+        // TODO -- Sync this.
+        /// <summary>
+        /// The set of attacks that the Empress previously sequentially performed.
+        /// </summary>
+        public readonly List<EmpressAIType> PreviousStates = [];
+
+        /// <summary>
+        /// The maximum amount of states that the Empress should remember in the <see cref="PreviousStates"/> list before forgetting the oldest one.
+        /// </summary>
+        public static int MaximumStatesToRemember => 8;
+
+        /// <summary>
+        /// The state machine of the Empress. This governs all of her behavior related code.
+        /// </summary>
         public PushdownAutomata<EntityAIState<EmpressAIType>, EmpressAIType> StateMachine
         {
             get
@@ -40,10 +52,9 @@ namespace WoTE.Content.NPCs.EoL
             if (!stateWasPopped || oldState.Identifier == EmpressAIType.Teleport)
                 return;
 
-            // TODO -- Sync this.
             if (oldState.Identifier != EmpressAIType.ResetCycle)
                 PreviousStates.Add(oldState.Identifier);
-            if (PreviousStates.Count >= 8)
+            if (PreviousStates.Count > MaximumStatesToRemember)
                 PreviousStates.RemoveAt(0);
 
             for (int i = 0; i < 4; i++)
