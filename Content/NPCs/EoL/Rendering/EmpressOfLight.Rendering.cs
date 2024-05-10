@@ -95,7 +95,7 @@ namespace WoTE.Content.NPCs.EoL
                     Matrix.CreateRotationX((time - 0.3f + i * 0.1f) * MathHelper.TwoPi * 0.7f) *
                     Matrix.CreateRotationY((time - 0.8f + i * 0.3f) * MathHelper.TwoPi * 0.7f) *
                     Matrix.CreateRotationZ((time + i * 0.5f) * MathHelper.TwoPi * 0.1f));
-                illusionDrawPosition += new Vector2(illusionOffset.X, illusionOffset.Y) * illusionInterpolant * 150f;
+                illusionDrawPosition += NPC.scale * new Vector2(illusionOffset.X, illusionOffset.Y) * illusionInterpolant * 150f;
 
                 Color illusionColor = Main.hslToRgb((i + 5f) / 10f, 0.7f, 0.5f) * illusionInterpolant;
 

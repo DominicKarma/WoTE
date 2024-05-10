@@ -1,11 +1,14 @@
 ﻿using System;
+using Luminance.Common.Easings;
 using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.Particles;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -33,7 +36,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends invisible as the rain pours during her second phase transition.
         /// </summary>
-        public static int Phase2Transition_StayInvisibleTime => Utilities.SecondsToFrames(5.4f);
+        public static int Phase2Transition_StayInvisibleTime => Utilities.SecondsToFrames(7.5f);
 
         /// <summary>
         /// The life ratio at which the Emperss transitions to her second phase.
@@ -80,13 +83,49 @@ namespace WoTE.Content.NPCs.EoL
 
                 NPC.velocity *= 0.85f;
                 NPC.Opacity = Utilities.Saturate((1f - disapperInterpolant) * opacitySwell);
+
+                if (AITimer == Phase2Transition_DisappearTime)
+                {
+                    NPC.Center = Target.Center - Vector2.UnitY * 375f;
+                    NPC.netUpdate = true;
+                }
+
                 return;
             }
 
+            if (AITimer == Phase2Transition_DisappearTime + Phase2Transition_StayInvisibleTime - Utilities.SecondsToFrames(4.35f))
+                SoundEngine.PlaySound(SoundID.Item159);
+
             Phase2 = true;
-            NPC.Opacity = 0f;
-            NPC.Center = Target.Center - Vector2.UnitY * 375f;
             IdealDrizzleVolume = StandardDrizzleVolume + Utilities.InverseLerp(0f, 120f, AITimer - Phase2Transition_DisappearTime) * 0.3f;
+
+            float appearanceInterpolant = Utilities.InverseLerpBump(0f, 0.4f, 0.5f, 0.55f, (AITimer - Phase2Transition_DisappearTime) / (float)Phase2Transition_StayInvisibleTime).Squared();
+            for (int i = 0; i < appearanceInterpolant * 16f; i++)
+            {
+                float pixelScale = Main.rand.NextFloat(1f, 5f);
+                Vector2 pixelSpawnPosition = NPC.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(900f, 1256f);
+                Vector2 pixelVelocity = pixelSpawnPosition.SafeDirectionTo(NPC.Center).RotatedBy(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 30f) / pixelScale;
+                Color pixelBloomColor = Utilities.MulticolorLerp(Main.rand.NextFloat(), Color.Yellow, Color.HotPink, Color.Violet, Color.DeepSkyBlue) * 0.6f;
+
+                BloomPixelParticle bloom = new(pixelSpawnPosition, pixelVelocity, Color.White, pixelBloomColor, Main.rand.Next(240, 300), Vector2.One * pixelScale, NPC.Center);
+                bloom.Spawn();
+            }
+
+            float appearInterpolant = Utilities.InverseLerp(0.67f, 0.95f, (AITimer - Phase2Transition_DisappearTime) / (float)Phase2Transition_StayInvisibleTime);
+            NPC.Opacity = 1f;
+            NPC.scale = EasingCurves.Evaluate(EasingCurves.Quadratic, EasingType.InOut, MathF.Pow(appearInterpolant, 1.5f));
+            DashAfterimageInterpolant = 1f - NPC.scale;
+
+            if (AITimer == Phase2Transition_DisappearTime + Phase2Transition_StayInvisibleTime - 2)
+            {
+                ScreenShakeSystem.StartShake(10f);
+
+                SoundEngine.PlaySound(SoundID.Item160);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<PrismaticBurst>(), 0, 0f);
+
+                TeleportTo(Target.Center - Vector2.UnitY * 400, 2);
+            }
         }
     }
 }

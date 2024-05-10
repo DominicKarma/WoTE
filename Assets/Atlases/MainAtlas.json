@@ -47,6 +47,30 @@
         "x": 0.5,
         "y": 0.5
       }
+    },
+    "Pixel.png": {
+      "frame": {
+        "x": 0,
+        "y": 390,
+        "w": 1,
+        "h": 1
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "sourceSize": {
+        "w": 1,
+        "h": 1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
     }
   },
   "meta": {
@@ -56,7 +80,7 @@
     "format": "RGBA8888",
     "size": {
       "w": 200,
-      "h": 390
+      "h": 391
     },
     "scale": 1
   }

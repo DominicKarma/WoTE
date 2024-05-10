@@ -253,6 +253,9 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.PerformBehaviors();
             StateMachine.PerformStateTransitionCheck();
 
+            if (CurrentState != EmpressAIType.Teleport)
+                TeleportCompletionRatio = 0f;
+
             UpdateLoopingSounds();
 
             if ((StateMachine?.StateStack?.Count ?? 1) <= 0)
