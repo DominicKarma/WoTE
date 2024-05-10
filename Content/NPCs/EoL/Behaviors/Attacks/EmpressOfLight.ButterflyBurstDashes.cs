@@ -1,4 +1,5 @@
-﻿using Luminance.Common.StateMachines;
+﻿using System;
+using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -66,34 +67,69 @@ namespace WoTE.Content.NPCs.EoL
 
             if (AITimer >= ButterflyBurstDashes_ButterflyTransitionDelay)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == ButterflyBurstDashes_ButterflyTransitionDelay)
-                {
-                    for (int i = 0; i < ButterflyBurstDashes_ButterflyCount; i++)
-                    {
-                        float offsetAngle = Main.rand.NextFloatDirection() * 0.4f;
-                        if (i >= ButterflyBurstDashes_ButterflyCount / 2)
-                            offsetAngle += MathHelper.Pi;
+                if (AITimer == ButterflyBurstDashes_ButterflyTransitionDelay)
+                    DoBehavior_ButterflyBurstDashes_SummonLacewings();
 
-                        int lacewingIndex = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<Lacewing>(), NPC.whoAmI, offsetAngle, i);
-                        if (lacewingIndex >= 0 && lacewingIndex < Main.maxNPCs)
-                            Main.npc[lacewingIndex].velocity = Main.rand.NextVector2Circular(38f, 24f);
-                    }
-                }
+                int lacewingCount = NPC.CountNPCS(ModContent.NPCType<Lacewing>());
+                if (lacewingCount >= 1)
+                    DoBehavior_ButterflyBurstDashes_InheritHP();
 
-                NPC.Opacity = Utilities.InverseLerp(32f, 0f, NPC.CountNPCS(ModContent.NPCType<Lacewing>()));
+                NPC.Opacity = lacewingCount >= 1 ? 0f : 1f;
                 if (NPC.Opacity <= 0f)
                     NPC.Center = Target.Center - Vector2.UnitY * 300f;
                 if (NPC.Opacity >= 1f)
                     ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 9f);
 
                 NPC.hide = NPC.Opacity <= 0f;
-                NPC.ShowNameOnHover = NPC.Opacity >= 0.4f;
                 NPC.dontTakeDamage = NPC.Opacity <= 0.5f;
+                NPC.ShowNameOnHover = !NPC.dontTakeDamage;
             }
 
             NPC.velocity *= 0.9f;
             NPC.spriteDirection = 1;
             NPC.rotation = NPC.velocity.X * 0.0035f;
+        }
+
+        /// <summary>
+        /// Makes the Empress' burst into Lacewings for her Butterfly Burst Dashes attack.
+        /// </summary>
+        public void DoBehavior_ButterflyBurstDashes_SummonLacewings()
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+
+            int lacewingHealth = (int)MathF.Ceiling(NPC.life / (float)ButterflyBurstDashes_ButterflyCount);
+            for (int i = 0; i < ButterflyBurstDashes_ButterflyCount; i++)
+            {
+                float offsetAngle = Main.rand.NextFloatDirection() * 0.4f;
+                if (i >= ButterflyBurstDashes_ButterflyCount / 2)
+                    offsetAngle += MathHelper.Pi;
+
+                int lacewingIndex = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<Lacewing>(), NPC.whoAmI, offsetAngle, i);
+                if (lacewingIndex >= 0 && lacewingIndex < Main.maxNPCs)
+                {
+                    Main.npc[lacewingIndex].velocity = Main.rand.NextVector2Circular(38f, 24f);
+                    Main.npc[lacewingIndex].life = lacewingHealth;
+                    Main.npc[lacewingIndex].lifeMax = lacewingHealth;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Makes the Empress' collective HP pool depend on all summoned Lacewings.
+        /// </summary>
+        public void DoBehavior_ButterflyBurstDashes_InheritHP()
+        {
+            int lacewingID = ModContent.NPCType<Lacewing>();
+
+            // A base HP of 1 is used to ensure that the Empress doesn't unexpectedly die during the attack while technically invisible if all of the lacewings are killed.
+            NPC.life = 1;
+
+            foreach (NPC lacewing in Main.ActiveNPCs)
+            {
+                if (lacewing.type == lacewingID)
+                    NPC.life += lacewing.life;
+            }
         }
     }
 }

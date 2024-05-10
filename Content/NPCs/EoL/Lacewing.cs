@@ -194,9 +194,6 @@ namespace WoTE.Content.NPCs.EoL
                 return;
             }
 
-            NPC.realLife = EmpressOfLight.Myself.whoAmI;
-            NPC.life = EmpressOfLight.Myself.life;
-            NPC.lifeMax = EmpressOfLight.Myself.lifeMax;
             NPC.defense = NPC.defDefense;
             NPC.target = EmpressOfLight.Myself.target;
             Player target = Main.player[NPC.target];
@@ -283,12 +280,15 @@ namespace WoTE.Content.NPCs.EoL
                     SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
 
                 NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 54f, 0.27f);
-                NPC.defense = 90;
+                NPC.defense = 9999;
                 idealTrailOpacity = 2f;
             }
 
             else if (wrappedAITimer <= redirectTime + dashRepositionTime + dashTime)
+            {
                 NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 3.5f;
+                NPC.defense = 9999;
+            }
             else
                 NPC.velocity *= 0.5f;
 
