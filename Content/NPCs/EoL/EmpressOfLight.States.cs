@@ -1,10 +1,13 @@
-﻿using Luminance.Common.StateMachines;
+﻿using System.Collections.Generic;
+using Luminance.Common.StateMachines;
 using Terraria.ModLoader;
 
 namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
+        public readonly List<EmpressAIType> PreviousStates = [];
+
         private PushdownAutomata<EntityAIState<EmpressAIType>, EmpressAIType> stateMachine;
 
         public PushdownAutomata<EntityAIState<EmpressAIType>, EmpressAIType> StateMachine
@@ -36,6 +39,11 @@ namespace WoTE.Content.NPCs.EoL
         {
             if (!stateWasPopped || oldState.Identifier == EmpressAIType.Teleport)
                 return;
+
+            if (oldState.Identifier != EmpressAIType.ResetCycle)
+                PreviousStates.Add(oldState.Identifier);
+            if (PreviousStates.Count >= 8)
+                PreviousStates.RemoveAt(0);
 
             for (int i = 0; i < 4; i++)
                 NPC.ai[i] = 0f;
