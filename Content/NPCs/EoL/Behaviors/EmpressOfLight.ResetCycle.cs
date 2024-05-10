@@ -10,7 +10,7 @@ namespace WoTE.Content.NPCs.EoL
     {
         public static List<EmpressAIType[]> Phase1AttackCombos => new()
         {
-            new EmpressAIType[] { EmpressAIType.BasicPrismaticBolts, EmpressAIType.SequentialDashes, EmpressAIType.ButterflyBurstDashes },
+            new EmpressAIType[] { EmpressAIType.BasicPrismaticBolts, EmpressAIType.ButterflyBurstDashes },
             new EmpressAIType[] { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
             new EmpressAIType[] { EmpressAIType.OutwardRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
             new EmpressAIType[] { EmpressAIType.OutwardRainbows, EmpressAIType.ButterflyBurstDashes },
@@ -26,11 +26,11 @@ namespace WoTE.Content.NPCs.EoL
 
                 // Supply the state stack with the attack cycle.
                 EmpressAIType[] phaseCycle;
-                List<EmpressAIType> lastToFirstStates = PreviousStates;
+                List<EmpressAIType> lastToFirstStates = [];
                 for (int i = PreviousStates.Count - 1; i >= 0; i--)
                     lastToFirstStates.Add(PreviousStates[i]);
 
-                var statesToAvoid = lastToFirstStates.Take(3);
+                var statesToAvoid = lastToFirstStates.Take(4);
                 do
                 {
                     phaseCycle = Main.rand.Next(Phase1AttackCombos);
