@@ -246,7 +246,12 @@ namespace WoTE.Content.NPCs.EoL
 
                 // Store the player's direction at the start of the butterfly's dash.
                 if (wrappedAITimer <= 1)
+                {
                     PlayerDirectionAtStartOfDash = target.velocity.SafeNormalize((PlayerDirectionAtStartOfDash + MathHelper.PiOver4).ToRotationVector2()).ToRotation();
+
+                    if (AITimer <= 5)
+                        PlayerDirectionAtStartOfDash = 0f;
+                }
 
                 // Decide where to hover.
                 Vector2 baseDirectionOffset = PlayerDirectionAtStartOfDash.ToRotationVector2();
