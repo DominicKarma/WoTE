@@ -40,15 +40,16 @@ namespace WoTE.Content.NPCs.EoL
 
         public void DoBehavior_BasicPrismaticBolts_HoverAround()
         {
+            float redirectSpeed = Utils.Remap(AITimer, 0f, 30f, 0.25f, 0.07f);
             Vector2 hoverDestination = Target.Center + new Vector2(MathF.Cos(MathHelper.TwoPi * AITimer / 90f) * 300f, -150f);
-            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, 0.07f, 0.93f, 50f);
+            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, redirectSpeed, 1f - redirectSpeed, 50f);
             NPC.rotation = NPC.velocity.X * 0.01f;
 
             if (AITimer == 1)
                 SoundEngine.PlaySound(SoundID.Item164, NPC.Center);
 
             Vector2 handPosition = NPC.Center + new Vector2(30f, -64f).RotatedBy(NPC.rotation);
-            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 4 == 3 && AITimer <= 90)
+            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 4 == 3 && AITimer >= 30 && AITimer <= 120)
             {
                 Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / 45f).ToRotationVector2() * 10.5f;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), 150, 0f, -1, NPC.target, AITimer / 45f % 1f);
