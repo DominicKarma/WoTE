@@ -1,7 +1,10 @@
 ﻿using System;
 using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
+using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace WoTE.Content.NPCs.EoL
@@ -22,9 +25,15 @@ namespace WoTE.Content.NPCs.EoL
             set => Phase = value ? Math.Max(1, Phase) : 0;
         }
 
-        public static int Phase2Transition_DisappearTime => Utilities.SecondsToFrames(1.5f);
+        /// <summary>
+        /// How long the Empress spends disappearing during her second phase transition.
+        /// </summary>
+        public static int Phase2Transition_DisappearTime => Utilities.SecondsToFrames(2.5f);
 
-        public static int Phase2Transition_StayInvisibleTime => Utilities.SecondsToFrames(6f);
+        /// <summary>
+        /// How long the Empress spends invisible as the rain pours during her second phase transition.
+        /// </summary>
+        public static int Phase2Transition_StayInvisibleTime => Utilities.SecondsToFrames(5.4f);
 
         /// <summary>
         /// The life ratio at which the Emperss transitions to her second phase.
@@ -41,32 +50,43 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.ApplyToAllStatesExcept(state =>
             {
                 StateMachine.RegisterTransition(state, EmpressAIType.Phase2Transition, false, () => EnterPhase2AfterNextAttack);
-            });
+            }, EmpressAIType.Phase2Transition);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Phase2Transition, DoBehavior_Phase2Transition);
         }
 
         /// <summary>
-        /// Performs the Empress' Phase 2 Transition state.
+        /// Performs the Empress' second phase transition state.
         /// </summary>
         public void DoBehavior_Phase2Transition()
         {
+            LeftHandFrame = EmpressHandFrame.HandPressedToChest;
+            RightHandFrame = EmpressHandFrame.HandPressedToChest;
             NPC.dontTakeDamage = true;
             NPC.ShowNameOnHover = false;
-            Phase2 = true;
 
             if (AITimer <= Phase2Transition_DisappearTime)
             {
-                float disapperInterpolant = Utilities.InverseLerp(0f, AITimer, Phase2Transition_DisappearTime);
-                float opacitySwell = MathHelper.Lerp(1f, 1.67f, MathF.Sin(MathHelper.TwoPi * disapperInterpolant * 3f));
+                if (AITimer == 1)
+                {
+                    NPC.velocity -= NPC.SafeDirectionTo(Target.Center) * 70f;
+                    SoundEngine.PlaySound(SoundID.NPCHit1);
+                    SoundEngine.PlaySound(SoundID.Item160);
+                    ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 13f);
+                }
 
-                NPC.velocity *= 0.65f;
-                NPC.Opacity = Utilities.Saturate(disapperInterpolant * opacitySwell);
+                float disapperInterpolant = Utilities.InverseLerp(0f, Phase2Transition_DisappearTime, AITimer);
+                float opacitySwell = MathHelper.Lerp(1f, 1.6f, MathF.Sin(MathHelper.Pi * disapperInterpolant * 4f));
+
+                NPC.velocity *= 0.85f;
+                NPC.Opacity = Utilities.Saturate((1f - disapperInterpolant) * opacitySwell);
                 return;
             }
 
+            Phase2 = true;
             NPC.Opacity = 0f;
             NPC.Center = Target.Center - Vector2.UnitY * 375f;
+            IdealDrizzleVolume = StandardDrizzleVolume + Utilities.InverseLerp(0f, 120f, AITimer - Phase2Transition_DisappearTime) * 0.3f;
         }
     }
 }

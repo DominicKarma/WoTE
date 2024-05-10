@@ -140,9 +140,13 @@ namespace WoTE.Content.NPCs.EoL
         {
             Texture2D texture = TextureAssets.Npc[Type].Value;
 
-            //DrawBackglow(drawPosition);
+            DrawBackglow(drawPosition);
             DrawWings(drawPosition);
+            if (Phase2)
+                DrawTentacles(drawPosition);
             Main.EntitySpriteDraw(texture, drawPosition, NPC.frame, Color.White, 0f, NPC.frame.Size() * 0.5f, 1f, 0);
+            if (Phase2)
+                DrawDress(drawPosition);
             DrawHands(drawPosition);
         }
 
@@ -152,13 +156,14 @@ namespace WoTE.Content.NPCs.EoL
         /// <param name="drawPosition">The draw position of the backglow.</param>
         public void DrawBackglow(Vector2 drawPosition)
         {
+            float backglowOpacity = MathHelper.Lerp(0.5f, 0.03f, MathF.Sqrt(DashAfterimageInterpolant));
             float backglowScale = 1f - Utilities.InverseLerpBump(0f, 0.5f, 0.6f, 1f, TeleportCompletionRatio);
             Color rainbow = Main.hslToRgb(Main.GlobalTimeWrappedHourly * 0.5f % 1f, 1f, 0.5f, 0);
             Texture2D backglow = MiscTexturesRegistry.BloomCircleSmall.Value;
-            Main.EntitySpriteDraw(backglow, drawPosition, null, Color.Wheat with { A = 0 } * 0.25f, 0f, backglow.Size() * 0.5f, backglowScale * 4.1f, 0);
-            Main.EntitySpriteDraw(backglow, drawPosition, null, Color.Wheat with { A = 0 } * 0.67f, 0f, backglow.Size() * 0.5f, backglowScale * 2.85f, 0);
-            Main.EntitySpriteDraw(backglow, drawPosition, null, rainbow * 0.7f, 0f, backglow.Size() * 0.5f, backglowScale * 1.5f, 0);
-            Main.EntitySpriteDraw(backglow, drawPosition, null, Color.Wheat with { A = 0 }, 0f, backglow.Size() * 0.5f, backglowScale * 0.8f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, Color.Wheat with { A = 0 } * backglowOpacity * 0.25f, 0f, backglow.Size() * 0.5f, backglowScale * 4.1f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, Color.Wheat with { A = 0 } * backglowOpacity * 0.67f, 0f, backglow.Size() * 0.5f, backglowScale * 2.85f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, rainbow * backglowOpacity * 0.7f, 0f, backglow.Size() * 0.5f, backglowScale * 1.5f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, Color.Wheat with { A = 0 } * backglowOpacity, 0f, backglow.Size() * 0.5f, backglowScale * 0.8f, 0);
         }
 
         /// <summary>
@@ -187,6 +192,25 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// Draws the Empress' tentacles.
+        /// </summary>
+        /// <param name="drawPosition">The draw position of the tentacles.</param>
+        public void DrawTentacles(Vector2 drawPosition)
+        {
+            Color tentacleColor = Color.Gold * 0.6f;
+            tentacleColor.A = 0;
+
+            Texture2D tentaclesTexture = TextureAssets.Extra[ExtrasID.HallowBossTentacles].Value;
+            Rectangle tantaclesFrame = tentaclesTexture.Frame(1, 8, 0, (int)(Main.GlobalTimeWrappedHourly * 15f) % 8);
+            Main.EntitySpriteDraw(tentaclesTexture, drawPosition, tantaclesFrame, Color.White, 0f, tantaclesFrame.Size() * 0.5f, 1f, 0);
+            for (int i = 0; i < 4; i++)
+            {
+                Vector2 drawOffset = (MathHelper.TwoPi * i / 4f).ToRotationVector2() * 2f;
+                Main.EntitySpriteDraw(tentaclesTexture, drawPosition + drawOffset, tantaclesFrame, tentacleColor, 0f, tantaclesFrame.Size() * 0.5f, 1f, 0);
+            }
+        }
+
+        /// <summary>
         /// Draws the Empress' arms.
         /// </summary>
         /// <param name="drawPosition">The draw position of the arms.</param>
@@ -199,6 +223,16 @@ namespace WoTE.Content.NPCs.EoL
             Texture2D rightHandTexture = TextureAssets.Extra[ExtrasID.HallowBossArmsRight].Value;
             Rectangle rightHandFrame = rightHandTexture.Frame(1, 7, 0, (int)RightHandFrame);
             Main.EntitySpriteDraw(rightHandTexture, drawPosition, rightHandFrame, Color.White, 0f, rightHandFrame.Size() * 0.5f, 1f, 0);
+        }
+
+        /// <summary>
+        /// Draws the Empress' glowing dress.
+        /// </summary>
+        /// <param name="drawPosition">The draw position of the dress.</param>
+        public void DrawDress(Vector2 drawPosition)
+        {
+            Texture2D dressTexture = TextureAssets.Extra[ExtrasID.HallowBossSkirt].Value;
+            Main.EntitySpriteDraw(dressTexture, drawPosition, null, Color.White, 0f, dressTexture.Size() * 0.5f, 1f, 0);
         }
     }
 }
