@@ -274,12 +274,12 @@ namespace WoTE.Content.NPCs.EoL
                 if (wrappedAITimer == redirectTime + 1 && Index == 0)
                     SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
 
-                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 56f, 0.27f);
+                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 50f, 0.27f);
                 idealTrailOpacity = 2f;
             }
 
             else if (wrappedAITimer <= redirectTime + dashRepositionTime + dashTime)
-                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 6.7f;
+                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 5f;
             else
                 NPC.velocity *= 0.5f;
 
