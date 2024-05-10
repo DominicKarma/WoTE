@@ -90,7 +90,7 @@ namespace WoTE.Content.NPCs.EoL
                 }
 
                 float flySpeedInterpolant = 1f - wrappedTimer / (float)redirectTime;
-                Vector2 hoverDestination = Target.Center + new Vector2(RadialStarBurst_HorizontalHoverDirection * 400f, 100f);
+                Vector2 hoverDestination = Target.Center + new Vector2(RadialStarBurst_HorizontalHoverDirection * 400f, 100f - Utilities.Convert01To010(wrappedTimer / (float)redirectTime) * 150f);
                 NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.2f);
                 NPC.velocity += NPC.SafeDirectionTo(hoverDestination) * flySpeedInterpolant * 40f;
 
@@ -113,8 +113,6 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.velocity.X *= 0.5f;
                 NPC.velocity.Y = MathHelper.Lerp(NPC.velocity.Y, idealVerticalSpeed, 0.33f);
                 DashAfterimageInterpolant *= 0.95f;
-
-                // TODO -- Charge-up particles.
             }
 
             if (wrappedTimer == redirectTime + boomDelay)
