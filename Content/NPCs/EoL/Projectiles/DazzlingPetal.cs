@@ -174,10 +174,13 @@ namespace WoTE.Content.NPCs.EoL
             // Measure how far along the petal's length the target is.
             // If the signed distance is negative (a.k.a. they're behind the petal) or above the petal length (a.k.a. they're beyond the petal), terminate this
             // method immediately.
-            Vector2 direction = Projectile.velocity.RotatedBy(MathHelper.PiOver2);
+            Vector2 direction = Projectile.velocity;
             float signedDistanceAlongPetal = Utilities.SignedDistanceToLine(targetHitbox.Center(), Projectile.Center, direction);
             if (signedDistanceAlongPetal < VanishInterpolant * PetalLength || signedDistanceAlongPetal >= PetalLength * 0.9f)
                 return false;
+
+            direction = Projectile.velocity.RotatedBy(MathHelper.PiOver2);
+            signedDistanceAlongPetal = Utilities.SignedDistanceToLine(targetHitbox.Center(), Projectile.Center, direction);
 
             // Now that the point on the petal is known from the distance, evaluate the exact width of the petal at said point for use with a AABB/line collision check.
             // The petal width is reduced somewhat based on the flare interpolant, since most of the edge of that isn't super hot.
