@@ -24,6 +24,9 @@
         Teleport,
         ResetCycle,
 
+        // "The player died so I should probably go away" state.
+        Vanish,
+
         // Useful count constant.
         Count
     }

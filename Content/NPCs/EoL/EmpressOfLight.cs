@@ -228,6 +228,8 @@ namespace WoTE.Content.NPCs.EoL
         #region AI
         public override void AI()
         {
+            NoTargetCouldBeFound = false;
+
             // Pick a target if the current one is invalid.
             if (Target.dead || !Target.active)
                 NPC.TargetClosest();
@@ -237,10 +239,7 @@ namespace WoTE.Content.NPCs.EoL
 
             // Hey bozo the player's gone. Leave.
             if (Target.dead || !Target.active)
-            {
-                NPC.active = false;
-                return;
-            }
+                NoTargetCouldBeFound = true;
 
             // Do not despawn.
             NPC.timeLeft = 7200;
