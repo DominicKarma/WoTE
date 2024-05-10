@@ -125,6 +125,7 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_PrismaticBoltDashes_PerformPostDashBehaviors()
         {
+            NPC.damage = NPC.defDamage;
             NPC.velocity = Vector2.Lerp(NPC.velocity, Vector2.UnitX * PrismaticBoltDashes_DashDirection * PrismaticBoltDashes_DashSpeed, 0.1f);
 
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 2 == 0)
