@@ -38,7 +38,7 @@ float4 CalculateFireColor(float2 coords)
     float edgeFade = smoothstep(0.5, 0.2, horizontalEdgeDistance);
     float glow = clamp(edgeFade / horizontalEdgeDistance * fireNoise * 0.4, 0, 5) * (1 - coords.x);
     
-    float4 fireColor = lerp(float4(1.95, 0.4, 0.06, 1), float4(0.94, 0.85, 0.45, 1), fireNoise) * glow;
+    float4 fireColor = lerp(float4(0.4, 1.05, 1.95, 1), float4(0.94, 0.85, 0.45, 1), fireNoise) * glow;
     fireColor.a *= smoothstep(0.2, 0.4, coords.x);
     fireColor -= tex2D(streakTexture, coords + float2(globalTime * -4.15, 0)) * fireColor.a / glow * 2;
     
