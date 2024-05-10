@@ -4,6 +4,7 @@ using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -64,6 +65,9 @@ namespace WoTE.Content.NPCs.EoL
         {
             LeftHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
             RightHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
+
+            if (AITimer == ButterflyBurstDashes_ButterflyTransitionDelay - Utilities.SecondsToFrames(0.3f))
+                SoundEngine.PlaySound(SoundID.Item165);
 
             if (AITimer >= ButterflyBurstDashes_ButterflyTransitionDelay)
             {
