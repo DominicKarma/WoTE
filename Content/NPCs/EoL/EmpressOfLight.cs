@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Luminance.Common.Utilities;
 using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
@@ -212,20 +211,16 @@ namespace WoTE.Content.NPCs.EoL
         {
             writer.Write(Phase);
 
-            var stateStack = (StateMachine?.StateStack ?? new()).ToList();
-            writer.Write(stateStack.Count);
-            for (int i = stateStack.Count - 1; i >= 0; i--)
-                writer.Write((byte)stateStack[i].Identifier);
+            WritePreviousStates(writer);
+            WriteStateMachineStack(writer);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             Phase = reader.ReadInt32();
 
-            int stateStackCount = reader.ReadInt32();
-            StateMachine.StateStack.Clear();
-            for (int i = 0; i < stateStackCount; i++)
-                StateMachine.StateStack.Push(StateMachine.StateRegistry[(EmpressAIType)reader.ReadByte()]);
+            ReadPreviousStates(reader);
+            ReadStateMachineStack(reader);
         }
 
         #endregion Syncing

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Luminance.Common.StateMachines;
 using Terraria.ModLoader;
 
@@ -45,6 +47,53 @@ namespace WoTE.Content.NPCs.EoL
 
             // Load state transitions.
             AutomatedMethodInvokeAttribute.InvokeWithAttribute(this);
+        }
+
+        /// <summary>
+        /// Write the status of the <see cref="StateMachine"/> to a <see cref="BinaryWriter"/> for use with syncing.
+        /// </summary>
+        /// <param name="writer">The writer to supply state machine data to.</param>
+        private void WriteStateMachineStack(BinaryWriter writer)
+        {
+            var stateStack = (StateMachine?.StateStack ?? new()).ToList();
+            writer.Write(stateStack.Count);
+            for (int i = stateStack.Count - 1; i >= 0; i--)
+                writer.Write((byte)stateStack[i].Identifier);
+        }
+
+        /// <summary>
+        /// Reads the status of the <see cref="StateMachine"/> from a <see cref="BinaryReader"/> for use with syncing.
+        /// </summary>
+        /// <param name="reader">The reader to read state machine data from.</param>
+        private void ReadStateMachineStack(BinaryReader reader)
+        {
+            int stateStackCount = reader.ReadInt32();
+            StateMachine.StateStack.Clear();
+            for (int i = 0; i < stateStackCount; i++)
+                StateMachine.StateStack.Push(StateMachine.StateRegistry[(EmpressAIType)reader.ReadByte()]);
+        }
+
+        /// <summary>
+        /// Writes the contents of the <see cref="PreviousStates"/> list to a <see cref="BinaryWriter"/> for use with syncing.
+        /// </summary>
+        /// <param name="writer">The writer to supply state data to.</param>
+        private void WritePreviousStates(BinaryWriter writer)
+        {
+            writer.Write(PreviousStates.Count);
+            for (int i = 0; i < PreviousStates.Count; i++)
+                writer.Write((int)PreviousStates[i]);
+        }
+
+        /// <summary>
+        /// Reads the contents of the <see cref="PreviousStates"/> list to a <see cref="BinaryReader"/> for use with syncing.
+        /// </summary>
+        /// <param name="reader">The reader to read state data from.</param>
+        private void ReadPreviousStates(BinaryReader reader)
+        {
+            PreviousStates.Clear();
+            int previousStateCount = reader.ReadInt32();
+            for (int i = 0; i < previousStateCount; i++)
+                PreviousStates.Add((EmpressAIType)reader.ReadInt32());
         }
 
         private void ResetGenericVariables(bool stateWasPopped, EntityAIState<EmpressAIType> oldState)
