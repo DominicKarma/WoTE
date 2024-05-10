@@ -241,7 +241,7 @@ namespace WoTE.Content.NPCs.EoL
             }
             else if (wrappedAITimer <= redirectTime)
             {
-                float flySpeedInterpolant = MathHelper.Lerp(0.245f, 0.04f, Utilities.Convert01To010(wrappedAITimer / (float)redirectTime));
+                float flySpeedInterpolant = MathHelper.Lerp(0.35f, 0.04f, Utilities.Convert01To010(wrappedAITimer / (float)redirectTime));
                 flySpeedInterpolant *= Utilities.InverseLerp(0f, 9f, wrappedAITimer);
 
                 // Store the player's direction at the start of the butterfly's dash.
@@ -281,12 +281,12 @@ namespace WoTE.Content.NPCs.EoL
                 if (wrappedAITimer == redirectTime + 1 && Index == 0)
                     SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
 
-                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 50f, 0.27f);
+                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 54f, 0.27f);
                 idealTrailOpacity = 2f;
             }
 
             else if (wrappedAITimer <= redirectTime + dashRepositionTime + dashTime)
-                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 5f;
+                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 3.5f;
             else
                 NPC.velocity *= 0.5f;
 
