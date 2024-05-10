@@ -92,7 +92,7 @@ namespace WoTE.Content.NPCs.EoL
                 if (Main.netMode != NetmodeID.MultiplayerClient && AITimer <= OutwardRainbows_RainbowShootTime)
                 {
                     Vector2 rainbowVelocity = (MathHelper.TwoPi * AITimer / 25f).ToRotationVector2() * 3f;
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, rainbowVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), 180, 0f, -1, AITimer / 20f % 1f);
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, rainbowVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), AcceleratingRainbowDamage, 0f, -1, AITimer / 20f % 1f);
                 }
             }
 

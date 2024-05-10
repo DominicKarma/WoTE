@@ -52,7 +52,7 @@ namespace WoTE.Content.NPCs.EoL
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 4 == 3 && AITimer >= 30 && AITimer <= 120 && !NPC.WithinRange(Target.Center, 150f))
             {
                 Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / 45f).ToRotationVector2() * 10.5f;
-                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), 150, 0f, -1, NPC.target, AITimer / 45f % 1f);
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target, AITimer / 45f % 1f);
             }
         }
     }

@@ -118,14 +118,39 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
-        /// The ambient drizzle sound that plays throughout the fight.
+        /// The amount of damage prismatic bolts summoned by the Empress do.
         /// </summary>
-        public static readonly SoundStyle DrizzleSound = new("WoTE/Assets/Sounds/Custom/Drizzle");
+        public static int PrismaticBoltDamage => Main.expertMode ? 160 : 95;
+
+        /// <summary>
+        /// The amount of damage star bursts summoned by the Empress do.
+        /// </summary>
+        public static int StarBurstDamage => Main.expertMode ? 160 : 95;
+
+        /// <summary>
+        /// The amount of damage accelerating rainbows summoned by the Empress do.
+        /// </summary>
+        public static int AcceleratingRainbowDamage => Main.expertMode ? 170 : 105;
+
+        /// <summary>
+        /// The amount of damage dazzling petals summoned by the Empress do.
+        /// </summary>
+        public static int DazzlingPetalDamage => Main.expertMode ? 185 : 120;
+
+        /// <summary>
+        /// The amount of damage terraprismas summoned by the Empress do.
+        /// </summary>
+        public static int TerraprismaDamage => Main.expertMode ? 185 : 120;
 
         /// <summary>
         /// The standard volume that the drizzle sound play at.
         /// </summary>
         public static float StandardDrizzleVolume => 0.1f;
+
+        /// <summary>
+        /// The ambient drizzle sound that plays throughout the fight.
+        /// </summary>
+        public static readonly SoundStyle DrizzleSound = new("WoTE/Assets/Sounds/Custom/Drizzle");
 
         public override string Texture => $"Terraria/Images/NPC_{NPCID.HallowBoss}";
 
@@ -152,7 +177,7 @@ namespace WoTE.Content.NPCs.EoL
         public override void SetDefaults()
         {
             NPC.npcSlots = 100f;
-            NPC.damage = 200;
+            NPC.damage = 180;
             NPC.width = 136;
             NPC.height = 124;
             NPC.defense = 100;
@@ -161,7 +186,7 @@ namespace WoTE.Content.NPCs.EoL
             if (Main.expertMode)
             {
                 NPC.lifeMax /= 2;
-                NPC.damage = 125;
+                NPC.damage = 105;
             }
 
             NPC.aiStyle = -1;

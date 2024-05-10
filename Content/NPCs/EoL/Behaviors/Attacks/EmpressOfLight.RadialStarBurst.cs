@@ -130,19 +130,19 @@ namespace WoTE.Content.NPCs.EoL
                         float shootAngle = MathHelper.TwoPi * i / 18f + shootOffsetAngle;
                         Vector2 shootVelocity = shootAngle.ToRotationVector2() * 0.45f;
 
-                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<StarBolt>(), 200, 0f);
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f);
                     }
 
                     for (int i = 0; i < 9; i++)
                     {
                         Vector2 shootVelocity = (MathHelper.TwoPi * i / 9f).ToRotationVector2() * 8f;
-                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PrismaticBolt>(), 200, 0f, -1, NPC.target);
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target);
                     }
 
                     for (int i = 0; i < 7; i++)
                     {
                         Vector2 shootVelocity = -NPC.SafeDirectionTo(Target.Center).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(1f, 1.7f);
-                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PrismaticBolt>(), 200, 0f, -1, NPC.target);
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target);
                     }
                 }
             }

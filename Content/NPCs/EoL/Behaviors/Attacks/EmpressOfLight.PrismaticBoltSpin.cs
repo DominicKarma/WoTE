@@ -85,7 +85,7 @@ namespace WoTE.Content.NPCs.EoL
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 4 == 3)
             {
                 Vector2 boltVelocity = NPC.velocity.SafeNormalize(Vector2.UnitY) * 17f;
-                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), 180, 0f, -1, NPC.target, AITimer / 45f % 1f);
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target, AITimer / 45f % 1f);
             }
         }
     }

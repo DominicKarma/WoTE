@@ -85,7 +85,7 @@ namespace WoTE.Content.NPCs.EoL
                 for (int i = 0; i < TwirlingPetalSun_PetalCount; i++)
                 {
                     float petalDirection = MathHelper.TwoPi * i / TwirlingPetalSun_PetalCount + petalOffsetAngle;
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DazzlingPetal>(), 200, 0f, -1, petalDirection);
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DazzlingPetal>(), DazzlingPetalDamage, 0f, -1, petalDirection);
                 }
             }
 
@@ -98,7 +98,7 @@ namespace WoTE.Content.NPCs.EoL
                     for (int i = 0; i < TwirlingPetalSun_PrismaticBoltCount; i++)
                     {
                         Vector2 boltVelocity = (MathHelper.TwoPi * i / TwirlingPetalSun_PrismaticBoltCount).ToRotationVector2() * 12f + Main.rand.NextVector2Circular(3.5f, 3.5f);
-                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), 200, 0f, -1, NPC.target);
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target);
                     }
                 }
             }

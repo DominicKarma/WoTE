@@ -81,7 +81,7 @@ namespace WoTE.Content.NPCs.EoL
                 int terraprismaCount = ConvergingTerraprismas_TerraprismaCount;
                 float spinAngleOffset = Main.rand.NextFloat(MathHelper.TwoPi);
                 for (int i = 0; i < terraprismaCount; i++)
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<SpinningTerraprisma>(), 200, 0f, -1, i / (float)terraprismaCount, MathHelper.TwoPi * i / terraprismaCount + spinAngleOffset);
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<SpinningTerraprisma>(), TerraprismaDamage, 0f, -1, i / (float)terraprismaCount, MathHelper.TwoPi * i / terraprismaCount + spinAngleOffset);
             }
         }
     }

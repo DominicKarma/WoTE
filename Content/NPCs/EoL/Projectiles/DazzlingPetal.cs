@@ -132,7 +132,7 @@ namespace WoTE.Content.NPCs.EoL
             for (int i = 0; i < 3; i++)
             {
                 Vector2 boltVelocity = Projectile.velocity.RotatedBy(MathHelper.Lerp(-0.09f, 0.09f, i / 2f)) * 4f;
-                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center + boltVelocity * 3f, boltVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), 180, 0f, -1, -Main.rand.NextFloat(0.12f));
+                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center + boltVelocity * 3f, boltVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), AcceleratingRainbowDamage, 0f, -1, -Main.rand.NextFloat(0.12f));
             }
         }
 
