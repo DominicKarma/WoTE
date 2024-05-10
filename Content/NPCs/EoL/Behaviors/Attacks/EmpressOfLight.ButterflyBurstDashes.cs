@@ -132,6 +132,9 @@ namespace WoTE.Content.NPCs.EoL
                 if (lacewing.type == lacewingID)
                     NPC.life += lacewing.life;
             }
+
+            if (NPC.life > NPC.lifeMax)
+                NPC.life = NPC.lifeMax;
         }
     }
 }
