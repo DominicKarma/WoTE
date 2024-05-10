@@ -10,6 +10,7 @@
         // Attack states.
         SequentialDashes,
         BasicPrismaticBolts,
+        PrismaticBoltDashes,
         ButterflyBurstDashes,
         OutwardRainbows,
         ConvergingTerraprismas,

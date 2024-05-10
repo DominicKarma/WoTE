@@ -50,6 +50,11 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static int TwirlingPetalSun_PrismaticBoltCount => 13;
 
+        /// <summary>
+        /// The maximum angular spin speed of petals summoned by the Empress.
+        /// </summary>
+        public static float TwirlingPetalSun_PetalSpinSpeed => MathHelper.ToRadians(1f);
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_TwirlingPetalSun()
         {

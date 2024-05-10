@@ -42,6 +42,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
+            Projectile.hide = true;
             Projectile.timeLeft = Lifetime;
             CooldownSlot = ImmunityCooldownID.Bosses;
         }

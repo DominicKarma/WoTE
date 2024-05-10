@@ -89,7 +89,7 @@ namespace WoTE.Content.NPCs.EoL
             // SPIN
             // 2
             // WIN
-            float spinSpeed = MathF.Sqrt(1f - FlareInterpolant) * Utilities.InverseLerp(0f, TwirlingPetalSun_TwirlTime, Time) * 0.021f;
+            float spinSpeed = MathF.Sqrt(1f - FlareInterpolant) * Utilities.InverseLerp(0f, TwirlingPetalSun_TwirlTime, Time) * EmpressOfLight.TwirlingPetalSun_PetalSpinSpeed;
             DirectionOffsetAngle += spinSpeed;
 
             // Extend outward.
