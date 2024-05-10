@@ -5,7 +5,9 @@
     /// </summary>
     public enum EmpressAIType
     {
+        // Phase transition states.
         Awaken,
+        Phase2Transition,
 
         // Attack states.
         SequentialDashes,

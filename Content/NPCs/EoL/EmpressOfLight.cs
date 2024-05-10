@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Luminance.Common.Utilities;
+using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -29,6 +31,33 @@ namespace WoTE.Content.NPCs.EoL
 
                 return StateMachine?.CurrentState?.Identifier ?? EmpressAIType.Awaken;
             }
+        }
+
+        /// <summary>
+        /// The volume of the idle drizzle.
+        /// </summary>
+        public float DrizzleVolume
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The ideal volume of the idle drizzle.
+        /// </summary>
+        public float IdealDrizzleVolume
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The looped sound instance of the drizzle.
+        /// </summary>
+        public LoopedSoundInstance DrizzleSoundLoop
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -77,6 +106,16 @@ namespace WoTE.Content.NPCs.EoL
                     myself = value;
             }
         }
+
+        /// <summary>
+        /// The ambient drizzle sound that plays throughout the fight.
+        /// </summary>
+        public static readonly SoundStyle DrizzleSound = new("WoTE/Assets/Sounds/Custom/Drizzle");
+
+        /// <summary>
+        /// The standard volume that the drizzle sound play at.
+        /// </summary>
+        public static float StandardDrizzleVolume => 0.1f;
 
         public override string Texture => $"Terraria/Images/NPC_{NPCID.HallowBoss}";
 
@@ -159,8 +198,11 @@ namespace WoTE.Content.NPCs.EoL
             Main.windSpeedTarget = 0.04f;
             Main.moonPhase = 4;
 
+            IdealDrizzleVolume = StandardDrizzleVolume;
             StateMachine.PerformBehaviors();
             StateMachine.PerformStateTransitionCheck();
+
+            UpdateLoopingSounds();
 
             if ((StateMachine?.StateStack?.Count ?? 1) <= 0)
                 StateMachine?.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
@@ -195,6 +237,24 @@ namespace WoTE.Content.NPCs.EoL
             NPC.immortal = false;
             NPC.hide = false;
             NPC.ShowNameOnHover = true;
+        }
+
+        /// <summary>
+        /// Updates all played looping sounds.
+        /// </summary>
+        public void UpdateLoopingSounds()
+        {
+            DrizzleVolume = MathHelper.Lerp(DrizzleVolume, IdealDrizzleVolume, 0.14f);
+
+            DrizzleSoundLoop ??= LoopedSoundManager.CreateNew(DrizzleSound, () => !NPC.active);
+            DrizzleSoundLoop.Update(Main.LocalPlayer.Center, sound =>
+            {
+                Vector2 groundPosition = Utilities.FindGround(Main.LocalPlayer.Center.ToTileCoordinates(), Vector2.UnitY).ToWorldCoordinates();
+                float distanceFromGround = Main.LocalPlayer.Distance(groundPosition);
+                float groundDistanceInterpolant = Utilities.InverseLerp(500f, 1774f, distanceFromGround);
+                float groundDistanceVolumeFactor = MathHelper.Lerp(1f, 0.4f, groundDistanceInterpolant);
+                sound.Volume = DrizzleVolume * groundDistanceVolumeFactor;
+            });
         }
 
         #endregion AI
