@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Luminance.Common.Utilities;
 using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
@@ -31,6 +32,15 @@ namespace WoTE.Content.NPCs.EoL
 
                 return StateMachine?.CurrentState?.Identifier ?? EmpressAIType.Awaken;
             }
+        }
+
+        /// <summary>
+        /// The current phase of the Empress.
+        /// </summary>
+        public int Phase
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -168,6 +178,14 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         #endregion Loading
+
+        #region Syncing
+
+        public override void SendExtraAI(BinaryWriter writer) => writer.Write(Phase);
+
+        public override void ReceiveExtraAI(BinaryReader reader) => Phase = reader.ReadInt32();
+
+        #endregion Syncing
 
         #region AI
         public override void AI()

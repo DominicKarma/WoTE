@@ -40,6 +40,7 @@ namespace WoTE.Content.NPCs.EoL
             if (!stateWasPopped || oldState.Identifier == EmpressAIType.Teleport)
                 return;
 
+            // TODO -- Sync this.
             if (oldState.Identifier != EmpressAIType.ResetCycle)
                 PreviousStates.Add(oldState.Identifier);
             if (PreviousStates.Count >= 8)
