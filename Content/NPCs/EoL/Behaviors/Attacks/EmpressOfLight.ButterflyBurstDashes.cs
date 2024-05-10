@@ -130,17 +130,15 @@ namespace WoTE.Content.NPCs.EoL
         {
             int lacewingID = ModContent.NPCType<Lacewing>();
 
-            // A base HP of 1 is used to ensure that the Empress doesn't unexpectedly die during the attack while technically invisible if all of the lacewings are killed.
-            NPC.life = 1;
-
+            NPC.life = 0;
             foreach (NPC lacewing in Main.ActiveNPCs)
             {
                 if (lacewing.type == lacewingID)
                     NPC.life += lacewing.life;
             }
 
-            if (NPC.life > NPC.lifeMax)
-                NPC.life = NPC.lifeMax;
+            // A minimum HP of 1 is used to ensure that the Empress doesn't unexpectedly die during the attack while technically invisible if all of the lacewings are killed.
+            NPC.life = Utils.Clamp(NPC.life, 1, NPC.lifeMax);
         }
     }
 }
