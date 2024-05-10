@@ -128,14 +128,14 @@ namespace WoTE.Content.NPCs.EoL
                     for (int i = 0; i < 18; i++)
                     {
                         float shootAngle = MathHelper.TwoPi * i / 18f + shootOffsetAngle;
-                        Vector2 shootVelocity = shootAngle.ToRotationVector2() * 0.45f;
+                        Vector2 shootVelocity = shootAngle.ToRotationVector2() * 0.3f;
 
                         Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f);
                     }
 
                     for (int i = 0; i < 9; i++)
                     {
-                        Vector2 shootVelocity = (MathHelper.TwoPi * i / 9f).ToRotationVector2() * 8f;
+                        Vector2 shootVelocity = (MathHelper.TwoPi * i / 9f).ToRotationVector2() * 6.4f;
                         Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target);
                     }
 
