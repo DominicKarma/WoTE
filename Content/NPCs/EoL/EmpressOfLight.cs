@@ -200,6 +200,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.value = Item.buyPrice(1, 0, 0, 0) / 5;
             NPC.netAlways = true;
             NPC.Opacity = 0f;
+            Music = MusicID.EmpressOfLight;
         }
 
         #endregion Loading
