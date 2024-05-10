@@ -62,6 +62,7 @@ namespace WoTE.Content.NPCs.EoL
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
+            Projectile.hide = true;
             Projectile.timeLeft = 9999999;
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
@@ -82,6 +83,7 @@ namespace WoTE.Content.NPCs.EoL
 
             Projectile.velocity = DirectionOffsetAngle.ToRotationVector2();
             Projectile.Center = Myself.Center - Projectile.velocity - Projectile.Size * 0.5f;
+            Projectile.Opacity = Utilities.InverseLerp(0f, 90f, Time).Cubed();
             Projectile.rotation = DirectionOffsetAngle;
 
             FlareInterpolant = MathF.Pow(Utilities.InverseLerp(0f, TwirlingPetalSun_FlareTransformTime, Time - TwirlingPetalSun_TwirlTime), 0.85f);
@@ -93,7 +95,7 @@ namespace WoTE.Content.NPCs.EoL
             DirectionOffsetAngle += spinSpeed;
 
             // Extend outward.
-            float idealPetalLength = Utilities.InverseLerp(0f, 60f, Time).Cubed() * 1000f;
+            float idealPetalLength = Projectile.Opacity * 1000f;
             idealPetalLength -= Utilities.InverseLerp(0f, TwirlingPetalSun_FlareRetractTime, Time - TwirlingPetalSun_TwirlTime - TwirlingPetalSun_FlareTransformTime).Squared() * 500f;
             idealPetalLength += Utilities.InverseLerp(0f, TwirlingPetalSun_BurstTime, Time - TwirlingPetalSun_TwirlTime - TwirlingPetalSun_FlareTransformTime - TwirlingPetalSun_FlareRetractTime).Squared() * 4000f;
             PetalLength = MathHelper.Lerp(PetalLength, idealPetalLength, 0.2f);
@@ -134,7 +136,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public Color PetalColorFunction(float completionRatio)
         {
-            float fadeStart = 0f + VanishInterpolant;
+            float fadeStart = VanishInterpolant;
             float fadeEnd = 1f;
             float edgeFade = Utilities.InverseLerpBump(fadeStart - 0.1f, fadeStart, fadeEnd, fadeEnd + 0.1f, completionRatio);
 
@@ -165,9 +167,32 @@ namespace WoTE.Content.NPCs.EoL
             PrimitiveRenderer.RenderTrail(controlPoints, settings, 25);
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        public override bool? CanDamage() => Projectile.Opacity >= 0.7f;
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            return false;
+            // Measure how far along the petal's length the target is.
+            // If the signed distance is negative (a.k.a. they're behind the petal) or above the petal length (a.k.a. they're beyond the petal), terminate this
+            // method immediately.
+            Vector2 direction = Projectile.velocity.RotatedBy(MathHelper.PiOver2);
+            float signedDistanceAlongPetal = Utilities.SignedDistanceToLine(targetHitbox.Center(), Projectile.Center, direction);
+            if (signedDistanceAlongPetal < VanishInterpolant * PetalLength || signedDistanceAlongPetal >= PetalLength * 0.9f)
+                return false;
+
+            // Now that the point on the petal is known from the distance, evaluate the exact width of the petal at said point for use with a AABB/line collision check.
+            // The petal width is reduced somewhat based on the flare interpolant, since most of the edge of that isn't super hot.
+            float fadePositionWidthFade = MathHelper.Lerp(1f, 0.61f, FlareInterpolant);
+            float petalWidth = PetalWidthFunction(signedDistanceAlongPetal / PetalLength) * fadePositionWidthFade * 0.45f;
+            Vector2 perpendicular = new(-direction.Y, direction.X);
+            Vector2 petalPoint = Projectile.Center + direction * signedDistanceAlongPetal;
+            Vector2 left = petalPoint - perpendicular * petalWidth;
+            Vector2 right = petalPoint + perpendicular * petalWidth;
+
+            Dust.QuickDust(left, Color.Green);
+            Dust.QuickDust(right, Color.Green);
+
+            float _ = 0f;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), left, right, 6f, ref _);
         }
     }
 }
