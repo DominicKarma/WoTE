@@ -24,7 +24,6 @@ namespace WoTE.Content.NPCs.EoL
             {
                 StateMachine.StateStack.Clear();
 
-                // Supply the state stack with the attack cycle.
                 EmpressAIType[] phaseCycle;
                 List<EmpressAIType> lastToFirstStates = [];
                 for (int i = PreviousStates.Count - 1; i >= 0; i--)
