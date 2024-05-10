@@ -79,7 +79,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.SmoothFlyNear(spinDestination, spinSpeedInterpolant * 0.6f, 1f - spinSpeedInterpolant * 0.54f);
             DashAfterimageInterpolant = spinSpeedInterpolant;
 
-            float spinSpeed = MathHelper.TwoPi / 38f;
+            float spinSpeed = MathHelper.TwoPi / 27f;
             PrismaticBoltSpin_SpinAngle += spinSpeed * PrismaticBoltSpin_SpinDirection;
 
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 4 == 3)
