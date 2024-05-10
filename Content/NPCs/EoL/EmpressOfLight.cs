@@ -249,7 +249,6 @@ namespace WoTE.Content.NPCs.EoL
             PerformPreUpdateResets();
             HandleMiscAmbienceTweaks();
 
-            IdealDrizzleVolume = StandardDrizzleVolume;
             StateMachine.PerformBehaviors();
             StateMachine.PerformStateTransitionCheck();
 
@@ -270,7 +269,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// Performs various ambience related changes to the world while the Empress is present.
         /// </summary>
-        public static void HandleMiscAmbienceTweaks()
+        public void HandleMiscAmbienceTweaks()
         {
             Main.windSpeedTarget = 0.04f;
             Main.moonPhase = 4;
@@ -282,6 +281,8 @@ namespace WoTE.Content.NPCs.EoL
                 if (proj.type == ProjectileID.FallingStar)
                     proj.active = false;
             }
+
+            IdealDrizzleVolume = StandardDrizzleVolume;
         }
 
         /// <summary>
