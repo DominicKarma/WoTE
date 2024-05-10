@@ -24,7 +24,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.ApplyToAllStatesExcept(state =>
             {
-                StateMachine.RegisterTransition(state, EmpressAIType.Vanish, false, () => NoTargetCouldBeFound);
+                StateMachine.RegisterTransition(state, EmpressAIType.Vanish, false, () => NoTargetCouldBeFound && CurrentState != EmpressAIType.Teleport);
             }, EmpressAIType.Vanish);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Vanish, DoBehavior_Vanish);
@@ -40,9 +40,12 @@ namespace WoTE.Content.NPCs.EoL
             NPC.dontTakeDamage = true;
 
             if (AITimer == 1)
-                TeleportTo(Vector2.One * -20000f);
+            {
+                TeleportTo(NPC.Center - Vector2.UnitY * 5000f, (int)(DefaultTeleportDuration * 1.6f));
+                NPC.velocity = Vector2.Zero;
+            }
 
-            if (AITimer >= 2)
+            if (AITimer >= 4)
                 NPC.active = false;
         }
     }

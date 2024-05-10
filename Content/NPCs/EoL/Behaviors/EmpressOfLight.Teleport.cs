@@ -73,6 +73,8 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_Teleport()
         {
             NPC.velocity *= 0.85f;
+            NPC.rotation = MathHelper.Lerp(NPC.rotation, NPC.velocity.X * 0.001f, 0f);
+            DashAfterimageInterpolant *= 0.7f;
 
             TeleportCompletionRatio = Utilities.InverseLerp(0f, TeleportDuration, AITimer);
 
