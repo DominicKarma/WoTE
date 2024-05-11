@@ -57,6 +57,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float horizontalEdgeCosine = input.TextureCoordinates.z;
     float edgeFade = 1 - smoothstep(0.92, 1, abs(input.TextureCoordinates.z) + noise * 0.15);
     
+    // Add edge shadows for some extra depth.
+    color.rgb -= smoothstep(0.73, 0.93, abs(input.TextureCoordinates.z)) * 0.56;
+    
     return color * edgeFade * opacity;
 }
 
