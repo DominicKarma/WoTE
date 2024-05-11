@@ -56,7 +56,7 @@ namespace WoTE.Content.NPCs.EoL
             ProjectileID.Sets.DrawScreenCheckFluff[Type] = 2400;
 
             if (Main.netMode != NetmodeID.Server)
-                BloomTexture = LazyAsset<Texture2D>.Request("WoTE/Content/NPCs/EoL/Projectiles/SpinningTerraprismaBloom");
+                BloomTexture = LazyAsset<Texture2D>.Request("WoTE/Content/NPCs/EoL/Projectiles/TerraprismaBloom");
         }
 
         public override void SetDefaults()
