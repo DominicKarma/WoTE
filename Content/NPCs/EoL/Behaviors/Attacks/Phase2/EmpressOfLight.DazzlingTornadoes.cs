@@ -28,18 +28,15 @@ namespace WoTE.Content.NPCs.EoL
             NPC.velocity *= 0.94f;
 
             LeftHandFrame = EmpressHandFrame.PalmRaisedUp;
-            RightHandFrame = EmpressHandFrame.PointingUp;
+            RightHandFrame = EmpressHandFrame.PalmRaisedUp;
 
             NPC.spriteDirection = 1;
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
-            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 240 == 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 9 == 1 && AITimer % 300 <= 60)
             {
-                for (int i = 0; i < 5; i++)
-                {
-                    Vector2 tornadoVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.Lerp(-1.89f, 1.89f, i / 4f)) * 25f;
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, tornadoVelocity, ModContent.ProjectileType<DazzlingTornado>(), AcceleratingRainbowDamage, 0f);
-                }
+                Vector2 tornadoVelocity = NPC.SafeDirectionTo(Target.Center) * 30f;
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, tornadoVelocity, ModContent.ProjectileType<DazzlingTornado>(), AcceleratingRainbowDamage, 0f, -1, 1f, 0f, Main.rand.NextFloatDirection() * MathHelper.TwoPi / 160f);
             }
         }
     }

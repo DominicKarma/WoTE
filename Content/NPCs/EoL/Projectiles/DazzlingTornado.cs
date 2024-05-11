@@ -34,9 +34,18 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// Whether this tornado should decelerate or not.
+        /// </summary>
+        public bool ShouldDecelerate
+        {
+            get => Projectile.ai[0] == 1f;
+            set => Projectile.ai[0] = value.ToInt();
+        }
+
+        /// <summary>
         /// How long this tornado has existed, in frames.
         /// </summary>
-        public ref float Time => ref Projectile.ai[0];
+        public ref float Time => ref Projectile.ai[1];
 
         /// <summary>
         /// The visuals timer used in the tornado shader that increases based on the speed of the tornado.
@@ -49,11 +58,6 @@ namespace WoTE.Content.NPCs.EoL
         public ref float VisualsTime => ref Projectile.localAI[1];
 
         /// <summary>
-        /// The lifetime ratio of this tornado as a 0-1 interpolant.
-        /// </summary>
-        public float LifetimeRatio => 1f - Projectile.timeLeft / (float)Lifetime;
-
-        /// <summary>
         /// How long this tornado should exist for, in frames.
         /// </summary>
         public static int Lifetime => Utilities.SecondsToFrames(3.4f);
@@ -61,7 +65,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The standard hitbox size of this tornado.
         /// </summary>
-        public static readonly Vector2 Size = new(240f, 575f);
+        public static Vector2 Size => new(115f, 214f);
 
         public override string Texture => MiscTexturesRegistry.PixelPath;
 
@@ -86,13 +90,14 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void AI()
         {
-            if (Projectile.velocity.Length() >= 6f)
-                Projectile.velocity *= 0.97f;
+            Projectile.Opacity = Utilities.InverseLerp(0f, 9f, Time) * Utilities.InverseLerp(0f, 90f, Projectile.timeLeft);
+            Projectile.scale = Utilities.InverseLerp(0f, 6f, Time);
 
-            Projectile.Opacity = Utilities.InverseLerp(0f, 90f, Projectile.timeLeft);
-            Projectile.scale = Utilities.InverseLerp(0f, 32f, Time);
+            Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
+            Projectile.ai[2] = Projectile.ai[2].AngleLerp(MathHelper.WrapAngle(Projectile.AngleTo(target.Center) - Projectile.velocity.ToRotation()) * 0.05f, 0.02f);
+            Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.ai[2]);
 
-            for (int i = 0; i < Projectile.scale.Squared() * 3; i++)
+            for (int i = 0; i < Projectile.scale.Squared(); i++)
             {
                 Color pixelColor = Color.Lerp(Color.DeepSkyBlue, Color.HotPink, Main.rand.NextFloat()) * Projectile.Opacity;
                 Vector2 pixelSpawnCore = Vector2.Lerp(Projectile.Top, Projectile.Bottom, Main.rand.NextFloat(0.75f));
@@ -111,13 +116,14 @@ namespace WoTE.Content.NPCs.EoL
 
             float visualTimePower = Projectile.scale * Projectile.Opacity;
             VisualsTime += visualTimePower / 120f;
-            SpeedTime += Projectile.velocity.X * visualTimePower / 550f;
+            SpeedTime += Projectile.velocity.X * visualTimePower / 1550f;
         }
 
         public override bool? CanDamage() => Projectile.scale >= 0.9f && Projectile.Opacity >= 0.7f;
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
+            GenerateVerticesAndIndices();
             Matrix scale = Matrix.CreateTranslation(0f, Projectile.height * -0.5f, 0f) * Matrix.CreateScale(Projectile.scale / Projectile.Opacity, Projectile.scale, 1f) * Matrix.CreateTranslation(0f, Projectile.height * 0.5f, 0f);
             Matrix view = Matrix.CreateTranslation(new Vector3(Projectile.Top.X - Main.screenPosition.X, Projectile.Top.Y - Main.screenPosition.Y, 0f));
             Matrix projection = Matrix.CreateOrthographicOffCenter(0f, Main.screenWidth, Main.screenHeight, 0f, -300f, 300f);
