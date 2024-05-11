@@ -9,6 +9,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Content.NPCs.EoL.Projectiles;
+using WoTE.Content.Particles;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -32,7 +33,7 @@ namespace WoTE.Content.NPCs.EoL
             private set;
         }
 
-        public ref float LocalTime => ref Projectile.localAI[0];
+        public ref float SpeedTime => ref Projectile.localAI[0];
 
         /// <summary>
         /// The lifetime ratio of this tornado as a 0-1 interpolant.
@@ -44,6 +45,9 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static int Lifetime => Utilities.SecondsToFrames(3.4f);
 
+        /// <summary>
+        /// The standard hitbox size of this tornado.
+        /// </summary>
         public static readonly Vector2 Size = new(240f, 575f);
 
         public override string Texture => MiscTexturesRegistry.PixelPath;
@@ -72,7 +76,18 @@ namespace WoTE.Content.NPCs.EoL
             Projectile.velocity *= 0.97f;
 
             Projectile.Opacity = Utilities.InverseLerp(0f, 48f, Projectile.timeLeft);
-            LocalTime += Projectile.velocity.X * 0.0023f;
+            SpeedTime += Projectile.velocity.X * 0.0023f;
+
+            for (int i = 0; i < 2; i++)
+            {
+                Color pixelColor = Color.Lerp(Color.DeepSkyBlue, Color.HotPink, Main.rand.NextFloat()) * Projectile.Opacity;
+                Vector2 pixelSpawnCore = Vector2.Lerp(Projectile.Top, Projectile.Bottom, Main.rand.NextFloat(0.75f));
+                Vector2 pixelSpawnPosition = pixelSpawnCore + Vector2.UnitX * Main.rand.NextFloatDirection() * Projectile.width * 0.4f;
+                Vector2 pixelVelocity = pixelSpawnPosition.SafeDirectionTo(pixelSpawnCore) * Projectile.Opacity * Main.rand.NextFloat(7f, 11.3f);
+                pixelVelocity.Y -= Main.rand.NextFloat(1f, 7f) * (pixelSpawnPosition.X < pixelSpawnCore.X).ToDirectionInt();
+                BloomPixelParticle pixel = new(pixelSpawnPosition, pixelVelocity, Color.White * Projectile.Opacity, pixelColor * 0.4f, (int)(Projectile.Opacity * 27f), Vector2.One * 3f);
+                pixel.Spawn();
+            }
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
@@ -82,7 +97,8 @@ namespace WoTE.Content.NPCs.EoL
 
             ManagedShader tornadoShader = ShaderManager.GetShader("WoTE.DazzlingTornadoShader");
             tornadoShader.TrySetParameter("uWorldViewProjection", view * projection);
-            tornadoShader.TrySetParameter("localTime", LocalTime);
+            tornadoShader.TrySetParameter("speedTime", SpeedTime + Projectile.identity * 3.189f);
+            tornadoShader.TrySetParameter("localTime", Main.GlobalTimeWrappedHourly + Projectile.identity * 7.3817f);
             tornadoShader.TrySetParameter("opacity", Projectile.Opacity);
             tornadoShader.TrySetParameter("horizontalStack", 2.5f);
             tornadoShader.TrySetParameter("swirlDirection", 1f);
