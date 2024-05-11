@@ -20,6 +20,9 @@
         TwirlingPetalSun,
         RadialStarBurst,
 
+        // Phase 2 attack states.
+        DazzlingTornadoes,
+
         // Intermediate states.
         Teleport,
         ResetCycle,

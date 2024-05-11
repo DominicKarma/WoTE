@@ -12,6 +12,7 @@ Projectiles: {
 	DazzlingPetal.DisplayName: Dazzling Petal
 	StarBolt.DisplayName: Star Bolt
 	PrismaticBurst.DisplayName: Prismatic Burst
+	DazzlingTornado.DisplayName: Dazzling Tornado
 }
 
 Configs: {

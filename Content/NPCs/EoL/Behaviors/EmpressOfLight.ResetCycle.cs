@@ -48,6 +48,8 @@ namespace WoTE.Content.NPCs.EoL
             }
             while (statesToAvoid.Contains(phaseCycle[0]));
 
+            phaseCycle = [EmpressAIType.DazzlingTornadoes];
+
             return phaseCycle;
         }
     }

@@ -24,7 +24,7 @@ namespace WoTE.Content.NPCs.EoL
             {
                 EmpressAIType[] lastToFirstStates = new EmpressAIType[PreviousStates.Count];
                 for (int i = PreviousStates.Count - 1; i >= 0; i--)
-                    lastToFirstStates[^i] = PreviousStates[i];
+                    lastToFirstStates[PreviousStates.Count - i - 1] = PreviousStates[i];
 
                 return lastToFirstStates;
             }

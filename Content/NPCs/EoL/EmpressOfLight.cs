@@ -138,6 +138,11 @@ namespace WoTE.Content.NPCs.EoL
         public static int DazzlingPetalDamage => Main.expertMode ? 185 : 120;
 
         /// <summary>
+        /// The amount of damage dazzling tornadoes summoned by the Empress do.
+        /// </summary>
+        public static int DazzlingTornadoDamage => Main.expertMode ? 185 : 120;
+
+        /// <summary>
         /// The amount of damage terraprismas summoned by the Empress do.
         /// </summary>
         public static int TerraprismaDamage => Main.expertMode ? 185 : 120;
