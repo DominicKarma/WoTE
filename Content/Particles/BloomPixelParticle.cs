@@ -63,6 +63,12 @@ namespace WoTE.Content.Particles
                 Opacity *= 0.91f;
                 Scale *= 0.96f;
                 Velocity *= 0.94f;
+
+                if (Time >= Lifetime - 5)
+                {
+                    Opacity *= 0.75f;
+                    Scale *= 0.75f;
+                }
             }
             else
                 Scale = Vector2.Lerp(BaseScale, Scale, Utilities.InverseLerp(0f, 24f, Time).Squared());
