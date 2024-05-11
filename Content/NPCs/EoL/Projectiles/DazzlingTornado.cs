@@ -33,7 +33,20 @@ namespace WoTE.Content.NPCs.EoL
             private set;
         }
 
+        /// <summary>
+        /// How long this tornado has existed, in frames.
+        /// </summary>
+        public ref float Time => ref Projectile.ai[0];
+
+        /// <summary>
+        /// The visuals timer used in the tornado shader that increases based on the speed of the tornado.
+        /// </summary>
         public ref float SpeedTime => ref Projectile.localAI[0];
+
+        /// <summary>
+        /// The visuals timer used in the tornado shader that increases based on the opacity and scale of the tornado.
+        /// </summary>
+        public ref float VisualsTime => ref Projectile.localAI[1];
 
         /// <summary>
         /// The lifetime ratio of this tornado as a 0-1 interpolant.
@@ -73,35 +86,47 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void AI()
         {
-            Projectile.velocity *= 0.97f;
+            if (Projectile.velocity.Length() >= 6f)
+                Projectile.velocity *= 0.97f;
 
-            Projectile.Opacity = Utilities.InverseLerp(0f, 48f, Projectile.timeLeft);
-            SpeedTime += Projectile.velocity.X * 0.0023f;
+            Projectile.Opacity = Utilities.InverseLerp(0f, 90f, Projectile.timeLeft);
+            Projectile.scale = Utilities.InverseLerp(0f, 32f, Time);
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < Projectile.scale.Squared() * 3; i++)
             {
                 Color pixelColor = Color.Lerp(Color.DeepSkyBlue, Color.HotPink, Main.rand.NextFloat()) * Projectile.Opacity;
                 Vector2 pixelSpawnCore = Vector2.Lerp(Projectile.Top, Projectile.Bottom, Main.rand.NextFloat(0.75f));
-                Vector2 pixelSpawnPosition = pixelSpawnCore + Vector2.UnitX * Main.rand.NextFloatDirection() * Projectile.width * 0.4f;
-                Vector2 pixelVelocity = pixelSpawnPosition.SafeDirectionTo(pixelSpawnCore) * Projectile.Opacity * Main.rand.NextFloat(7f, 11.3f);
+                Vector2 pixelSpawnPosition = pixelSpawnCore + Vector2.UnitX * Main.rand.NextFloatDirection() * Projectile.width * Projectile.scale * 0.4f;
+                Vector2 pixelVelocity = pixelSpawnPosition.SafeDirectionTo(pixelSpawnCore) * Projectile.Opacity * Projectile.scale * Main.rand.NextFloat(5f, 9.3f);
                 pixelVelocity.Y -= Main.rand.NextFloat(1f, 7f) * (pixelSpawnPosition.X < pixelSpawnCore.X).ToDirectionInt();
-                BloomPixelParticle pixel = new(pixelSpawnPosition, pixelVelocity, Color.White * Projectile.Opacity, pixelColor * 0.4f, (int)(Projectile.Opacity * 27f), Vector2.One * 3f);
+                if (Projectile.velocity.X <= 0f)
+                    pixelVelocity = Vector2.Reflect(pixelVelocity, Vector2.UnitX);
+                pixelVelocity -= Projectile.velocity.RotatedByRandom(MathHelper.Pi / 3f) * 0.7f;
+
+                BloomPixelParticle pixel = new(pixelSpawnPosition, pixelVelocity, Color.White * Projectile.Opacity * 0.75f, pixelColor * 0.4f, (int)(Projectile.Opacity * 38f), Vector2.One * Main.rand.NextFloat(1.7f, 3.3f));
                 pixel.Spawn();
             }
+
+            Time++;
+
+            float visualTimePower = Projectile.scale * Projectile.Opacity;
+            VisualsTime += visualTimePower / 120f;
+            SpeedTime += Projectile.velocity.X * visualTimePower / 550f;
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
+            Matrix scale = Matrix.CreateTranslation(0f, Projectile.height * -0.5f, 0f) * Matrix.CreateScale(Projectile.scale / Projectile.Opacity, Projectile.scale, 1f) * Matrix.CreateTranslation(0f, Projectile.height * 0.5f, 0f);
             Matrix view = Matrix.CreateTranslation(new Vector3(Projectile.Top.X - Main.screenPosition.X, Projectile.Top.Y - Main.screenPosition.Y, 0f));
             Matrix projection = Matrix.CreateOrthographicOffCenter(0f, Main.screenWidth, Main.screenHeight, 0f, -300f, 300f);
 
             ManagedShader tornadoShader = ShaderManager.GetShader("WoTE.DazzlingTornadoShader");
-            tornadoShader.TrySetParameter("uWorldViewProjection", view * projection);
+            tornadoShader.TrySetParameter("uWorldViewProjection", scale * view * projection);
             tornadoShader.TrySetParameter("speedTime", SpeedTime + Projectile.identity * 3.189f);
-            tornadoShader.TrySetParameter("localTime", Main.GlobalTimeWrappedHourly + Projectile.identity * 7.3817f);
+            tornadoShader.TrySetParameter("localTime", VisualsTime + Projectile.identity * 7.3817f);
             tornadoShader.TrySetParameter("opacity", Projectile.Opacity);
             tornadoShader.TrySetParameter("horizontalStack", 2.5f);
-            tornadoShader.TrySetParameter("swirlDirection", 1f);
+            tornadoShader.TrySetParameter("swirlDirection", Projectile.velocity.X.NonZeroSign());
             tornadoShader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.PointWrap);
             tornadoShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 2, SamplerState.PointWrap);
             tornadoShader.SetTexture(TextureAssets.Projectile[ModContent.ProjectileType<StarBolt>()], 3, SamplerState.LinearWrap);

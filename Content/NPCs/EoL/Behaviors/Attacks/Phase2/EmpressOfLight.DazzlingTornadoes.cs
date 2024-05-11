@@ -35,9 +35,9 @@ namespace WoTE.Content.NPCs.EoL
 
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 240 == 1)
             {
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 5; i++)
                 {
-                    Vector2 tornadoVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.Lerp(-1.89f, 1.89f, i / 5f)) * 25f;
+                    Vector2 tornadoVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.Lerp(-1.89f, 1.89f, i / 4f)) * 25f;
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, tornadoVelocity, ModContent.ProjectileType<DazzlingTornado>(), AcceleratingRainbowDamage, 0f);
                 }
             }
