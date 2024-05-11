@@ -228,24 +228,12 @@ namespace WoTE.Content.NPCs.EoL
         #region AI
         public override void AI()
         {
-            NoTargetCouldBeFound = false;
-
-            // Pick a target if the current one is invalid.
-            if (Target.dead || !Target.active)
-                NPC.TargetClosest();
-
-            if (!NPC.WithinRange(Target.Center, 4600f))
-                NPC.TargetClosest();
-
-            // Hey bozo the player's gone. Leave.
-            if (Target.dead || !Target.active)
-                NoTargetCouldBeFound = true;
-
             // Do not despawn.
             NPC.timeLeft = 7200;
 
             Myself = NPC;
 
+            HandleTargetSelection();
             PerformPreUpdateResets();
             HandleMiscAmbienceTweaks();
 
@@ -264,6 +252,25 @@ namespace WoTE.Content.NPCs.EoL
             AITimer++;
 
             Lighting.AddLight(NPC.Center, Vector3.One * NPC.Opacity);
+        }
+
+        /// <summary>
+        /// Handles target selection code for the Empress, along with instructing her to leave if no valid target could be found.
+        /// </summary>
+        public void HandleTargetSelection()
+        {
+            NoTargetCouldBeFound = false;
+
+            // Pick a target if the current one is invalid.
+            if (Target.dead || !Target.active)
+                NPC.TargetClosest();
+
+            if (!NPC.WithinRange(Target.Center, 3300f))
+                NPC.TargetClosest();
+
+            // Hey bozo the player's gone. Leave.
+            if (Target.dead || !Target.active)
+                NoTargetCouldBeFound = true;
         }
 
         /// <summary>
