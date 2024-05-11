@@ -22,6 +22,7 @@
 
         // Phase 2 attack states.
         DazzlingTornadoes,
+        OrbitReleasedTerraprismas,
 
         // Intermediate states.
         Teleport,
