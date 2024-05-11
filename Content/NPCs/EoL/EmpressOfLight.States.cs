@@ -13,18 +13,18 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The set of attacks that the Empress previously sequentially performed, with the newest being at the end and the oldest being at the start.
         /// </summary>
-        public readonly List<EmpressAIType> PreviousStates = [];
+        public readonly List<EmpressAIType> PreviousStates = new(MaximumStatesToRemember);
 
         /// <summary>
         /// The set of attacks that the Empress previously sequentially performed, with the newest being at the start and the oldest being at the end.
         /// </summary>
-        public List<EmpressAIType> PreviousStatesReversed
+        public EmpressAIType[] PreviousStatesReversed
         {
             get
             {
-                List<EmpressAIType> lastToFirstStates = [];
+                EmpressAIType[] lastToFirstStates = new EmpressAIType[PreviousStates.Count];
                 for (int i = PreviousStates.Count - 1; i >= 0; i--)
-                    lastToFirstStates.Add(PreviousStates[i]);
+                    lastToFirstStates[^i] = PreviousStates[i];
 
                 return lastToFirstStates;
             }
