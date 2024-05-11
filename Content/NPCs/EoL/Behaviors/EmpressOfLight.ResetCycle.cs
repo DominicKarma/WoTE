@@ -27,21 +27,28 @@ namespace WoTE.Content.NPCs.EoL
             {
                 StateMachine.StateStack.Clear();
 
-                EmpressAIType[] phaseCycle;
-                List<EmpressAIType> lastToFirstStates = [];
-                for (int i = PreviousStates.Count - 1; i >= 0; i--)
-                    lastToFirstStates.Add(PreviousStates[i]);
-
-                var statesToAvoid = lastToFirstStates.Take(4);
-                do
-                {
-                    phaseCycle = Main.rand.Next(Phase1AttackCombos);
-                }
-                while (statesToAvoid.Contains(phaseCycle[0]));
-
+                var phaseCycle = ChooseNextCycle();
                 for (int i = phaseCycle.Length - 1; i >= 0; i--)
                     StateMachine.StateStack.Push(StateMachine.StateRegistry[phaseCycle[i]]);
             });
+        }
+
+        /// <summary>
+        /// Chooses an attack state cycle that the empress should perform at random, based on phase.
+        /// </summary>
+        /// <returns>The new attack state cycle to perform.</returns>
+        public EmpressAIType[] ChooseNextCycle()
+        {
+            EmpressAIType[] phaseCycle;
+
+            var statesToAvoid = PreviousStatesReversed.Take(4);
+            do
+            {
+                phaseCycle = Main.rand.Next(Phase1AttackCombos);
+            }
+            while (statesToAvoid.Contains(phaseCycle[0]));
+
+            return phaseCycle;
         }
     }
 }

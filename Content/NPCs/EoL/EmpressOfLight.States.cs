@@ -10,11 +10,25 @@ namespace WoTE.Content.NPCs.EoL
     {
         private PushdownAutomata<EntityAIState<EmpressAIType>, EmpressAIType> stateMachine;
 
-        // TODO -- Sync this.
         /// <summary>
-        /// The set of attacks that the Empress previously sequentially performed.
+        /// The set of attacks that the Empress previously sequentially performed, with the newest being at the end and the oldest being at the start.
         /// </summary>
         public readonly List<EmpressAIType> PreviousStates = [];
+
+        /// <summary>
+        /// The set of attacks that the Empress previously sequentially performed, with the newest being at the start and the oldest being at the end.
+        /// </summary>
+        public List<EmpressAIType> PreviousStatesReversed
+        {
+            get
+            {
+                List<EmpressAIType> lastToFirstStates = [];
+                for (int i = PreviousStates.Count - 1; i >= 0; i--)
+                    lastToFirstStates.Add(PreviousStates[i]);
+
+                return lastToFirstStates;
+            }
+        }
 
         /// <summary>
         /// The maximum amount of states that the Empress should remember in the <see cref="PreviousStates"/> list before forgetting the oldest one.

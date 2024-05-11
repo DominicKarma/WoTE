@@ -76,8 +76,10 @@ namespace WoTE.Content.NPCs.EoL
             RightHandFrame = EmpressHandFrame.FistedOutstretchedArm;
 
             if (AITimer <= PrismaticBoltDashes_HoverRedirectTime)
+            {
                 DoBehavior_PrismaticBoltDashes_PerformRedirect();
-
+                DoBehavior_PrismaticBoltDashes_PerformDashBehaviors();
+            }
             else
                 DoBehavior_PrismaticBoltDashes_PerformPostDashBehaviors();
 
@@ -110,14 +112,17 @@ namespace WoTE.Content.NPCs.EoL
                 AITimer = PrismaticBoltDashes_HoverRedirectTime;
                 NPC.netUpdate = true;
             }
+        }
 
-            if (AITimer == PrismaticBoltDashes_HoverRedirectTime)
-            {
-                SoundEngine.PlaySound(SoundID.Item164 with { MaxInstances = 0 });
-                NPC.velocity *= 0.3f;
-                PrismaticBoltDashes_BoltSpinOffsetAngle = Main.rand.NextFloat(MathHelper.TwoPi);
-                NPC.netUpdate = true;
-            }
+        /// <summary>
+        /// Performs frame-one behaviors for dashes that the Empress performs during her Prismatic Bolt Dashes attack.
+        /// </summary>
+        public void DoBehavior_PrismaticBoltDashes_PerformDashBehaviors()
+        {
+            SoundEngine.PlaySound(SoundID.Item164 with { MaxInstances = 0 });
+            NPC.velocity *= 0.3f;
+            PrismaticBoltDashes_BoltSpinOffsetAngle = Main.rand.NextFloat(MathHelper.TwoPi);
+            NPC.netUpdate = true;
         }
 
         /// <summary>
