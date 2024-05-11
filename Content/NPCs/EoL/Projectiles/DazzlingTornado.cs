@@ -114,6 +114,8 @@ namespace WoTE.Content.NPCs.EoL
             SpeedTime += Projectile.velocity.X * visualTimePower / 550f;
         }
 
+        public override bool? CanDamage() => Projectile.scale >= 0.9f && Projectile.Opacity >= 0.7f;
+
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
             Matrix scale = Matrix.CreateTranslation(0f, Projectile.height * -0.5f, 0f) * Matrix.CreateScale(Projectile.scale / Projectile.Opacity, Projectile.scale, 1f) * Matrix.CreateTranslation(0f, Projectile.height * 0.5f, 0f);
