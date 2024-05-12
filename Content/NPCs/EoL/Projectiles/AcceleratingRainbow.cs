@@ -100,7 +100,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             trailShader.TrySetParameter("hueOffset", HueInterpolant);
             trailShader.Apply();
 
-            PrimitiveSettings settings = new(RainbowWidthFunction, RainbowColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);
+            PrimitiveSettings settings = new(RainbowWidthFunction, RainbowColorFunction, _ => Projectile.Size * 0.5f + Projectile.velocity.SafeNormalize(Vector2.Zero) * 26f, Pixelate: true, Shader: trailShader);
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 30);
         }
     }
