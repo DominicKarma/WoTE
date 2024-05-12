@@ -27,7 +27,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends redirecting during her Sequential Dashes attack.
         /// </summary>
-        public static int SequentialDashes_RedirectTime => Utilities.SecondsToFrames(0.5f);
+        public static int SequentialDashes_RedirectTime => Utilities.SecondsToFrames(0.59f);
 
         /// <summary>
         /// How long the Empress spends dashing during her Sequential Dashes attack.
@@ -47,7 +47,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The speed of dashes performed by the Empress during her Sequential Dashes attack.
         /// </summary>
-        public static float SequentialDashes_DashSpeed => 78f;
+        public float SequentialDashes_DashSpeed => ByPhase(69f, 78f);
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_SequentialDashes()
