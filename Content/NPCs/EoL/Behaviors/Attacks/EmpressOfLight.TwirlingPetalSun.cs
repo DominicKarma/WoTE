@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.NPCs.EoL.Projectiles;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -99,6 +100,12 @@ namespace WoTE.Content.NPCs.EoL
                     {
                         Vector2 boltVelocity = (MathHelper.TwoPi * i / TwirlingPetalSun_PrismaticBoltCount).ToRotationVector2() * 12f + Main.rand.NextVector2Circular(3.5f, 3.5f);
                         Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target);
+
+                        if (Phase2)
+                        {
+                            boltVelocity = (MathHelper.TwoPi * (i + 0.5f) / TwirlingPetalSun_PrismaticBoltCount).ToRotationVector2() * 1.2f;
+                            Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f);
+                        }
                     }
                 }
             }
