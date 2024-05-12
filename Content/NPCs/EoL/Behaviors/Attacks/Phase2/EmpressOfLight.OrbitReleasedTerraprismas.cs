@@ -63,7 +63,7 @@ namespace WoTE.Content.NPCs.EoL
                 float spinAngleOffset = 0f;
                 for (int i = 0; i < terraprismaCount; i++)
                 {
-                    int fireDelay = i * 2;
+                    int fireDelay = i;
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<EmpressOrbitingTerraprisma>(), TerraprismaDamage, 0f, -1, i / (float)terraprismaCount, MathHelper.TwoPi * i / terraprismaCount + spinAngleOffset, fireDelay);
                 }
             }
