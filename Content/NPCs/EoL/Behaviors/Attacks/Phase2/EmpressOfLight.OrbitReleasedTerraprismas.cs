@@ -47,11 +47,13 @@ namespace WoTE.Content.NPCs.EoL
             NPC.spriteDirection = 1;
             NPC.rotation = NPC.rotation.AngleLerp(MathHelper.Clamp(NPC.velocity.X * 0.0021f, -0.4f, 0.4f), 0.16f);
 
-            if (AITimer == OrbitReleasedTerraprismas_TerraprismaSpinTime)
-                DoBehavior_OrbitReleasedTerraprismas_PerformTerraprismaReleaseEffects();
-
             if (AITimer >= OrbitReleasedTerraprismas_TerraprismaSpinTime)
+            {
                 DoBehavior_OrbitReleasedTerraprismas_HandlePostSwordDashBehavior();
+
+                if (AITimer == OrbitReleasedTerraprismas_TerraprismaSpinTime)
+                    DoBehavior_OrbitReleasedTerraprismas_PerformTerraprismaReleaseEffects();
+            }
             else
                 DoBehavior_OrbitReleasedTerraprismas_FlyNearTarget();
 
