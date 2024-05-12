@@ -36,8 +36,8 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override void SetDefaults()
         {
-            Projectile.width = 40;
-            Projectile.height = 40;
+            Projectile.width = 35;
+            Projectile.height = 35;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
