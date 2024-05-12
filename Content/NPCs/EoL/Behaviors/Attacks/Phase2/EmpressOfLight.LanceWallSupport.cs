@@ -89,6 +89,9 @@ namespace WoTE.Content.NPCs.EoL
 
             NPC.velocity.X *= 0.932f;
 
+            if (AITimer == 1 && !NPC.WithinRange(Target.Center, 700f))
+                TeleportTo(Target.Center - Vector2.UnitY.RotatedByRandom(MathHelper.PiOver4) * 350f);
+
             if (AITimer >= LanceWallSupport_FlyUpwardDelay + LanceWallSupport_FlyUpwardTime)
                 NPC.velocity.Y = MathHelper.Clamp(NPC.velocity.Y + 5f, -60f, 90f);
             else if (AITimer >= LanceWallSupport_FlyUpwardDelay)
@@ -119,7 +122,7 @@ namespace WoTE.Content.NPCs.EoL
             }
 
             // Wait until the support activation is completed before actually doing anything.
-            if (CurrentState == EmpressAIType.LanceWallSupport)
+            if (CurrentState == EmpressAIType.LanceWallSupport || CurrentState == EmpressAIType.Teleport)
                 return;
 
             float previousLanceWallX = LanceWallXPosition;
