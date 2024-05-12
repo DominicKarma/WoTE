@@ -30,7 +30,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends releasing rainbows on her finger during her Outward Rainbows attack.
         /// </summary>
-        public int OutwardRainbows_RainbowShootTime => Utilities.SecondsToFrames(ByPhase(2f, 1.7f));
+        public int OutwardRainbows_RainbowShootTime => Utilities.SecondsToFrames(ByPhase(2f, 2.3f));
 
         /// <summary>
         /// How long the Empress waits before choosing a new attack during her Outward Rainbows attack.
