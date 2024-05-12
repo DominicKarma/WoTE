@@ -105,7 +105,7 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_OrbitReleasedTerraprismas_HandlePostSwordDashBehavior()
         {
             RightHandFrame = EmpressHandFrame.FistedOutstretchedArm;
-            if (OrbitReleasedTerraprismas_PunchDirection == -1f)
+            if (OrbitReleasedTerraprismas_PunchDirection == 1f)
                 (LeftHandFrame, RightHandFrame) = (RightHandFrame, LeftHandFrame);
 
             // Fly up and forward.
