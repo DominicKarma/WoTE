@@ -31,7 +31,7 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.RegisterTransition(EmpressAIType.OrbitReleasedTerraprismas, null, false, () =>
             {
                 return AITimer >= 20 && !Utilities.AnyProjectiles(ModContent.ProjectileType<EmpressOrbitingTerraprisma>());
-            });
+            }, () => TeleportTo(Target.Center - Vector2.UnitY * 350f));
 
             StateMachine.RegisterStateBehavior(EmpressAIType.OrbitReleasedTerraprismas, DoBehavior_OrbitReleasedTerraprismas);
         }
