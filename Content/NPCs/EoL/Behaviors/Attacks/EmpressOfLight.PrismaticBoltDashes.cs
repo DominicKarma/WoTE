@@ -34,7 +34,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of time the Empress spends dashing during the Prismatic Bolt Dashes attack.
         /// </summary>
-        public int PrismaticBoltDashes_DashTime => Utilities.SecondsToFrames(ByPhase(0.75f, 0.73f));
+        public int PrismaticBoltDashes_DashTime => Utilities.SecondsToFrames(ByPhase(0.82f, 0.79f));
 
         /// <summary>
         /// The amount of dashes that the Empress should perform during the Prismatic Bolt Dashes attack.
@@ -105,7 +105,7 @@ namespace WoTE.Content.NPCs.EoL
                 SoundEngine.PlaySound(SoundID.Item160 with { MaxInstances = 0 }, NPC.Center);
 
             float hoverFlySpeed = Utilities.InverseLerp(0f, AITimer, PrismaticBoltDashes_HoverRedirectTime).Cubed() * 0.11f;
-            Vector2 hoverDestination = Target.Center - Vector2.UnitX * PrismaticBoltDashes_DashDirection * 800f;
+            Vector2 hoverDestination = Target.Center - Vector2.UnitX * PrismaticBoltDashes_DashDirection * 900f;
             NPC.SmoothFlyNear(hoverDestination, hoverFlySpeed, 1f - hoverFlySpeed);
 
             if (NPC.WithinRange(hoverDestination, 35f) && AITimer < PrismaticBoltDashes_HoverRedirectTime)
@@ -123,7 +123,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             SoundEngine.PlaySound(SoundID.Item164 with { MaxInstances = 0 });
             NPC.velocity *= 0.3f;
-            PrismaticBoltDashes_BoltSpinOffsetAngle = Main.rand.NextFloat(MathHelper.TwoPi);
+            PrismaticBoltDashes_BoltSpinOffsetAngle = Main.rand.NextFloat(MathHelper.TwoPi * 4f);
             NPC.netUpdate = true;
         }
 
@@ -137,7 +137,7 @@ namespace WoTE.Content.NPCs.EoL
 
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 2 == 0)
             {
-                Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / PrismaticBoltSpin_SpinTime * PrismaticBoltDashes_DashDirection * 2f + PrismaticBoltDashes_BoltSpinOffsetAngle).ToRotationVector2() * 1.25f;
+                Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / PrismaticBoltSpin_SpinTime * PrismaticBoltDashes_DashDirection * 3f + PrismaticBoltDashes_BoltSpinOffsetAngle).ToRotationVector2() * 1.15f;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f, -1);
             }
 
