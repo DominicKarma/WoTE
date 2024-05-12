@@ -343,5 +343,15 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         #endregion AI
+
+        #region Iframes
+
+        public override bool CanHitPlayer(Player target, ref int cooldownSlot)
+        {
+            cooldownSlot = ImmunityCooldownID.Bosses;
+            return true;
+        }
+
+        #endregion Iframes
     }
 }
