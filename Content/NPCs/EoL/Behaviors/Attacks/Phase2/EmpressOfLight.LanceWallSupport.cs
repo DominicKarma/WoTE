@@ -89,8 +89,8 @@ namespace WoTE.Content.NPCs.EoL
 
             NPC.velocity.X *= 0.932f;
 
-            if (AITimer == 1 && !NPC.WithinRange(Target.Center, 700f))
-                TeleportTo(Target.Center - Vector2.UnitY.RotatedByRandom(MathHelper.PiOver4) * 350f);
+            if (AITimer == 1)
+                TeleportTo(Target.Center + Vector2.UnitX * Target.direction * 720f);
 
             if (AITimer >= LanceWallSupport_FlyUpwardDelay + LanceWallSupport_FlyUpwardTime)
                 NPC.velocity.Y = MathHelper.Clamp(NPC.velocity.Y + 5f, -60f, 90f);
