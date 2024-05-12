@@ -26,10 +26,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             get
             {
-                // Add the relevant phase cycle if it has been exhausted, to ensure that the Empress' attacks are cyclic.
-                if ((StateMachine?.StateStack?.Count ?? 1) <= 0)
-                    StateMachine?.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
-
+                FillStateMachineIfEmpty();
                 return StateMachine?.CurrentState?.Identifier ?? EmpressAIType.Awaken;
             }
         }
@@ -254,12 +251,20 @@ namespace WoTE.Content.NPCs.EoL
 
             // This is done to ensure that if the PerformStateTransitionCheck cleared the state stack there's a viable replacement state in there.
             // Without this, the AITimer ref will throw an exception due to there being nothing in the state stack to peek.
-            if ((StateMachine?.StateStack?.Count ?? 1) <= 0)
-                StateMachine?.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
+            FillStateMachineIfEmpty();
 
             AITimer++;
 
             Lighting.AddLight(NPC.Center, Vector3.One * NPC.Opacity);
+        }
+
+        /// <summary>
+        /// Supplies the <see cref="StateMachine"/> with a <see cref="EmpressAIType.ResetCycle"/> if it's empty.
+        /// </summary>
+        public void FillStateMachineIfEmpty()
+        {
+            if ((StateMachine?.StateStack?.Count ?? 1) <= 0)
+                StateMachine?.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
         }
 
         /// <summary>
