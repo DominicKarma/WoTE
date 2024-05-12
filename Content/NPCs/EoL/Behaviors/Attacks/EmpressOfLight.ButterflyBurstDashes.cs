@@ -53,6 +53,10 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.RegisterTransition(EmpressAIType.ButterflyBurstDashes, null, false, () =>
             {
                 return AITimer >= ButterflyBurstDashes_ButterflyTransitionDelay + 5 && !NPC.AnyNPCs(ModContent.NPCType<Lacewing>());
+            }, () =>
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<PrismaticBurst>(), 0, 0f);
             });
 
             StateMachine.RegisterStateBehavior(EmpressAIType.ButterflyBurstDashes, DoBehavior_ButterflyBurstDashes);
