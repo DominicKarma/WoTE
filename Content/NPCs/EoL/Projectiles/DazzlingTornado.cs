@@ -60,12 +60,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long this tornado should exist for, in frames.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(3.4f);
+        public static int Lifetime => Utilities.SecondsToFrames(2.3f);
 
         /// <summary>
         /// The standard hitbox size of this tornado.
         /// </summary>
-        public static Vector2 Size => new(115f, 214f);
+        public static Vector2 Size => new(164f, 214f);
 
         public override string Texture => MiscTexturesRegistry.PixelPath;
 
@@ -90,12 +90,11 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void AI()
         {
-            Projectile.Opacity = Utilities.InverseLerp(0f, 9f, Time) * Utilities.InverseLerp(0f, 90f, Projectile.timeLeft);
-            Projectile.scale = Utilities.InverseLerp(0f, 6f, Time);
+            Projectile.Opacity = Utilities.InverseLerp(0f, 14f, Projectile.timeLeft);
+            Projectile.scale = Utilities.InverseLerp(0f, 12f, Time);
 
-            Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
-            Projectile.ai[2] = Projectile.ai[2].AngleLerp(MathHelper.WrapAngle(Projectile.AngleTo(target.Center) - Projectile.velocity.ToRotation()) * 0.05f, 0.02f);
-            Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.ai[2]);
+            if (Projectile.velocity.Length() >= 19f)
+                Projectile.velocity *= 0.86f;
 
             for (int i = 0; i < Projectile.scale.Squared(); i++)
             {
@@ -123,7 +122,6 @@ namespace WoTE.Content.NPCs.EoL
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            GenerateVerticesAndIndices();
             Matrix scale = Matrix.CreateTranslation(0f, Projectile.height * -0.5f, 0f) * Matrix.CreateScale(Projectile.scale / Projectile.Opacity, Projectile.scale, 1f) * Matrix.CreateTranslation(0f, Projectile.height * 0.5f, 0f);
             Matrix view = Matrix.CreateTranslation(new Vector3(Projectile.Top.X - Main.screenPosition.X, Projectile.Top.Y - Main.screenPosition.Y, 0f));
             Matrix projection = Matrix.CreateOrthographicOffCenter(0f, Main.screenWidth, Main.screenHeight, 0f, -300f, 300f);
