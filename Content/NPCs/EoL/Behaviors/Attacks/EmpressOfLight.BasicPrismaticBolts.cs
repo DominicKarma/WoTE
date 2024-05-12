@@ -69,7 +69,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.rotation = NPC.velocity.X * 0.01f;
 
             if (AITimer == 1)
-                SoundEngine.PlaySound(SoundID.Item164, NPC.Center);
+                SoundEngine.PlaySound(SoundID.Item164);
 
             bool ableToShoot = AITimer >= BasicPrismaticBolts_BoltShootDelay && AITimer <= BasicPrismaticBolts_BoltShootDelay + BasicPrismaticBolts_BoltShootTime && !NPC.WithinRange(Target.Center, 150f);
             Vector2 handPosition = NPC.Center + new Vector2(30f, -64f).RotatedBy(NPC.rotation);
