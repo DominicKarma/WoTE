@@ -19,12 +19,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends releasing bolts during her Basic Prismatic Bolts attack.
         /// </summary>
-        public static int BasicPrismaticBolts_BoltShootTime => Utilities.SecondsToFrames(1.5f);
+        public int BasicPrismaticBolts_BoltShootTime => Utilities.SecondsToFrames(ByPhase(1.5f, 1.2f));
 
         /// <summary>
         /// How long the Empress waits before choosing a new attack after all bolts have been shot in her Basic Prismatic Bolts attack.
         /// </summary>
-        public static int BasicPrismaticBolts_AttackTransitionDelay => Utilities.SecondsToFrames(2f);
+        public int BasicPrismaticBolts_AttackTransitionDelay => Utilities.SecondsToFrames(ByPhase(2f, 1.67f));
 
         /// <summary>
         /// How rate at which bolts are summoned by the Empress during her Basic Prismatic Bolts attack.

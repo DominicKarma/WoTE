@@ -25,17 +25,22 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends redirecting during her Outward Rainbows attack.
         /// </summary>
-        public static int OutwardRainbows_RainbowShootDelay => Utilities.SecondsToFrames(0.9f);
+        public int OutwardRainbows_RainbowShootDelay => Utilities.SecondsToFrames(ByPhase(0.9f, 0.78f));
 
         /// <summary>
         /// How long the Empress spends releasing rainbows on her finger during her Outward Rainbows attack.
         /// </summary>
-        public static int OutwardRainbows_RainbowShootTime => Utilities.SecondsToFrames(2f);
+        public int OutwardRainbows_RainbowShootTime => Utilities.SecondsToFrames(ByPhase(2f, 1.7f));
 
         /// <summary>
         /// How long the Empress waits before choosing a new attack during her Outward Rainbows attack.
         /// </summary>
         public static int OutwardRainbows_AttackTransitionDelay => Utilities.SecondsToFrames(0.75f);
+
+        /// <summary>
+        /// How speed of rainbows summoned during the Empress' Outward Rainbows attack.
+        /// </summary>
+        public float OutwardRainbows_RainbowSpeed => ByPhase(3f, 5f);
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_OutwardRainbows()
@@ -91,7 +96,7 @@ namespace WoTE.Content.NPCs.EoL
                 Vector2 handPosition = NPC.Center + new Vector2(NPC.spriteDirection * 42f, -68f).RotatedBy(NPC.rotation);
                 if (Main.netMode != NetmodeID.MultiplayerClient && AITimer <= OutwardRainbows_RainbowShootTime)
                 {
-                    Vector2 rainbowVelocity = (MathHelper.TwoPi * AITimer / 25f).ToRotationVector2() * 3f;
+                    Vector2 rainbowVelocity = (MathHelper.TwoPi * AITimer / 25f).ToRotationVector2() * OutwardRainbows_RainbowSpeed;
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, rainbowVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), AcceleratingRainbowDamage, 0f, -1, AITimer / 20f % 1f);
                 }
             }

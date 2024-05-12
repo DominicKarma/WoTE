@@ -31,6 +31,7 @@ namespace WoTE.Content.NPCs.EoL
             new EmpressAIType[] { EmpressAIType.OutwardRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
             new EmpressAIType[] { EmpressAIType.OutwardRainbows, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
             new EmpressAIType[] { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst, EmpressAIType.BasicPrismaticBolts2 },
+            new EmpressAIType[] { EmpressAIType.PrismaticBoltSpin, EmpressAIType.OrbitReleasedTerraprismas, EmpressAIType.PrismaticBoltDashes },
         };
 
         [AutomatedMethodInvoke]
@@ -68,12 +69,12 @@ namespace WoTE.Content.NPCs.EoL
         {
             EmpressAIType[] phaseCycle;
 
-            var statesToAvoid = PreviousStatesReversed.Take(4);
+            var statesToAvoid = PreviousStatesReversed.Take(3);
             do
             {
                 phaseCycle = Main.rand.Next(Phase2 ? Phase2AttackCombos : Phase1AttackCombos);
             }
-            while (statesToAvoid.Contains(phaseCycle[0]));
+            while (statesToAvoid.Any(s => phaseCycle.Contains(s)));
 
             return phaseCycle;
         }

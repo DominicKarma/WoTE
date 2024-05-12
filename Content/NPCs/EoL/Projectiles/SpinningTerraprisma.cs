@@ -67,7 +67,13 @@ namespace WoTE.Content.NPCs.EoL
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
-            Projectile.timeLeft = ConvergingTerraprismas_SpinTime + ConvergingTerraprismas_ReelBackTime + ConvergingTerraprismas_AttackTransitionDelay;
+            Projectile.timeLeft = 1;
+            if (Myself is not null)
+            {
+                var empress = Myself.As<EmpressOfLight>();
+                Projectile.timeLeft = empress.ConvergingTerraprismas_SpinTime + empress.ConvergingTerraprismas_ReelBackTime + ConvergingTerraprismas_AttackTransitionDelay;
+            }
+
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
@@ -86,14 +92,15 @@ namespace WoTE.Content.NPCs.EoL
             Time++;
             Projectile.Opacity = Utilities.InverseLerp(0f, ConvergingTerraprismas_TerraprismaFadeInTime, Time);
 
-            if (Time >= ConvergingTerraprismas_SpinTime + ConvergingTerraprismas_ReelBackTime)
+            var empress = Myself.As<EmpressOfLight>();
+            if (Time >= empress.ConvergingTerraprismas_SpinTime + empress.ConvergingTerraprismas_ReelBackTime)
             {
                 HandlePostDashEffects();
                 return;
             }
 
             SpinAroundTarget();
-            if (Time == ConvergingTerraprismas_SpinTime + ConvergingTerraprismas_ReelBackTime - 1f)
+            if (Time == empress.ConvergingTerraprismas_SpinTime + empress.ConvergingTerraprismas_ReelBackTime - 1f)
                 PerformDash();
         }
 
@@ -105,21 +112,23 @@ namespace WoTE.Content.NPCs.EoL
             if (Myself is null)
                 return;
 
+            var empress = Myself.As<EmpressOfLight>();
+
             // Lock the spin center on the player at first.
             // This grip is loosened as the terraprismas reel back.
             Vector2 spinCenter = Main.player[Myself.target].Center;
-            SpinCenter = Vector2.Lerp(SpinCenter, spinCenter, Utilities.InverseLerp(ConvergingTerraprismas_ReelBackTime, 0f, Time - ConvergingTerraprismas_SpinTime));
+            SpinCenter = Vector2.Lerp(SpinCenter, spinCenter, Utilities.InverseLerp(empress.ConvergingTerraprismas_ReelBackTime, 0f, Time - empress.ConvergingTerraprismas_SpinTime));
 
             // Make the spin speed go from slow to super fast over the duration of the spin animation.
-            float spinSpeed = Utilities.InverseLerpBump(-ConvergingTerraprismas_SpinTime, 0f, 0f, 17f, Time - ConvergingTerraprismas_SpinTime).Squared() * MathHelper.TwoPi / 25f;
+            float spinSpeed = Utilities.InverseLerpBump(-empress.ConvergingTerraprismas_SpinTime, 0f, 0f, 17f, Time - empress.ConvergingTerraprismas_SpinTime).Squared() * MathHelper.TwoPi / 25f;
 
             // This ensures that the spin starts out at a moderate speed, rather than at no speed at all. This makes the attack look a bit more interesting at the start.
-            spinSpeed += Utilities.InverseLerp(ConvergingTerraprismas_SpinTime * 0.5f, 0f, Time) * MathHelper.TwoPi / 45f;
+            spinSpeed += Utilities.InverseLerp(empress.ConvergingTerraprismas_SpinTime * 0.5f, 0f, Time) * MathHelper.TwoPi / 45f;
 
             SpinAngle += spinSpeed;
 
-            float orbitSquishInterpolant = Utilities.InverseLerp(0f, -ConvergingTerraprismas_OrbitSquishDissipateTime, Time - ConvergingTerraprismas_SpinTime) * 0.3f;
-            float reelBackInterpolant = MathHelper.SmoothStep(0f, 1f, Utilities.InverseLerp(0f, ConvergingTerraprismas_ReelBackTime, Time - ConvergingTerraprismas_SpinTime)).Squared();
+            float orbitSquishInterpolant = Utilities.InverseLerp(0f, -ConvergingTerraprismas_OrbitSquishDissipateTime, Time - empress.ConvergingTerraprismas_SpinTime) * 0.3f;
+            float reelBackInterpolant = MathHelper.SmoothStep(0f, 1f, Utilities.InverseLerp(0f, empress.ConvergingTerraprismas_ReelBackTime, Time - empress.ConvergingTerraprismas_SpinTime)).Squared();
             float radius = MathHelper.Lerp(ConvergingTerraprismas_InitialRadius, ConvergingTerraprismas_ReelBackRadius, reelBackInterpolant);
             orbitSquishInterpolant += (1f - reelBackInterpolant) * 0.25f;
 

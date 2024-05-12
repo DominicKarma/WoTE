@@ -43,12 +43,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of petals the Empress summons during the Twirling Petal Sun attack.
         /// </summary>
-        public static int TwirlingPetalSun_PetalCount => 8;
+        public int TwirlingPetalSun_PetalCount => ByPhase(8, 9);
 
         /// <summary>
         /// The amount of prismatic bolt created during the Twirling Petal Sun attack when the petal flares burst outward.
         /// </summary>
-        public static int TwirlingPetalSun_PrismaticBoltCount => 13;
+        public int TwirlingPetalSun_PrismaticBoltCount => ByPhase(13, 19);
 
         /// <summary>
         /// The maximum angular spin speed of petals summoned by the Empress.

@@ -14,7 +14,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How rate at which bolts are summoned by the Empress during her Basic Prismatic Bolts attack.
         /// </summary>
-        public static int BasicPrismaticBolts2_BoltShootRate => Utilities.SecondsToFrames(0.067f);
+        public static int BasicPrismaticBolts2_BoltShootRate => Utilities.SecondsToFrames(0.05f);
 
         /// <summary>
         /// The speed of bolts summoned by the Empress in her Basic Prismatic Bolts attack.
