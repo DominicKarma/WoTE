@@ -11,12 +11,37 @@ namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
+        /// <summary>
+        /// How long the Empress waits before releasing bolts during her Basic Prismatic Bolts attack.
+        /// </summary>
+        public static int BasicPrismaticBolts_BoltShootDelay => Utilities.SecondsToFrames(0.5f);
+
+        /// <summary>
+        /// How long the Empress spends releasing bolts during her Basic Prismatic Bolts attack.
+        /// </summary>
+        public static int BasicPrismaticBolts_BoltShootTime => Utilities.SecondsToFrames(1.5f);
+
+        /// <summary>
+        /// How long the Empress waits before choosing a new attack after all bolts have been shot in her Basic Prismatic Bolts attack.
+        /// </summary>
+        public static int BasicPrismaticBolts_AttackTransitionDelay => Utilities.SecondsToFrames(2f);
+
+        /// <summary>
+        /// How rate at which bolts are summoned by the Empress during her Basic Prismatic Bolts attack.
+        /// </summary>
+        public static int BasicPrismaticBolts_BoltShootRate => Utilities.SecondsToFrames(0.067f);
+
+        /// <summary>
+        /// The speed of bolts summoned by the Empress in her Basic Prismatic Bolts attack.
+        /// </summary>
+        public static float BasicPrismaticBolts_BoltFireSpeed => 10.5f;
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_BasicPrismaticBolts()
         {
             StateMachine.RegisterTransition(EmpressAIType.BasicPrismaticBolts, null, false, () =>
             {
-                return AITimer >= 240;
+                return AITimer >= BasicPrismaticBolts_BoltShootDelay + BasicPrismaticBolts_BoltShootTime + BasicPrismaticBolts_AttackTransitionDelay;
             });
 
             StateMachine.RegisterStateBehavior(EmpressAIType.BasicPrismaticBolts, DoBehavior_BasicPrismaticBolts);
@@ -32,8 +57,6 @@ namespace WoTE.Content.NPCs.EoL
             LeftHandFrame = EmpressHandFrame.PalmRaisedUp;
             RightHandFrame = EmpressHandFrame.PointingUp;
 
-            DashAfterimageInterpolant = Utilities.InverseLerp(0f, 30f, AITimer) * 0.1f;
-
             NPC.spriteDirection = 1;
             NPC.rotation = NPC.velocity.X * 0.0035f;
         }
@@ -48,10 +71,11 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer == 1)
                 SoundEngine.PlaySound(SoundID.Item164, NPC.Center);
 
+            bool ableToShoot = AITimer >= BasicPrismaticBolts_BoltShootDelay && AITimer <= BasicPrismaticBolts_BoltShootDelay + BasicPrismaticBolts_BoltShootTime && !NPC.WithinRange(Target.Center, 150f);
             Vector2 handPosition = NPC.Center + new Vector2(30f, -64f).RotatedBy(NPC.rotation);
-            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 4 == 3 && AITimer >= 30 && AITimer <= 120 && !NPC.WithinRange(Target.Center, 150f))
+            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % BasicPrismaticBolts_BoltShootRate == 0 && ableToShoot)
             {
-                Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / 45f).ToRotationVector2() * 10.5f;
+                Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / 45f).ToRotationVector2() * BasicPrismaticBolts_BoltFireSpeed;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target, AITimer / 45f % 1f);
             }
         }
