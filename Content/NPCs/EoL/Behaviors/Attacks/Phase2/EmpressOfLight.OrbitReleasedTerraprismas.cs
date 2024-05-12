@@ -23,7 +23,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of Terraprisma instances the Empress summons for her Orbit Released Terraprismas attack.
         /// </summary>
-        public static int OrbitReleasedTerraprismas_TerraprismaCount => 10;
+        public static int OrbitReleasedTerraprismas_TerraprismaCount => 9;
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_OrbitReleasedTerraprismas()
@@ -60,7 +60,7 @@ namespace WoTE.Content.NPCs.EoL
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == 1)
             {
                 int terraprismaCount = OrbitReleasedTerraprismas_TerraprismaCount;
-                float spinAngleOffset = Main.rand.NextFromList(0f, MathHelper.Pi / 3f, MathHelper.Pi * 0.667f);
+                float spinAngleOffset = 0f;
                 for (int i = 0; i < terraprismaCount; i++)
                 {
                     int fireDelay = i * 2;
