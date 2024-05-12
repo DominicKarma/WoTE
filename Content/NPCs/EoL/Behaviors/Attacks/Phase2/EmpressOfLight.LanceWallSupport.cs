@@ -147,6 +147,9 @@ namespace WoTE.Content.NPCs.EoL
                 Vector2 lanceSpawnPosition = new Vector2(LanceWallXPosition, Target.Center.Y) + horizontalSpawnOffset + verticalSpawnOffset;
                 Vector2 lanceVelocity = Vector2.UnitY.RotatedBy(lanceWallAngle) * 80f;
 
+                if (lanceSpawnPosition.Y < 150f)
+                    lanceSpawnPosition.Y = 150f;
+
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), lanceSpawnPosition, lanceVelocity, ModContent.ProjectileType<LightLance>(), LightLanceDamage, 0f, -1, 0f, lanceHue, 1f);
             }
         }
