@@ -244,12 +244,15 @@ namespace WoTE.Content.NPCs.EoL
 
             StateMachine.PerformBehaviors();
             StateMachine.PerformStateTransitionCheck();
+            PerformPostAttackSanityChecks();
 
-            if (CurrentState != EmpressAIType.Teleport)
-                TeleportCompletionRatio = 0f;
+            if (PerformingLanceWallSupport)
+                DoBehavior_LanceWallSupport_HandlePostStateSupportBehaviors();
 
             UpdateLoopingSounds();
 
+            // This is done to ensure that if the PerformStateTransitionCheck cleared the state stack there's a viable replacement state in there.
+            // Without this, the AITimer ref will throw an exception due to there being nothing in the state stack to peek.
             if ((StateMachine?.StateStack?.Count ?? 1) <= 0)
                 StateMachine?.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
 
@@ -282,6 +285,15 @@ namespace WoTE.Content.NPCs.EoL
             // Hey bozo the player's gone. Leave.
             if (Target.dead || !Target.active)
                 NoTargetCouldBeFound = true;
+        }
+
+        /// <summary>
+        /// Accounts for various edge cases that may occur in the fight, particularly with respect to attack-specific effects "bleeding over" into inappropriate contexts.
+        /// </summary>
+        public void PerformPostAttackSanityChecks()
+        {
+            if (CurrentState != EmpressAIType.Teleport)
+                TeleportCompletionRatio = 0f;
         }
 
         /// <summary>

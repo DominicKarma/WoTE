@@ -24,6 +24,7 @@
         BasicPrismaticBolts2,
         DazzlingTornadoes,
         OrbitReleasedTerraprismas,
+        LanceWallSupport,
 
         // Intermediate states.
         Teleport,
