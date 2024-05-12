@@ -120,6 +120,9 @@ namespace WoTE.Content.NPCs.EoL
             if (PreviousStates.Count > MaximumStatesToRemember)
                 PreviousStates.RemoveAt(0);
 
+            if (oldState.Identifier != EmpressAIType.LanceWallSupport)
+                PerformingLanceWallSupport = false;
+
             for (int i = 0; i < 4; i++)
                 NPC.ai[i] = 0f;
 

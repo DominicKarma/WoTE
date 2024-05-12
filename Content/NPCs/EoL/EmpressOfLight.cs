@@ -130,6 +130,11 @@ namespace WoTE.Content.NPCs.EoL
         public static int AcceleratingRainbowDamage => Main.expertMode ? 190 : 120;
 
         /// <summary>
+        /// The amount of damage light lances summoned by the Empress do.
+        /// </summary>
+        public static int LightLanceDamage => Main.expertMode ? 190 : 120;
+
+        /// <summary>
         /// The amount of damage dazzling petals summoned by the Empress do.
         /// </summary>
         public static int DazzlingPetalDamage => Main.expertMode ? 205 : 135;
@@ -212,6 +217,8 @@ namespace WoTE.Content.NPCs.EoL
         public override void SendExtraAI(BinaryWriter writer)
         {
             writer.Write(Phase);
+            writer.Write(LanceWallXPosition);
+            writer.Write((byte)PerformingLanceWallSupport.ToInt());
 
             WritePreviousStates(writer);
             WriteStateMachineStack(writer);
@@ -220,6 +227,8 @@ namespace WoTE.Content.NPCs.EoL
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             Phase = reader.ReadInt32();
+            LanceWallXPosition = reader.ReadSingle();
+            PerformingLanceWallSupport = reader.ReadByte() != 0;
 
             ReadPreviousStates(reader);
             ReadStateMachineStack(reader);

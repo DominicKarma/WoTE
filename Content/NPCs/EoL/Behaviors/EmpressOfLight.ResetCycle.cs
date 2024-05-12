@@ -11,27 +11,28 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The set of phase 1 attack combinations that may be selected.
         /// </summary>
-        public static List<EmpressAIType[]> Phase1AttackCombos => new()
+        public static List<List<EmpressAIType>> Phase1AttackCombos => new()
         {
-            new EmpressAIType[] { EmpressAIType.BasicPrismaticBolts, EmpressAIType.ButterflyBurstDashes },
-            new EmpressAIType[] { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
-            new EmpressAIType[] { EmpressAIType.OutwardRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
-            new EmpressAIType[] { EmpressAIType.OutwardRainbows, EmpressAIType.ButterflyBurstDashes },
-            new EmpressAIType[] { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst },
+            new() { EmpressAIType.BasicPrismaticBolts, EmpressAIType.ButterflyBurstDashes },
+            new() { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
+            new() { EmpressAIType.OutwardRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
+            new() { EmpressAIType.OutwardRainbows, EmpressAIType.ButterflyBurstDashes },
+            new() { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst },
         };
 
         /// <summary>
         /// The set of phase 2 attack combinations that may be selected.
         /// </summary>
-        public static List<EmpressAIType[]> Phase2AttackCombos => new()
+        public static List<List<EmpressAIType>> Phase2AttackCombos => new()
         {
-            new EmpressAIType[] { EmpressAIType.BasicPrismaticBolts, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
-            new EmpressAIType[] { EmpressAIType.BasicPrismaticBolts2, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
-            new EmpressAIType[] { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
-            new EmpressAIType[] { EmpressAIType.OutwardRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
-            new EmpressAIType[] { EmpressAIType.OutwardRainbows, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
-            new EmpressAIType[] { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst, EmpressAIType.BasicPrismaticBolts2 },
-            new EmpressAIType[] { EmpressAIType.PrismaticBoltSpin, EmpressAIType.OrbitReleasedTerraprismas, EmpressAIType.PrismaticBoltDashes },
+            new() { EmpressAIType.BasicPrismaticBolts, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
+            new() { EmpressAIType.BasicPrismaticBolts2, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
+            new() { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
+            new() { EmpressAIType.OutwardRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
+            new() { EmpressAIType.OutwardRainbows, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
+            new() { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst, EmpressAIType.BasicPrismaticBolts2 },
+            new() { EmpressAIType.PrismaticBoltSpin, EmpressAIType.OrbitReleasedTerraprismas, EmpressAIType.PrismaticBoltDashes },
+            new() { EmpressAIType.LanceWallSupport },
         };
 
         [AutomatedMethodInvoke]
@@ -42,7 +43,7 @@ namespace WoTE.Content.NPCs.EoL
                 StateMachine.StateStack.Clear();
 
                 var phaseCycle = ChooseNextCycle();
-                for (int i = phaseCycle.Length - 1; i >= 0; i--)
+                for (int i = phaseCycle.Count - 1; i >= 0; i--)
                     StateMachine.StateStack.Push(StateMachine.StateRegistry[phaseCycle[i]]);
             });
         }
@@ -65,9 +66,9 @@ namespace WoTE.Content.NPCs.EoL
         /// Chooses an attack state cycle that the empress should perform at random, based on phase.
         /// </summary>
         /// <returns>The new attack state cycle to perform.</returns>
-        public EmpressAIType[] ChooseNextCycle()
+        public List<EmpressAIType> ChooseNextCycle()
         {
-            EmpressAIType[] phaseCycle;
+            List<EmpressAIType> phaseCycle;
 
             int tries = 0;
             var statesToAvoid = PreviousStatesReversed.Take(3);
@@ -76,7 +77,10 @@ namespace WoTE.Content.NPCs.EoL
                 phaseCycle = Main.rand.Next(Phase2 ? Phase2AttackCombos : Phase1AttackCombos);
                 tries++;
             }
-            while (statesToAvoid.Any(s => phaseCycle.Contains(s)) && tries <= 100);
+            while (statesToAvoid.Any(s => phaseCycle.Contains(s)) && tries <= 50);
+
+            if (phaseCycle[0] == EmpressAIType.LanceWallSupport)
+                phaseCycle.Insert(1, Main.rand.Next(AcceptableAttacksForLanceWallSupport));
 
             return phaseCycle;
         }
