@@ -30,6 +30,11 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static int PrismaticBoltSpin_AttackTransitionDelay => Utilities.SecondsToFrames(2.3f);
 
+        /// <summary>
+        /// The radius of the spin the Empress performs during her Prismatic Bolt Spin attack.
+        /// </summary>
+        public static float PrismaticBoltSpin_SpinRadius => 700f;
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_PrismaticBoltSpin()
         {
@@ -75,7 +80,7 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_PrismaticBoltSpin_Spin()
         {
             float spinSpeedInterpolant = Utilities.InverseLerp(0f, 30f, AITimer);
-            Vector2 spinDestination = Target.Center + PrismaticBoltSpin_SpinAngle.ToRotationVector2() * 550f;
+            Vector2 spinDestination = Target.Center + PrismaticBoltSpin_SpinAngle.ToRotationVector2() * PrismaticBoltSpin_SpinRadius;
             NPC.SmoothFlyNear(spinDestination, spinSpeedInterpolant * 0.6f, 1f - spinSpeedInterpolant * 0.54f);
             DashAfterimageInterpolant = spinSpeedInterpolant;
 
