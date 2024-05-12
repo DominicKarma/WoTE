@@ -50,7 +50,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <param name="sortMode">The sprite sort mode to use when rendering.</param>
         internal static void BeginSpriteBatch(SpriteSortMode sortMode)
         {
-            Main.spriteBatch.Begin(sortMode, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
+            Main.spriteBatch.Begin(sortMode, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
         }
     }
 }

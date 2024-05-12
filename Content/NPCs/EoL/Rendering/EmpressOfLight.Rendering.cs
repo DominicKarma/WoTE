@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.NPCs.EoL.Projectiles;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -179,10 +180,18 @@ namespace WoTE.Content.NPCs.EoL
             Main.EntitySpriteDraw(wingsTexture, drawPosition, wingsFrame, Color.White, 0f, wingsFrame.Size() * 0.5f, 2f, 0);
 
             Main.spriteBatch.End();
-            EmpressOfLightTargetManager.BeginSpriteBatch(SpriteSortMode.Immediate);
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 
             ManagedShader gradientShader = ShaderManager.GetShader("WoTE.EmpressWingGradientShader");
-            gradientShader.SetTexture(TextureAssets.Extra[ExtrasID.HallowBossGradient], 1, SamplerState.LinearWrap);
+            gradientShader.TrySetParameter("gradient", new Vector4[]
+            {
+                Color.HotPink.ToVector4(),
+                Color.White.ToVector4(),
+                Color.Aqua.ToVector4(),
+                new Color(240, 243, 184).ToVector4(),
+            });
+            gradientShader.TrySetParameter("gradientCount", 4f);
+            gradientShader.SetTexture(TextureAssets.Projectile[ModContent.ProjectileType<StarBolt>()], 1, SamplerState.PointWrap);
             gradientShader.Apply();
 
             Main.EntitySpriteDraw(wingsColorShapeTexture, drawPosition, wingsFrame, Color.White, 0f, wingsFrame.Size() * 0.5f, 2f, 0);
