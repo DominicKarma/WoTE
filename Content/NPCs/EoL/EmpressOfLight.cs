@@ -256,6 +256,8 @@ namespace WoTE.Content.NPCs.EoL
             // Increment timers.
             AITimer++;
 
+            Target.GrantInfiniteFlight();
+
             Lighting.AddLight(NPC.Center, Vector3.One * NPC.Opacity);
         }
 

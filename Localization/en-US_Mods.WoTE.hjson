@@ -13,6 +13,7 @@ Projectiles: {
 	StarBolt.DisplayName: Star Bolt
 	PrismaticBurst.DisplayName: Prismatic Burst
 	DazzlingTornado.DisplayName: Dazzling Tornado
+	EmpressOrbitingTerraprisma.DisplayName: Empress Orbiting Terraprisma
 }
 
 Configs: {
