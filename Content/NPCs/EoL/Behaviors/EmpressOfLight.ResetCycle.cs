@@ -69,12 +69,14 @@ namespace WoTE.Content.NPCs.EoL
         {
             EmpressAIType[] phaseCycle;
 
+            int tries = 0;
             var statesToAvoid = PreviousStatesReversed.Take(3);
             do
             {
                 phaseCycle = Main.rand.Next(Phase2 ? Phase2AttackCombos : Phase1AttackCombos);
+                tries++;
             }
-            while (statesToAvoid.Any(s => phaseCycle.Contains(s)));
+            while (statesToAvoid.Any(s => phaseCycle.Contains(s)) && tries <= 100);
 
             return phaseCycle;
         }
