@@ -34,7 +34,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of time the Empress spends dashing during the Prismatic Bolt Dashes attack.
         /// </summary>
-        public int PrismaticBoltDashes_DashTime => Utilities.SecondsToFrames(ByPhase(0.75f, 0.64f));
+        public int PrismaticBoltDashes_DashTime => Utilities.SecondsToFrames(ByPhase(0.75f, 0.73f));
 
         /// <summary>
         /// The amount of dashes that the Empress should perform during the Prismatic Bolt Dashes attack.
@@ -44,7 +44,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The speed of dashes performed during the Prismatic Bolt Dashes attack.
         /// </summary>
-        public float PrismaticBoltDashes_DashSpeed => ByPhase(60f, 72f);
+        public float PrismaticBoltDashes_DashSpeed => ByPhase(60f, 67f);
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_PrismaticBoltDashes()
