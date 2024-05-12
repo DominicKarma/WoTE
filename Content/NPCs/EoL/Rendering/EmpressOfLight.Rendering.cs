@@ -171,7 +171,7 @@ namespace WoTE.Content.NPCs.EoL
         /// Draws the Empress' wings.
         /// </summary>
         /// <param name="drawPosition">The draw position of the wings.</param>
-        public void DrawWings(Vector2 drawPosition)
+        public static void DrawWings(Vector2 drawPosition)
         {
             Texture2D wingsTexture = TextureAssets.Extra[ExtrasID.HallowBossWingsBack].Value;
             Texture2D wingsColorShapeTexture = TextureAssets.Extra[ExtrasID.HallowBossWings].Value;
@@ -204,7 +204,7 @@ namespace WoTE.Content.NPCs.EoL
         /// Draws the Empress' tentacles.
         /// </summary>
         /// <param name="drawPosition">The draw position of the tentacles.</param>
-        public void DrawTentacles(Vector2 drawPosition)
+        public static void DrawTentacles(Vector2 drawPosition)
         {
             Color tentacleColor = Color.Gold * 0.6f;
             tentacleColor.A = 0;
@@ -238,7 +238,7 @@ namespace WoTE.Content.NPCs.EoL
         /// Draws the Empress' glowing dress.
         /// </summary>
         /// <param name="drawPosition">The draw position of the dress.</param>
-        public void DrawDress(Vector2 drawPosition)
+        public static void DrawDress(Vector2 drawPosition)
         {
             Texture2D dressTexture = TextureAssets.Extra[ExtrasID.HallowBossSkirt].Value;
             Main.EntitySpriteDraw(dressTexture, drawPosition, null, Color.White, 0f, dressTexture.Size() * 0.5f, 1f, 0);
