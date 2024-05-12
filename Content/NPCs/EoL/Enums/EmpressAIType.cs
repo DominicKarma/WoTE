@@ -21,6 +21,7 @@
         RadialStarBurst,
 
         // Phase 2 attack states.
+        BasicPrismaticBolts2,
         DazzlingTornadoes,
         OrbitReleasedTerraprismas,
 
