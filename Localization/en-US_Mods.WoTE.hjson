@@ -1,19 +1,19 @@
 NPCs: {
-	EmpressOfLight.DisplayName: Empress Of Light
+	EmpressOfLight.DisplayName: Empress of Light
 	Lacewing.DisplayName: Lacewing
 }
 
 Projectiles: {
 	PrismaticBolt.DisplayName: Prismatic Bolt
 	LightLance.DisplayName: Light Lance
-	AcceleratingLightLance.DisplayName: Accelerating Light Lance
-	AcceleratingRainbow.DisplayName: Accelerating Rainbow
-	SpinningTerraprisma.DisplayName: Spinning Terraprisma
+	AcceleratingLightLance.DisplayName: Light Lance
+	AcceleratingRainbow.DisplayName: Rainbow
+	SpinningTerraprisma.DisplayName: Terraprisma
 	DazzlingPetal.DisplayName: Dazzling Petal
 	StarBolt.DisplayName: Star Bolt
 	PrismaticBurst.DisplayName: Prismatic Burst
 	DazzlingTornado.DisplayName: Dazzling Tornado
-	EmpressOrbitingTerraprisma.DisplayName: Empress Orbiting Terraprisma
+	EmpressOrbitingTerraprisma.DisplayName: Terraprisma
 }
 
 Configs: {
