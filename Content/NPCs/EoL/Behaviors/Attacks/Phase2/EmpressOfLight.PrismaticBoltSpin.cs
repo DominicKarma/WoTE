@@ -79,12 +79,12 @@ namespace WoTE.Content.NPCs.EoL
             NPC.SmoothFlyNear(spinDestination, spinSpeedInterpolant * 0.6f, 1f - spinSpeedInterpolant * 0.54f);
             DashAfterimageInterpolant = spinSpeedInterpolant;
 
-            float spinSpeed = MathHelper.TwoPi / 27f;
+            float spinSpeed = MathHelper.TwoPi / 36f;
             PrismaticBoltSpin_SpinAngle += spinSpeed * PrismaticBoltSpin_SpinDirection;
 
-            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 4 == 3)
+            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 5 == 4)
             {
-                Vector2 boltVelocity = NPC.velocity.SafeNormalize(Vector2.UnitY) * 17f;
+                Vector2 boltVelocity = NPC.velocity.SafeNormalize(Vector2.UnitY) * 10f;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target, AITimer / 45f % 1f);
             }
         }
