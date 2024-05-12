@@ -52,7 +52,7 @@ namespace WoTE.Content.NPCs.EoL
             });
             StateMachine.ApplyToAllStatesExcept(state =>
             {
-                StateMachine.RegisterTransition(state, EmpressAIType.Phase2Transition, false, () => EnterPhase2AfterNextAttack);
+                StateMachine.RegisterTransition(state, EmpressAIType.Phase2Transition, false, () => EnterPhase2AfterNextAttack && CurrentState != EmpressAIType.ButterflyBurstDashes);
             }, EmpressAIType.Phase2Transition);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Phase2Transition, DoBehavior_Phase2Transition);

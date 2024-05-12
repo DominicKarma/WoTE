@@ -256,7 +256,11 @@ namespace WoTE.Content.NPCs.EoL
             // Increment timers.
             AITimer++;
 
-            Target.GrantInfiniteFlight();
+            foreach (Player player in Main.ActivePlayers)
+            {
+                player.GrantInfiniteFlight();
+                player.AddBuff(ModContent.BuffType<GracedWings>(), 2);
+            }
 
             Lighting.AddLight(NPC.Center, Vector3.One * NPC.Opacity);
         }
