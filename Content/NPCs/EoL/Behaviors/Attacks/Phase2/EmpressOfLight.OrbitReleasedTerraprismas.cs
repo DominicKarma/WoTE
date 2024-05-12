@@ -78,8 +78,10 @@ namespace WoTE.Content.NPCs.EoL
             NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.006f);
             NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 11f, 0.21f);
 
+            float slowdownRadius = Utilities.InverseLerp(0f, 24f, AITimer) * 400f;
             float initialFlySpeedInterpolant = Utilities.InverseLerp(40f, 0f, AITimer);
-            NPC.SmoothFlyNearWithSlowdownRadius(Target.Center + Vector2.UnitX * NPC.OnRightSideOf(Target.Center).ToDirectionInt() * 500f, initialFlySpeedInterpolant * 0.3f, 1f - initialFlySpeedInterpolant * 0.4f, 400f);
+            Vector2 hoverDestination = Target.Center + Vector2.UnitX * NPC.OnRightSideOf(Target.Center).ToDirectionInt() * 500f;
+            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, initialFlySpeedInterpolant * 0.3f, 1f - initialFlySpeedInterpolant * 0.4f, slowdownRadius);
         }
 
         /// <summary>
