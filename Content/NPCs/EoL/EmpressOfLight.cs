@@ -256,7 +256,6 @@ namespace WoTE.Content.NPCs.EoL
             if ((StateMachine?.StateStack?.Count ?? 1) <= 0)
                 StateMachine?.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
 
-            // Increment timers.
             AITimer++;
 
             foreach (Player player in Main.ActivePlayers)
