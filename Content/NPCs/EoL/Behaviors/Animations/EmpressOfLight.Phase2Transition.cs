@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.NPCs.EoL.Projectiles;
 using WoTE.Content.Particles;
 
 namespace WoTE.Content.NPCs.EoL
@@ -46,7 +47,7 @@ namespace WoTE.Content.NPCs.EoL
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_Phase2Transition()
         {
-            StateMachine.RegisterTransition(EmpressAIType.Phase2Transition, null, false, () =>
+            StateMachine.RegisterTransition(EmpressAIType.Phase2Transition, EmpressAIType.OrbitReleasedTerraprismas, false, () =>
             {
                 return AITimer >= Phase2Transition_DisappearTime + Phase2Transition_StayInvisibleTime;
             });
@@ -118,11 +119,22 @@ namespace WoTE.Content.NPCs.EoL
 
             if (AITimer == Phase2Transition_DisappearTime + Phase2Transition_StayInvisibleTime - 2)
             {
-                ScreenShakeSystem.StartShake(10f);
+                ScreenShakeSystem.StartShake(14f);
 
                 SoundEngine.PlaySound(SoundID.Item160);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<PrismaticBurst>(), 0, 0f);
+
+                    float shootOffsetAngle = NPC.AngleTo(Target.Center);
+                    for (int i = 0; i < 23; i++)
+                    {
+                        float shootAngle = MathHelper.TwoPi * i / 23f + shootOffsetAngle;
+                        Vector2 shootVelocity = shootAngle.ToRotationVector2() * 4f;
+
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<StarBolt>(), 0, 0f);
+                    }
+                }
 
                 TeleportTo(Target.Center - Vector2.UnitY * 400, 2);
             }
