@@ -63,7 +63,7 @@ namespace WoTE.Content.NPCs.EoL
                 float spinAngleOffset = Main.rand.NextFromList(0f, MathHelper.Pi / 3f, MathHelper.Pi * 0.667f);
                 for (int i = 0; i < terraprismaCount; i++)
                 {
-                    int fireDelay = i * 3;
+                    int fireDelay = i * 2;
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<EmpressOrbitingTerraprisma>(), TerraprismaDamage, 0f, -1, i / (float)terraprismaCount, MathHelper.TwoPi * i / terraprismaCount + spinAngleOffset, fireDelay);
                 }
             }
@@ -78,9 +78,9 @@ namespace WoTE.Content.NPCs.EoL
             NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.006f);
             NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 11f, 0.21f);
 
-            float slowdownRadius = Utilities.InverseLerp(0f, 24f, AITimer) * 400f;
+            float slowdownRadius = Utilities.InverseLerp(0f, 42f, AITimer) * 400f;
             float initialFlySpeedInterpolant = Utilities.InverseLerp(40f, 0f, AITimer);
-            Vector2 hoverDestination = Target.Center + Vector2.UnitX * NPC.OnRightSideOf(Target.Center).ToDirectionInt() * 500f;
+            Vector2 hoverDestination = Target.Center + Vector2.UnitX * NPC.OnRightSideOf(Target.Center).ToDirectionInt() * 700f;
             NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, initialFlySpeedInterpolant * 0.3f, 1f - initialFlySpeedInterpolant * 0.4f, slowdownRadius);
         }
 
