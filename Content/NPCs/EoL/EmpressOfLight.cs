@@ -250,6 +250,7 @@ namespace WoTE.Content.NPCs.EoL
                 DoBehavior_LanceWallSupport_HandlePostStateSupportBehaviors();
 
             UpdateLoopingSounds();
+            GracePlayerWings();
 
             // This is done to ensure that if the PerformStateTransitionCheck cleared the state stack there's a viable replacement state in there.
             // Without this, the AITimer ref will throw an exception due to there being nothing in the state stack to peek.
@@ -257,12 +258,6 @@ namespace WoTE.Content.NPCs.EoL
                 StateMachine?.StateStack.Push(StateMachine.StateRegistry[EmpressAIType.ResetCycle]);
 
             AITimer++;
-
-            foreach (Player player in Main.ActivePlayers)
-            {
-                player.GrantInfiniteFlight();
-                player.AddBuff(ModContent.BuffType<GracedWings>(), 2);
-            }
 
             Lighting.AddLight(NPC.Center, Vector3.One * NPC.Opacity);
         }
@@ -351,6 +346,18 @@ namespace WoTE.Content.NPCs.EoL
                 float groundDistanceVolumeFactor = MathHelper.Lerp(1f, 0.4f, groundDistanceInterpolant);
                 sound.Volume = DrizzleVolume * groundDistanceVolumeFactor;
             });
+        }
+
+        /// <summary>
+        /// Grants all active players with infinite flight and buffed flight speeds via the <see cref="GracedWings"/> buff.
+        /// </summary>
+        public static void GracePlayerWings()
+        {
+            foreach (Player player in Main.ActivePlayers)
+            {
+                player.GrantInfiniteFlight();
+                player.AddBuff(ModContent.BuffType<GracedWings>(), 2);
+            }
         }
 
         #endregion AI
