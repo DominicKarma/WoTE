@@ -87,10 +87,13 @@ namespace WoTE.Content.NPCs.EoL
             LeftHandFrame = EmpressHandFrame.PalmRaisedUp;
             RightHandFrame = EmpressHandFrame.PalmRaisedUp;
 
-            NPC.velocity.X *= 1.032f;
+            NPC.velocity.X *= 1.02f;
 
             if (AITimer == 1)
                 TeleportTo(Target.Center + Vector2.UnitX * Target.direction * 720f);
+
+            if (AITimer <= 10)
+                NPC.velocity += NPC.SafeDirectionTo(Target.Center) * 0.9f;
 
             if (AITimer >= LanceWallSupport_FlyUpwardDelay + LanceWallSupport_FlyUpwardTime)
                 NPC.velocity.Y = MathHelper.Clamp(NPC.velocity.Y + 5f, -60f, 90f);
