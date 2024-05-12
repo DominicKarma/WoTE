@@ -97,25 +97,31 @@ namespace WoTE.Content.NPCs.EoL
                 Projectile.velocity *= 0.86f;
 
             for (int i = 0; i < Projectile.scale.Squared(); i++)
-            {
-                Color pixelColor = Color.Lerp(Color.DeepSkyBlue, Color.HotPink, Main.rand.NextFloat()) * Projectile.Opacity;
-                Vector2 pixelSpawnCore = Vector2.Lerp(Projectile.Top, Projectile.Bottom, Main.rand.NextFloat(0.75f));
-                Vector2 pixelSpawnPosition = pixelSpawnCore + Vector2.UnitX * Main.rand.NextFloatDirection() * Projectile.width * Projectile.scale * 0.4f;
-                Vector2 pixelVelocity = pixelSpawnPosition.SafeDirectionTo(pixelSpawnCore) * Projectile.Opacity * Projectile.scale * Main.rand.NextFloat(5f, 9.3f);
-                pixelVelocity.Y -= Main.rand.NextFloat(1f, 7f) * (pixelSpawnPosition.X < pixelSpawnCore.X).ToDirectionInt();
-                if (Projectile.velocity.X <= 0f)
-                    pixelVelocity = Vector2.Reflect(pixelVelocity, Vector2.UnitX);
-                pixelVelocity -= Projectile.velocity.RotatedByRandom(MathHelper.Pi / 3f) * 0.7f;
-
-                BloomPixelParticle pixel = new(pixelSpawnPosition, pixelVelocity, Color.White * Projectile.Opacity * 0.75f, pixelColor * 0.4f, (int)(Projectile.Opacity * 38f), Vector2.One * Main.rand.NextFloat(1.7f, 3.3f));
-                pixel.Spawn();
-            }
+                CreateSwirlEnergyInstance();
 
             Time++;
 
             float visualTimePower = Projectile.scale * Projectile.Opacity;
             VisualsTime += visualTimePower / 120f;
             SpeedTime += Projectile.velocity.X * visualTimePower / 1550f;
+        }
+
+        /// <summary>
+        /// Creates a single instance of swirling energy along the tornado.
+        /// </summary>
+        public void CreateSwirlEnergyInstance()
+        {
+            Color pixelColor = Color.Lerp(Color.DeepSkyBlue, Color.HotPink, Main.rand.NextFloat()) * Projectile.Opacity;
+            Vector2 pixelSpawnCore = Vector2.Lerp(Projectile.Top, Projectile.Bottom, Main.rand.NextFloat(0.75f));
+            Vector2 pixelSpawnPosition = pixelSpawnCore + Vector2.UnitX * Main.rand.NextFloatDirection() * Projectile.width * Projectile.scale * 0.4f;
+            Vector2 pixelVelocity = pixelSpawnPosition.SafeDirectionTo(pixelSpawnCore) * Projectile.Opacity * Projectile.scale * Main.rand.NextFloat(5f, 9.3f);
+            pixelVelocity.Y -= Main.rand.NextFloat(1f, 7f) * (pixelSpawnPosition.X < pixelSpawnCore.X).ToDirectionInt();
+            if (Projectile.velocity.X <= 0f)
+                pixelVelocity = Vector2.Reflect(pixelVelocity, Vector2.UnitX);
+            pixelVelocity -= Projectile.velocity.RotatedByRandom(MathHelper.Pi / 3f) * 0.7f;
+
+            BloomPixelParticle pixel = new(pixelSpawnPosition, pixelVelocity, Color.White * Projectile.Opacity * 0.75f, pixelColor * 0.4f, (int)(Projectile.Opacity * 38f), Vector2.One * Main.rand.NextFloat(1.7f, 3.3f));
+            pixel.Spawn();
         }
 
         public override bool? CanDamage() => Projectile.scale >= 0.9f && Projectile.Opacity >= 0.7f;
