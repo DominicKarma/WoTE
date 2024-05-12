@@ -205,7 +205,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.value = Item.buyPrice(1, 0, 0, 0) / 5;
             NPC.netAlways = true;
             NPC.Opacity = 0f;
-            Music = MusicID.EmpressOfLight;
+            Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/EmpressOfLight");
         }
 
         #endregion Loading
@@ -291,6 +291,8 @@ namespace WoTE.Content.NPCs.EoL
         {
             Main.windSpeedTarget = 0.04f;
             Main.moonPhase = 4;
+            if (!Main.dayTime)
+                Main.time = MathHelper.Lerp((float)Main.time, 16200f, 0.1f);
 
             // The ambient sounds of these things absolutely kill the mood of the fight.
             // Kill them.
