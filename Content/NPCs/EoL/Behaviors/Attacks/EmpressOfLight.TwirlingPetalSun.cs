@@ -110,8 +110,9 @@ namespace WoTE.Content.NPCs.EoL
                 }
             }
 
+            float flySpeed = PerformingLanceWallSupport ? 6f : 2f;
             NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.013f);
-            NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * 2f, 0.03f);
+            NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * flySpeed, 0.03f);
         }
     }
 }
