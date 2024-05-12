@@ -23,7 +23,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of Terraprisma instances the Empress summons for her Orbit Released Terraprismas attack.
         /// </summary>
-        public static int OrbitReleasedTerraprismas_TerraprismaCount => 11;
+        public static int OrbitReleasedTerraprismas_TerraprismaCount => 10;
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_OrbitReleasedTerraprismas()
