@@ -33,6 +33,9 @@
         // "The player died so I should probably go away" state.
         Vanish,
 
+        // Death state.
+        Die,
+
         // Useful count constant.
         Count
     }
