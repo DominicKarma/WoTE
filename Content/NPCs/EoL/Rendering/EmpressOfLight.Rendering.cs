@@ -61,7 +61,6 @@ namespace WoTE.Content.NPCs.EoL
             float backgroundFadeInterpolant = Utilities.InverseLerp(1f, 2.6f, z);
             float defocusInterpolant = Utilities.InverseLerp(0.3f, 2.4f, z);
             float opacity = MathHelper.Lerp(1f, 0.43f, backgroundFadeInterpolant);
-            color = Color.Lerp(color, Color.Gray, backgroundFadeInterpolant * 0.5f);
 
             float[] blurWeights = new float[5];
             for (int i = 0; i < blurWeights.Length; i++)
@@ -166,6 +165,8 @@ namespace WoTE.Content.NPCs.EoL
         public void DrawBackglow(Vector2 drawPosition)
         {
             float backglowOpacity = MathHelper.Lerp(0.5f, 0.03f, MathF.Sqrt(DashAfterimageInterpolant));
+            backglowOpacity = MathHelper.Lerp(backglowOpacity, 0.03f, Utilities.InverseLerp(0.3f, 0.9f, ZPosition));
+
             float backglowScale = 1f - Utilities.InverseLerpBump(0f, 0.5f, 0.6f, 1f, TeleportCompletionRatio);
             Color rainbow = Main.hslToRgb(Main.GlobalTimeWrappedHourly * 0.5f % 1f, 1f, 0.5f, 0);
             Texture2D backglow = MiscTexturesRegistry.BloomCircleSmall.Value;

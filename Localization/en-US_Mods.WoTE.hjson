@@ -14,6 +14,7 @@ Projectiles: {
 	PrismaticBurst.DisplayName: Prismatic Burst
 	DazzlingTornado.DisplayName: Dazzling Tornado
 	EmpressOrbitingTerraprisma.DisplayName: Terraprisma
+	ConvergingMoonlight.DisplayName: Converging Moonlight
 }
 
 Configs: {

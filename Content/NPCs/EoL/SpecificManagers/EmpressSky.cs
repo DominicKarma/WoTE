@@ -50,6 +50,14 @@ namespace WoTE.Content.NPCs.EoL
             }
         }
 
+        /// <summary>
+        /// The position of the moon in screen space.
+        /// </summary>
+        public static Vector2 MoonScreenPosition => Main.ScreenSize.ToVector2() * new Vector2(0.5f, 0.115f);
+
+        /// <summary>
+        /// The set of all active rain particles.
+        /// </summary>
         public static readonly RainParticle[] RainParticles = new RainParticle[2048];
 
         /// <summary>
@@ -82,7 +90,7 @@ namespace WoTE.Content.NPCs.EoL
                 Main.spriteBatch.Draw(sky, skyRectangle, Color.White * Opacity * 0.4f);
 
                 Texture2D moon = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/SpecificManagers/TheMoonFromInfernum").Value;
-                Vector2 moonDrawPosition = Main.ScreenSize.ToVector2() * new Vector2(0.5f, 0.115f);
+                Vector2 moonDrawPosition = MoonScreenPosition;
 
                 Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
                 Main.spriteBatch.Draw(bloom, moonDrawPosition, null, Color.Silver with { A = 0 } * Opacity * 0.6f, 0f, bloom.Size() * 0.5f, 2f, 0, 0f);
@@ -156,9 +164,7 @@ namespace WoTE.Content.NPCs.EoL
             for (int i = 0; i < RainParticles.Length; i++)
                 RainParticles[i].Update();
 
-            if (!skyActive)
-                ResetVariablesWhileInactive();
-            else if (Main.LocalPlayer.Center.Y >= 3000f)
+            if (skyActive && Main.LocalPlayer.Center.Y >= 3000f)
             {
                 for (int i = 0; i < 2; i++)
                 {
@@ -169,10 +175,6 @@ namespace WoTE.Content.NPCs.EoL
                     RainParticle.SpawnNew(rainSpawnPosition, rainVelocity, rainScale);
                 }
             }
-        }
-
-        public void ResetVariablesWhileInactive()
-        {
         }
 
         #region Boilerplate

@@ -1,4 +1,5 @@
-﻿using Luminance.Common.Utilities;
+﻿using System;
+using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,9 +25,9 @@ namespace WoTE.Content.Particles
         public Vector2 BloomScaleFactor;
 
         /// <summary>
-        /// The optional position that this pixel should try to home towards.
+        /// The optional position function that this pixel should try to home towards.
         /// </summary>
-        public Vector2? HomeInDestination;
+        public Func<Vector2>? HomeInDestination;
 
         /// <summary>
         /// The bloom texture.
@@ -41,7 +42,7 @@ namespace WoTE.Content.Particles
 
         public override BlendState BlendState => BlendState.Additive;
 
-        public BloomPixelParticle(Vector2 position, Vector2 velocity, Color color, Color bloomColor, int lifetime, Vector2 scale, Vector2? homeInDestination = null, Vector2? bloomScaleFactor = null)
+        public BloomPixelParticle(Vector2 position, Vector2 velocity, Color color, Color bloomColor, int lifetime, Vector2 scale, Func<Vector2>? homeInDestination = null, Vector2? bloomScaleFactor = null)
         {
             Position = position;
             Velocity = velocity;
@@ -77,15 +78,16 @@ namespace WoTE.Content.Particles
                 Velocity *= 0.96f;
             else
             {
+                Vector2 homeInDestination = HomeInDestination?.Invoke() ?? Position;
                 float flySpeedInterpolant = Utilities.InverseLerp(0f, 120f, Time);
                 float currentDirection = Velocity.ToRotation();
-                float idealDirection = (HomeInDestination.Value - Position).ToRotation();
+                float idealDirection = (homeInDestination - Position).ToRotation();
                 Velocity = currentDirection.AngleLerp(idealDirection, flySpeedInterpolant * 0.014f).ToRotationVector2() * Velocity.Length();
-                Velocity = Vector2.Lerp(Velocity, idealDirection.ToRotationVector2() * (Time * 0.04f + 25f), flySpeedInterpolant * 0.006f);
-                if (Position.WithinRange(HomeInDestination.Value, 300f))
+                Velocity = Vector2.Lerp(Velocity, idealDirection.ToRotationVector2() * (Time * 0.05f + 25f), flySpeedInterpolant * 0.0137f);
+                if (Position.WithinRange(homeInDestination, 300f))
                     Velocity *= 0.97f;
 
-                if (Position.WithinRange(HomeInDestination.Value, 10f))
+                if (Position.WithinRange(homeInDestination, 10f))
                     Kill();
             }
 
