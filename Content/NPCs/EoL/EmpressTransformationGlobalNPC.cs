@@ -18,10 +18,5 @@ namespace WoTE.Content.NPCs.EoL
 
             return true;
         }
-
-        public override void FindFrame(NPC npc, int frameHeight)
-        {
-
-        }
     }
 }
