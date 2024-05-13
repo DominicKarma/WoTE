@@ -1,4 +1,5 @@
 ﻿using System;
+using Luminance.Common.Easings;
 using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -61,8 +62,8 @@ namespace WoTE.Content.NPCs.EoL
             if (Main.mouseRight && Main.mouseRightRelease)
                 AITimer = 0;
 
-            ZPosition = Utilities.InverseLerp(0f, 35f, AITimer).Squared() * 2.4f;
-            NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 400f, ZPosition * 0.1f, 1f - ZPosition * 0.15f);
+            ZPosition = EasingCurves.Cubic.Evaluate(EasingType.InOut, Utilities.InverseLerp(0f, 60f, AITimer)) * 2.3f;
+            NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 270f, ZPosition * 0.1f, 1f - ZPosition * 0.15f);
 
             LeftHandFrame = EmpressHandFrame.HandPressedToChest;
             RightHandFrame = EmpressHandFrame.HandPressedToChest;
