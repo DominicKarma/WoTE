@@ -10,6 +10,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public override bool PreAI(NPC npc)
         {
+            // TODO -- Sidestep this if a different mod attempts to reset the Empress' AI, maybe?
             if (npc.type == NPCID.HallowBoss)
             {
                 npc.Transform(ModContent.NPCType<EmpressOfLight>());
