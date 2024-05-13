@@ -24,9 +24,41 @@ namespace WoTE.Content.NPCs.EoL
             set;
         }
 
+        /// <summary>
+        /// The scale of the Empress' butterfly projection.
+        /// </summary>
+        public float ButterflyProjectionScale
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The opacity of the Empress' butterfly projection.
+        /// </summary>
+        public float ButterflyProjectionOpacity
+        {
+            get;
+            set;
+        }
+
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
             Main.spriteBatch.PrepareForShaders();
+
+            if (ButterflyProjectionOpacity > 0f && ButterflyProjectionScale > 0f)
+            {
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                DrawButterflyProjection(NPC.Center - screenPos, 1f);
+
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+
+                for (int i = 24; i >= 1; i--)
+                    DrawButterflyProjection(NPC.oldPos[i] + NPC.Size * 0.5f - screenPos, (1f - i / 24f) * 0.4f);
+                Main.spriteBatch.PrepareForShaders();
+            }
 
             float illusionInterpolant = (1f - Utilities.InverseLerpBump(0f, 0.2f, 0.8f, 1f, TeleportCompletionRatio)) * DashAfterimageInterpolant;
             float cutoffYInterpolant = EasingCurves.Quadratic.Evaluate(EasingType.InOut, TeleportCompletionRatio);
@@ -44,6 +76,47 @@ namespace WoTE.Content.NPCs.EoL
             Main.spriteBatch.ResetToDefault();
 
             return false;
+        }
+
+        /// <summary>
+        /// Draws the Empress' butterfly avatar form projection.
+        /// </summary>
+        /// <param name="drawPosition">The draw position of the avatar projection.</param>
+        /// <param name="opacity">The opacity of the avatar projection.</param>
+        public void DrawButterflyProjection(Vector2 drawPosition, float opacity)
+        {
+            Texture2D body = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/ButterflyProjectionBody").Value;
+            Texture2D wing = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/ButterflyProjectionWing").Value;
+
+            ManagedShader avatarShader = ShaderManager.GetShader("WoTE.EmpressButterflyAvatarShader");
+            avatarShader.TrySetParameter("gradientCount", 9f);
+            avatarShader.TrySetParameter("gradient", new Vector4[]
+            {
+                Color.Black.ToVector4(),
+                Color.Black.ToVector4(),
+                Color.Aqua.ToVector4(),
+                Color.White.ToVector4(),
+                Color.Wheat.ToVector4(),
+                Color.Wheat.ToVector4(),
+                Color.HotPink.ToVector4(),
+                Color.DeepSkyBlue.ToVector4(),
+                Color.DeepPink.ToVector4(),
+            });
+            avatarShader.Apply();
+
+            var wingFlapCurve = new PiecewiseCurve().
+                Add(EasingCurves.Quadratic, EasingType.InOut, 0.1f, 0.3f, 1f).
+                Add(EasingCurves.Quadratic, EasingType.Out, 1.02f, 0.65f).
+                Add(EasingCurves.Quadratic, EasingType.InOut, 1f, 1f);
+            float flapScale = wingFlapCurve.Evaluate(Main.GlobalTimeWrappedHourly * 0.8f % 1f);
+
+            Vector2 baseScale = Vector2.One * ButterflyProjectionScale;
+            Vector2 wingScale = new Vector2(flapScale, 1f) * baseScale;
+            Vector2 wingDrawPosition = drawPosition + Vector2.UnitY * 54f;
+
+            Main.EntitySpriteDraw(wing, wingDrawPosition, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(0f, 0.5f), wingScale, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(wing, wingDrawPosition, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(1f, 0.5f), wingScale, SpriteEffects.FlipHorizontally, 0f);
+            Main.EntitySpriteDraw(body, drawPosition, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, body.Size() * 0.5f, baseScale, 0, 0f);
         }
 
         /// <summary>

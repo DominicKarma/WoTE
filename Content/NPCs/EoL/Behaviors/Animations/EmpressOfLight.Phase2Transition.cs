@@ -2,6 +2,7 @@
 using Luminance.Common.Easings;
 using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -28,14 +29,9 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
-        /// How long the Empress spends disappearing during her second phase transition.
+        /// How long the Empress waits during her second phase transition while charging energy.
         /// </summary>
-        public static int Phase2Transition_DisappearTime => Utilities.SecondsToFrames(0f);
-
-        /// <summary>
-        /// How long the Empress spends invisible as the rain pours during her second phase transition.
-        /// </summary>
-        public static int Phase2Transition_StayInvisibleTime => Utilities.SecondsToFrames(11f);
+        public static int Phase2Transition_EnergyChargeUpTime => Utilities.SecondsToFrames(11f);
 
         /// <summary>
         /// The life ratio at which the Emperss transitions to her second phase.
@@ -63,17 +59,22 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_Phase2Transition()
         {
             if (Main.mouseRight && Main.mouseRightRelease)
+            {
+                ButterflyProjectionScale = 0f;
+                ButterflyProjectionOpacity = 0f;
                 AITimer = 0;
+            }
 
             float maxZPosition = MathHelper.Lerp(5f, 1.1f, Utilities.Sin01(MathHelper.TwoPi * AITimer / 60f).Cubed());
             ZPosition = EasingCurves.Cubic.Evaluate(EasingType.InOut, Utilities.InverseLerp(0f, 60f, AITimer)) * maxZPosition;
-            if (ZPosition >= 0.8f)
-                NPC.velocity *= 0.9f;
-            else
+            if (AITimer <= 120)
                 NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 270f, ZPosition * 0.1f, 1f - ZPosition * 0.15f);
+            else if (AITimer <= 180)
+                NPC.velocity *= 0.9f;
+
             NPC.rotation = MathHelper.Lerp(NPC.rotation, 0f, 0.3f);
 
-            float appearanceInterpolant = Utilities.InverseLerpBump(0f, 0.4f, 0.5f, 0.55f, (AITimer - Phase2Transition_DisappearTime) / (float)Phase2Transition_StayInvisibleTime).Squared();
+            float appearanceInterpolant = Utilities.InverseLerpBump(0f, 0.4f, 0.7f, 0.75f, AITimer / (float)Phase2Transition_EnergyChargeUpTime).Squared();
             if (Main.netMode != NetmodeID.MultiplayerClient && ZPosition >= 2f && AITimer % 3 == 0 && appearanceInterpolant >= 0.5f)
             {
                 Vector2 moonlightPosition = NPC.Center + (MathHelper.TwoPi * AITimer / 30f).ToRotationVector2() * Main.rand.NextFloat(1200f, 1300f) * new Vector2(1f, 0.6f);
@@ -81,7 +82,7 @@ namespace WoTE.Content.NPCs.EoL
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), moonlightPosition, moonlightVelocity, ModContent.ProjectileType<ConvergingMoonlight>(), 0, 0f);
             }
 
-            for (int i = 0; i < appearanceInterpolant * 16f; i++)
+            for (int i = 0; i < appearanceInterpolant.Squared() * 16f; i++)
             {
                 float pixelScale = Main.rand.NextFloat(1f, 5f);
                 Vector2 pixelSpawnPosition = NPC.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(900f, 1256f);
@@ -92,12 +93,23 @@ namespace WoTE.Content.NPCs.EoL
                 bloom.Spawn();
             }
 
+            if (AITimer >= Phase2Transition_EnergyChargeUpTime)
+            {
+                if (AITimer == Phase2Transition_EnergyChargeUpTime + 10)
+                    ScreenShakeSystem.StartShake(10f);
+
+                ButterflyProjectionScale = MathHelper.Lerp(ButterflyProjectionScale, 2.56f, 0.04f);
+                ButterflyProjectionOpacity = MathHelper.Lerp(ButterflyProjectionOpacity, 1f, 0.2f);
+            }
+
+            ScreenShakeSystem.SetUniversalRumble(MathF.Sqrt(appearanceInterpolant) * 6f, MathHelper.TwoPi, null, 0.2f);
+
             LeftHandFrame = EmpressHandFrame.HandPressedToChest;
             RightHandFrame = EmpressHandFrame.HandPressedToChest;
             NPC.dontTakeDamage = true;
             NPC.ShowNameOnHover = false;
             Phase2 = true;
-            IdealDrizzleVolume = StandardDrizzleVolume + Utilities.InverseLerp(0f, 120f, AITimer - Phase2Transition_DisappearTime) * 0.3f;
+            IdealDrizzleVolume = StandardDrizzleVolume + Utilities.InverseLerp(0f, 120f, AITimer) * 0.3f;
 
             DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, Utilities.InverseLerp(0f, 120f, AITimer), 0.055f);
 
@@ -108,7 +120,7 @@ namespace WoTE.Content.NPCs.EoL
             // This obviously doesn't work in multiplayer, and as such it does not run there.
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
-                float parallax = 1f - MathF.Pow(2f, ZPosition * -1.5f);
+                float parallax = 0.8f;
                 Vector2 targetOffset = Target.velocity;
                 if (NPC.HasPlayerTarget)
                 {

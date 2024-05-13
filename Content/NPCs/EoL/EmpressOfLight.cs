@@ -326,6 +326,12 @@ namespace WoTE.Content.NPCs.EoL
         {
             if (CurrentState != EmpressAIType.Teleport)
                 TeleportCompletionRatio = 0f;
+
+            if (CurrentState != EmpressAIType.Phase2Transition)
+            {
+                ButterflyProjectionScale = 0f;
+                ButterflyProjectionOpacity = 0f;
+            }
         }
 
         /// <summary>
