@@ -1,6 +1,7 @@
 ﻿using System;
 using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -57,11 +58,16 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_Phase2Transition()
         {
+            if (Main.mouseRight && Main.mouseRightRelease)
+                AITimer = 0;
+
+            ZPosition = Utilities.InverseLerp(0f, 35f, AITimer).Squared() * 2.4f;
+            NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 400f, ZPosition * 0.1f, 1f - ZPosition * 0.15f);
+
             LeftHandFrame = EmpressHandFrame.HandPressedToChest;
             RightHandFrame = EmpressHandFrame.HandPressedToChest;
             NPC.dontTakeDamage = true;
             NPC.ShowNameOnHover = false;
-            Phase2 = true;
             IdealDrizzleVolume = StandardDrizzleVolume + Utilities.InverseLerp(0f, 120f, AITimer - Phase2Transition_DisappearTime) * 0.3f;
         }
     }

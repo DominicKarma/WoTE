@@ -32,11 +32,11 @@ namespace WoTE.Content.NPCs.EoL
             float cutoffYInterpolant = EasingCurves.Quadratic.Evaluate(EasingType.InOut, TeleportCompletionRatio);
             if (TeleportCompletionRatio > 0f && TeleportCompletionRatio < 1f)
             {
-                DrawInstance(NPC.Center - screenPos, Color.White * (1f - illusionInterpolant), NPC.rotation, cutoffYInterpolant, false);
-                DrawInstance(TeleportDestination - screenPos, Color.White, NPC.rotation, 1f - cutoffYInterpolant, false);
+                DrawInstance(NPC.Center - screenPos, Color.White * (1f - illusionInterpolant), ZPosition, NPC.rotation, cutoffYInterpolant, false);
+                DrawInstance(TeleportDestination - screenPos, Color.White, NPC.rotation, ZPosition, 1f - cutoffYInterpolant, false);
             }
             else
-                DrawInstance(NPC.Center - screenPos, Color.White, NPC.rotation, 0f, false);
+                DrawInstance(NPC.Center - screenPos, Color.White, ZPosition, NPC.rotation, 0f, false);
 
             if (DashAfterimageInterpolant > 0f)
                 DrawAfterimageVisuals(screenPos, illusionInterpolant);
@@ -51,19 +51,32 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         /// <param name="drawPosition">The draw position of the Empress instance.</param>
         /// <param name="color">The color of the Empress instance.</param>
+        /// <param name="z">The Z position of the Empress instance.</param>
         /// <param name="cutoffY">The instance's rotation.</param>
         /// <param name="cutoffY">The Y cutoff interpolant value.</param>
         /// <param name="invertDisappearanceDirection">Whether the direction of disappearance should be inverted.</param>
-        public void DrawInstance(Vector2 drawPosition, Color color, float rotation, float cutoffY, bool invertDisappearanceDirection)
+        public void DrawInstance(Vector2 drawPosition, Color color, float z, float rotation, float cutoffY, bool invertDisappearanceDirection)
         {
+            float scale = NPC.scale / (z + 1f);
+            float backgroundFadeInterpolant = Utilities.InverseLerp(1f, 2.6f, z);
+            float defocusInterpolant = Utilities.InverseLerp(0.3f, 2.4f, z);
+            float opacity = MathHelper.Lerp(1f, 0.43f, backgroundFadeInterpolant);
+            color = Color.Lerp(color, Color.Gray, backgroundFadeInterpolant * 0.5f);
+
+            float[] blurWeights = new float[5];
+            for (int i = 0; i < blurWeights.Length; i++)
+                blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 0.8f) / 6f;
+
             ManagedShader teleportShader = ShaderManager.GetShader("WoTE.EmpressTeleportDisappearShader");
             teleportShader.TrySetParameter("cutoffY", cutoffY);
             teleportShader.TrySetParameter("invertDisappearanceDirection", invertDisappearanceDirection);
+            teleportShader.TrySetParameter("blurOffset", defocusInterpolant * 0.0043f);
+            teleportShader.TrySetParameter("blurWeights", blurWeights);
             teleportShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
             teleportShader.Apply();
 
             SpriteEffects direction = NPC.spriteDirection.ToSpriteDirection();
-            Main.EntitySpriteDraw(EmpressOfLightTargetManager.EmpressTarget, drawPosition, null, NPC.GetAlpha(color), rotation, EmpressOfLightTargetManager.EmpressTarget.Size() * 0.5f, NPC.scale, direction, 0f);
+            Main.EntitySpriteDraw(EmpressOfLightTargetManager.EmpressTarget, drawPosition, null, NPC.GetAlpha(color) * opacity, rotation, EmpressOfLightTargetManager.EmpressTarget.Size() * 0.5f, scale, direction, 0f);
 
             DrawTeleportRing(drawPosition, cutoffY, invertDisappearanceDirection);
         }
@@ -80,7 +93,7 @@ namespace WoTE.Content.NPCs.EoL
                 float opacity = Utilities.InverseLerp(NPC.oldPos.Length, 1f, i) * DashAfterimageInterpolant * 0.8f;
                 Vector2 drawPosition = Vector2.Lerp(NPC.oldPos[i] + NPC.Size * 0.5f, NPC.Center, 0f) - screenPos;
                 Color afterimageColor = Main.hslToRgb((i + 5f) / 10f - Main.GlobalTimeWrappedHourly * 0.2f, 0.7f, 0.5f, 0) * opacity;
-                DrawInstance(drawPosition, afterimageColor, NPC.oldRot[i], 0f, false);
+                DrawInstance(drawPosition, afterimageColor, OldZPositions[i], NPC.oldRot[i], 0f, false);
             }
 
             for (int i = 0; i < 25; i++)
@@ -91,11 +104,11 @@ namespace WoTE.Content.NPCs.EoL
                     Matrix.CreateRotationX((time - 0.3f + i * 0.1f) * MathHelper.TwoPi * 0.7f) *
                     Matrix.CreateRotationY((time - 0.8f + i * 0.3f) * MathHelper.TwoPi * 0.7f) *
                     Matrix.CreateRotationZ((time + i * 0.5f) * MathHelper.TwoPi * 0.1f));
-                illusionDrawPosition += NPC.scale * new Vector2(illusionOffset.X, illusionOffset.Y) * illusionInterpolant * 150f;
+                illusionDrawPosition += NPC.scale / (ZPosition + 1f) * new Vector2(illusionOffset.X, illusionOffset.Y) * illusionInterpolant * 150f;
 
                 Color illusionColor = Main.hslToRgb((i + 5f) / 10f, 0.7f, 0.5f) * illusionInterpolant;
 
-                DrawInstance(illusionDrawPosition, illusionColor with { A = 0 }, NPC.rotation, 0f, false);
+                DrawInstance(illusionDrawPosition, illusionColor with { A = 0 }, ZPosition, NPC.rotation, 0f, false);
             }
         }
 
@@ -237,6 +250,14 @@ namespace WoTE.Content.NPCs.EoL
         {
             Texture2D dressTexture = TextureAssets.Extra[ExtrasID.HallowBossSkirt].Value;
             Main.EntitySpriteDraw(dressTexture, drawPosition, null, Color.White, 0f, dressTexture.Size() * 0.5f, 1f, 0);
+        }
+
+        public override void DrawBehind(int index)
+        {
+            if (ZPosition >= 0.45f)
+                Main.instance.DrawCacheNPCsBehindNonSolidTiles.Add(index);
+            else
+                Main.instance.DrawCacheNPCsMoonMoon.Add(index);
         }
     }
 }

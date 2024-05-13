@@ -50,6 +50,15 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// The set of the Empress' previous Z positions.
+        /// </summary>
+        public float[] OldZPositions
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The volume of the idle drizzle.
         /// </summary>
         public float DrizzleVolume
@@ -216,7 +225,10 @@ namespace WoTE.Content.NPCs.EoL
             NPC.value = Item.buyPrice(1, 0, 0, 0) / 5;
             NPC.netAlways = true;
             NPC.Opacity = 0f;
+            NPC.hide = true;
             Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/EmpressOfLight");
+
+            OldZPositions = new float[NPC.oldPos.Length];
         }
 
         #endregion Loading
@@ -262,6 +274,7 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.PerformBehaviors();
             StateMachine.PerformStateTransitionCheck();
             PerformPostAttackSanityChecks();
+            UpdateZPositionCache();
 
             if (PerformingLanceWallSupport)
                 DoBehavior_LanceWallSupport_HandlePostStateSupportBehaviors();
@@ -383,6 +396,16 @@ namespace WoTE.Content.NPCs.EoL
                 player.GrantInfiniteFlight();
                 player.AddBuff(ModContent.BuffType<GracedWings>(), 2);
             }
+        }
+
+        /// <summary>
+        /// Updates the <see cref="OldZPositions"/> cache, propagating old Z position values through and using the current <see cref="ZPosition"/> at the first index.
+        /// </summary>
+        public void UpdateZPositionCache()
+        {
+            for (int i = OldZPositions.Length - 1; i >= 1; i--)
+                OldZPositions[i] = OldZPositions[i - 1];
+            OldZPositions[0] = ZPosition;
         }
 
         #endregion AI
