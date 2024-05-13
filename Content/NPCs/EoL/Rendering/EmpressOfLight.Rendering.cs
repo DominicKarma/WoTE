@@ -24,11 +24,6 @@ namespace WoTE.Content.NPCs.EoL
             set;
         }
 
-        public override void FindFrame(int frameHeight)
-        {
-
-        }
-
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
             Main.spriteBatch.PrepareForShaders();
