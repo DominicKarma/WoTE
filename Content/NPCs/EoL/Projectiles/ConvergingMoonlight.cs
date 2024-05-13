@@ -58,7 +58,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Vector2 end = EmpressOfLight.Myself.Center;
 
             float proximityInterpolant = Utilities.InverseLerp(70f, 200f, Projectile.Distance(end));
-            float sine = MathF.Sin(MathHelper.Pi * Utilities.InverseLerp(0f, Lifetime + 4f, Time)) * (Projectile.identity % 2 == 0).ToDirectionInt();
+            float sine = MathF.Sin(MathHelper.Pi * Utilities.InverseLerp(0f, Lifetime + 4f, Time));
             Projectile.Center = Vector2.Lerp(Start, end, Utilities.InverseLerp(0f, Lifetime, Time)) + (end - Start).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * sine * MathF.Sqrt(proximityInterpolant) * 270f;
             Projectile.Opacity = Utilities.InverseLerp(10f, 0f, Time - Lifetime);
             Projectile.velocity *= 0.5f;

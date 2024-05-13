@@ -9,6 +9,8 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Utilities;
+using WoTE.Common.ShapeCurves;
 using WoTE.Content.NPCs.EoL.Projectiles;
 
 namespace WoTE.Content.NPCs.EoL
@@ -44,21 +46,15 @@ namespace WoTE.Content.NPCs.EoL
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
-            Main.spriteBatch.PrepareForShaders();
-
             if (ButterflyProjectionOpacity > 0f && ButterflyProjectionScale > 0f)
             {
                 spriteBatch.End();
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-                DrawButterflyProjection(NPC.Center - screenPos, 1f);
-
-                spriteBatch.End();
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-
-                for (int i = 24; i >= 1; i--)
-                    DrawButterflyProjection(NPC.oldPos[i] + NPC.Size * 0.5f - screenPos, (1f - i / 24f) * 0.4f);
-                Main.spriteBatch.PrepareForShaders();
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                DrawButterflyProjectionBack(NPC.Center - screenPos, 1f);
+                Main.spriteBatch.ResetToDefault();
             }
+
+            Main.spriteBatch.PrepareForShaders();
 
             float illusionInterpolant = (1f - Utilities.InverseLerpBump(0f, 0.2f, 0.8f, 1f, TeleportCompletionRatio)) * DashAfterimageInterpolant;
             float cutoffYInterpolant = EasingCurves.Quadratic.Evaluate(EasingType.InOut, TeleportCompletionRatio);
@@ -78,45 +74,78 @@ namespace WoTE.Content.NPCs.EoL
             return false;
         }
 
-        /// <summary>
-        /// Draws the Empress' butterfly avatar form projection.
-        /// </summary>
-        /// <param name="drawPosition">The draw position of the avatar projection.</param>
-        /// <param name="opacity">The opacity of the avatar projection.</param>
-        public void DrawButterflyProjection(Vector2 drawPosition, float opacity)
+        public void DrawButterflyProjectionBack(Vector2 baseDrawPosition, float opacity)
         {
+            float flapScale = MathHelper.Lerp(0.22f, 1f, Utilities.Cos01(MathHelper.TwoPi * Main.GlobalTimeWrappedHourly * 0.85f));
+            float bloomScaleFactor = ButterflyProjectionOpacity;
+            float bloomOpacity = MathHelper.Lerp(0.4f, 1f, flapScale) * opacity;
+            Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
+            Main.spriteBatch.Draw(bloom, baseDrawPosition, null, Color.White with { A = 0 } * bloomOpacity * 0.26f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 6f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, baseDrawPosition, null, new Color(255, 217, 142, 0) * bloomOpacity * 0.35f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 9f, 0, 0f);
+
             Texture2D body = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/ButterflyProjectionBody").Value;
             Texture2D wing = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/ButterflyProjectionWing").Value;
 
+            float[] blurWeights = new float[7];
+            for (int i = 0; i < blurWeights.Length; i++)
+                blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 0.5f) / 11f;
+
             ManagedShader avatarShader = ShaderManager.GetShader("WoTE.EmpressButterflyAvatarShader");
-            avatarShader.TrySetParameter("gradientCount", 9f);
+            avatarShader.TrySetParameter("gradientCount", 4f);
             avatarShader.TrySetParameter("gradient", new Vector4[]
             {
-                Color.Black.ToVector4(),
-                Color.Black.ToVector4(),
-                Color.Aqua.ToVector4(),
                 Color.White.ToVector4(),
                 Color.Wheat.ToVector4(),
-                Color.Wheat.ToVector4(),
-                Color.HotPink.ToVector4(),
-                Color.DeepSkyBlue.ToVector4(),
-                Color.DeepPink.ToVector4(),
+                Color.LightGoldenrodYellow.ToVector4(),
+                Color.White.ToVector4(),
             });
+            avatarShader.TrySetParameter("blurOffset", 0.003f);
+            avatarShader.TrySetParameter("blurWeights", blurWeights);
             avatarShader.Apply();
-
-            var wingFlapCurve = new PiecewiseCurve().
-                Add(EasingCurves.Quadratic, EasingType.InOut, 0.1f, 0.3f, 1f).
-                Add(EasingCurves.Quadratic, EasingType.Out, 1.02f, 0.65f).
-                Add(EasingCurves.Quadratic, EasingType.InOut, 1f, 1f);
-            float flapScale = wingFlapCurve.Evaluate(Main.GlobalTimeWrappedHourly * 0.8f % 1f);
 
             Vector2 baseScale = Vector2.One * ButterflyProjectionScale;
             Vector2 wingScale = new Vector2(flapScale, 1f) * baseScale;
-            Vector2 wingDrawPosition = drawPosition + Vector2.UnitY * 54f;
+            Vector2 wingDrawPosition = baseDrawPosition + Vector2.UnitY * 54f;
 
-            Main.EntitySpriteDraw(wing, wingDrawPosition, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(0f, 0.5f), wingScale, SpriteEffects.None, 0f);
-            Main.EntitySpriteDraw(wing, wingDrawPosition, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(1f, 0.5f), wingScale, SpriteEffects.FlipHorizontally, 0f);
-            Main.EntitySpriteDraw(body, drawPosition, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, body.Size() * 0.5f, baseScale, 0, 0f);
+            Main.EntitySpriteDraw(wing, wingDrawPosition - Vector2.UnitX * 14f, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(0f, 0.5f), wingScale, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(wing, wingDrawPosition + Vector2.UnitX * 14f, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(1f, 0.5f), wingScale, SpriteEffects.FlipHorizontally, 0f);
+            Main.EntitySpriteDraw(body, baseDrawPosition, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, body.Size() * 0.5f, baseScale * new Vector2(1f, 0.81f), 0, 0f);
+        }
+
+        /// <summary>
+        /// Draws the Empress' butterfly avatar form projection.
+        /// </summary>
+        /// <param name="baseDrawPosition">The draw position of the avatar projection.</param>
+        /// <param name="opacity">The opacity of the avatar projection.</param>
+        public void DrawButterflyProjection(Vector2 baseDrawPosition, float opacity)
+        {
+            if (!ShapeCurveManager.TryFind("Butterfly", out ShapeCurve butterflyCurve))
+                return;
+
+            Main.instance.LoadNPC(NPCID.EmpressButterfly);
+            Texture2D lacewing = TextureAssets.Npc[NPCID.EmpressButterfly].Value;
+
+            UnifiedRandom rng = new(NPC.whoAmI * 11);
+            foreach (Vector2 point in butterflyCurve.ShapePoints)
+            {
+                Vector2 drawOffset = (point - Vector2.One * 0.5f) * ButterflyProjectionScale * new Vector2(470f, 240f);
+                drawOffset.X += 10f;
+                drawOffset.Y += 50f;
+
+                Vector2 butterflyDrawPosition = baseDrawPosition + drawOffset;
+                Rectangle lacewingFrame = lacewing.Frame(1, 3, 0, (int)(rng.Next(3) + Main.GlobalTimeWrappedHourly * 10f) % 3);
+                SpriteEffects butterflyDirection = rng.NextFromList(-1, 1).ToSpriteDirection();
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Color backglowColor = Main.hslToRgb(rng.NextFloat(), 1f, 0.5f, 0) * 0.5f;
+                    float backglowOffsetPulse = (Utilities.Cos01(MathHelper.TwoPi * Main.GlobalTimeWrappedHourly + rng.NextFloat(MathHelper.TwoPi)) * 5f + 1f);
+                    Vector2 backglowDrawOffset = (MathHelper.TwoPi * i / 4f).ToRotationVector2() * backglowOffsetPulse;
+                    Main.spriteBatch.Draw(lacewing, butterflyDrawPosition + backglowDrawOffset, lacewingFrame, backglowColor * ButterflyProjectionOpacity * opacity, 0f, lacewingFrame.Size() * 0.5f, ButterflyProjectionScale * 0.3f, butterflyDirection, 0f);
+                }
+
+                Main.spriteBatch.Draw(lacewing, butterflyDrawPosition, lacewingFrame, Color.White * ButterflyProjectionOpacity * opacity, 0f, lacewingFrame.Size() * 0.5f, ButterflyProjectionScale * 0.3f, butterflyDirection, 0f);
+            }
         }
 
         /// <summary>
@@ -171,12 +200,13 @@ namespace WoTE.Content.NPCs.EoL
             for (int i = 0; i < 25; i++)
             {
                 float time = (float)Main.timeForVisualEffects / 60f;
+
+                Matrix transformX = Matrix.CreateRotationX((time - 0.3f + i * 0.1f) * MathHelper.TwoPi * 0.7f);
+                Matrix transformY = Matrix.CreateRotationY((time - 0.8f + i * 0.3f) * MathHelper.TwoPi * 0.7f);
+                Matrix transformZ = Matrix.CreateRotationZ((time + i * 0.5f) * MathHelper.TwoPi * 0.1f);
                 Vector2 illusionDrawPosition = NPC.Center - screenPos - NPC.velocity * i * 0.23f;
-                Vector3 illusionOffset = Vector3.Transform(Vector3.Forward,
-                    Matrix.CreateRotationX((time - 0.3f + i * 0.1f) * MathHelper.TwoPi * 0.7f) *
-                    Matrix.CreateRotationY((time - 0.8f + i * 0.3f) * MathHelper.TwoPi * 0.7f) *
-                    Matrix.CreateRotationZ((time + i * 0.5f) * MathHelper.TwoPi * 0.1f));
-                illusionDrawPosition += NPC.scale / (ZPosition + 1f) * new Vector2(illusionOffset.X, illusionOffset.Y) * illusionInterpolant * 150f;
+                Vector3 illusionOffset = Vector3.Transform(Vector3.Forward, transformX * transformY * transformZ) * illusionInterpolant * 150f;
+                illusionDrawPosition += NPC.scale / (ZPosition + 1f) * new Vector2(illusionOffset.X, illusionOffset.Y);
 
                 Color illusionColor = Main.hslToRgb((i + 5f) / 10f, 0.7f, 0.5f) * illusionInterpolant;
 

@@ -63,6 +63,7 @@ namespace WoTE.Content.NPCs.EoL
                 ButterflyProjectionScale = 0f;
                 ButterflyProjectionOpacity = 0f;
                 AITimer = 0;
+                NPC.Opacity = 1f;
             }
 
             float maxZPosition = MathHelper.Lerp(5f, 1.1f, Utilities.Sin01(MathHelper.TwoPi * AITimer / 60f).Cubed());
@@ -96,10 +97,12 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer >= Phase2Transition_EnergyChargeUpTime)
             {
                 if (AITimer == Phase2Transition_EnergyChargeUpTime + 10)
-                    ScreenShakeSystem.StartShake(10f);
+                    ScreenShakeSystem.StartShake(17.4f);
 
-                ButterflyProjectionScale = MathHelper.Lerp(ButterflyProjectionScale, 2.56f, 0.04f);
+                ButterflyProjectionScale = MathHelper.Lerp(ButterflyProjectionScale, 2f, 0.04f);
                 ButterflyProjectionOpacity = MathHelper.Lerp(ButterflyProjectionOpacity, 1f, 0.2f);
+                NPC.Opacity = MathHelper.Lerp(NPC.Opacity, 0.15f, 0.15f);
+                NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 380f, 0.1f, 0.7f);
             }
 
             ScreenShakeSystem.SetUniversalRumble(MathF.Sqrt(appearanceInterpolant) * 6f, MathHelper.TwoPi, null, 0.2f);

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Microsoft.Xna.Framework;
@@ -8,13 +7,12 @@ namespace WoTE.Common.ShapeCurves
 {
     // This code isn't actually used anywhere ingame, it's just here for the purpose of clarity in terms of how the shape files are made.
     // If you wish to use it you'll want to copypaste this code and tweak it for use in a separate C# project.
-    public class ShapeCurveGenerator
+    internal static class ShapeCurveGenerator
     {
 #pragma warning disable CA1416 // Validate platform compatibility
         internal static void GenerateShapeFile(string imagePath)
         {
-            string shapeFileName = $"{Path.GetFileNameWithoutExtension(imagePath)}.vec";
-            string shapeFilePath = Environment.CurrentDirectory + "\\" + shapeFileName;
+            string shapeFilePath = imagePath.Replace(".png", ".vec");
             using var shapeFile = File.Create(shapeFilePath);
             using BinaryWriter shapeFileWriter = new(shapeFile);
 

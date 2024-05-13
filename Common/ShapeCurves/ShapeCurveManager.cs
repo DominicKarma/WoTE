@@ -15,7 +15,7 @@ namespace WoTE.Common.ShapeCurves
             // Load all shape points.
             // In binary they are simply stored as a list of paired, unordered X/Y floats. They are normalized such that their values never exceed a 0 to 1 range, and can thusly
             // be scaled up easily via the inbuilt ShapeCurve methods.
-            foreach (var path in Mod.GetFileNames().Where(f => f.Contains("Core/ShapeCurves/") && Path.GetExtension(f) == ".vec"))
+            foreach (string path in Mod.GetFileNames().Where(f => f.Contains("Common/ShapeCurves/") && Path.GetExtension(f) == ".vec"))
             {
                 byte[] curveBytes = Mod.GetFileBytes(path);
                 if (curveBytes.Length <= 0)
@@ -46,9 +46,11 @@ namespace WoTE.Common.ShapeCurves
         /// <param name="name">The name of the shape curve.</param>
         /// <param name="curve">The resulting curve. <see langword="null"/> if the shape couldn't be found.</param>
         /// <returns>Whether the shape curve search was successful.</returns>
-        public static bool TryFind(string name, out ShapeCurve? curve)
+        public static bool TryFind(string name, out ShapeCurve curve)
         {
-            curve = default;
+            // This usage of the ! operator is a bit improper, but really it should be on the developer to take care with the TryFind results.
+            curve = default!;
+
             if (shapes.TryGetValue(name, out ShapeCurve? s))
             {
                 curve = s;
