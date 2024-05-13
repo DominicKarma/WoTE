@@ -65,12 +65,12 @@ namespace WoTE.Content.NPCs.EoL
 
             float[] blurWeights = new float[5];
             for (int i = 0; i < blurWeights.Length; i++)
-                blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 0.8f) / 6f;
+                blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 0.8f) / 11f;
 
             ManagedShader teleportShader = ShaderManager.GetShader("WoTE.EmpressTeleportDisappearShader");
             teleportShader.TrySetParameter("cutoffY", cutoffY);
             teleportShader.TrySetParameter("invertDisappearanceDirection", invertDisappearanceDirection);
-            teleportShader.TrySetParameter("blurOffset", defocusInterpolant * 0.0043f);
+            teleportShader.TrySetParameter("blurOffset", defocusInterpolant * 0.004f);
             teleportShader.TrySetParameter("blurWeights", blurWeights);
             teleportShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
             teleportShader.Apply();
