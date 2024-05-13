@@ -1,11 +1,7 @@
 ﻿using System;
 using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
-using Luminance.Core.Graphics;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Audio;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace WoTE.Content.NPCs.EoL
@@ -46,7 +42,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.RegisterTransition(EmpressAIType.Phase2Transition, EmpressAIType.OrbitReleasedTerraprismas, false, () =>
             {
-                return AITimer >= Phase2Transition_DisappearTime + Phase2Transition_StayInvisibleTime;
+                return AITimer >= 999999;
             });
             StateMachine.ApplyToAllStatesExcept(state =>
             {
@@ -65,32 +61,6 @@ namespace WoTE.Content.NPCs.EoL
             RightHandFrame = EmpressHandFrame.HandPressedToChest;
             NPC.dontTakeDamage = true;
             NPC.ShowNameOnHover = false;
-
-            if (AITimer <= Phase2Transition_DisappearTime)
-            {
-                if (AITimer == 1)
-                {
-                    NPC.velocity -= NPC.SafeDirectionTo(Target.Center) * 70f;
-                    SoundEngine.PlaySound(SoundID.NPCHit1);
-                    SoundEngine.PlaySound(SoundID.Item160);
-                    ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 13f);
-                }
-
-                float disapperInterpolant = Utilities.InverseLerp(0f, Phase2Transition_DisappearTime, AITimer);
-                float opacitySwell = MathHelper.Lerp(1f, 1.6f, MathF.Sin(MathHelper.Pi * disapperInterpolant * 4f));
-
-                NPC.velocity *= 0.85f;
-                NPC.Opacity = Utilities.Saturate((1f - disapperInterpolant) * opacitySwell);
-
-                if (AITimer == Phase2Transition_DisappearTime)
-                {
-                    NPC.Center = Target.Center - Vector2.UnitY * 375f;
-                    NPC.netUpdate = true;
-                }
-
-                return;
-            }
-
             Phase2 = true;
             IdealDrizzleVolume = StandardDrizzleVolume + Utilities.InverseLerp(0f, 120f, AITimer - Phase2Transition_DisappearTime) * 0.3f;
         }
