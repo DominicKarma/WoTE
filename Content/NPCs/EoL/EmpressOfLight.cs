@@ -41,6 +41,15 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// The Empress' Z position.
+        /// </summary>
+        public float ZPosition
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The volume of the idle drizzle.
         /// </summary>
         public float DrizzleVolume
@@ -216,6 +225,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void SendExtraAI(BinaryWriter writer)
         {
+            writer.Write(ZPosition);
             writer.Write(Phase);
             writer.Write(LanceWallXPosition);
             writer.Write((byte)PerformingLanceWallSupport.ToInt());
@@ -226,6 +236,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
+            ZPosition = reader.ReadSingle();
             Phase = reader.ReadInt32();
             LanceWallXPosition = reader.ReadSingle();
             PerformingLanceWallSupport = reader.ReadByte() != 0;
