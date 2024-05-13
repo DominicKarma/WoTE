@@ -91,8 +91,8 @@ namespace WoTE.Content.NPCs.EoL
                     ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 9f);
 
                 NPC.hide = NPC.Opacity <= 0f;
-                NPC.dontTakeDamage = NPC.Opacity <= 0.5f;
-                NPC.ShowNameOnHover = !NPC.dontTakeDamage;
+                NPC.dontTakeDamage = true;
+                NPC.ShowNameOnHover = false;
             }
 
             NPC.velocity *= 0.9f;
