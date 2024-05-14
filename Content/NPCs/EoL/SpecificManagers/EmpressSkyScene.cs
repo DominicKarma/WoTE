@@ -11,6 +11,8 @@ namespace WoTE.Content.NPCs.EoL
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.BossHigh;
 
+        public override int Music => EmpressOfLight.Myself?.ModNPC?.Music ?? 0;
+
         public override float GetWeight(Player player) => 0.85f;
 
         public override bool IsSceneEffectActive(Player player) => NPC.AnyNPCs(ModContent.NPCType<EmpressOfLight>());
