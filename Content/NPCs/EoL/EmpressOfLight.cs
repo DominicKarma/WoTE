@@ -168,6 +168,11 @@ namespace WoTE.Content.NPCs.EoL
         public static int TerraprismaDamage => Main.expertMode ? 205 : 135;
 
         /// <summary>
+        /// The amount of damage dazzling deathrays casted by the Empress do.
+        /// </summary>
+        public static int DazzlingDeathrayDamage => Main.expertMode ? 300 : 190;
+
+        /// <summary>
         /// The standard volume that the drizzle sound play at.
         /// </summary>
         public static float StandardDrizzleVolume => 0.1f;

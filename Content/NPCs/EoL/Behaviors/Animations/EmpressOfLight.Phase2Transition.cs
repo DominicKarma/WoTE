@@ -35,6 +35,26 @@ namespace WoTE.Content.NPCs.EoL
         public static int Phase2Transition_EnergyChargeUpTime => Utilities.SecondsToFrames(11f);
 
         /// <summary>
+        /// How long the Empress spends idle while entering her avatar form during her second phase.
+        /// </summary>
+        public static int Phase2Transition_ShootCycleDelay => Utilities.SecondsToFrames(1.5f);
+
+        /// <summary>
+        /// How long the Empress spends flying about in her avatar form during each cycle.
+        /// </summary>
+        public static int Phase2Transition_FlyAroundCycleTime => Utilities.SecondsToFrames(2f);
+
+        /// <summary>
+        /// How long the Empress spends releasing laser beams and rainbows during her avatar form.
+        /// </summary>
+        public static int Phase2Transition_ShootDeathrayTime => Utilities.SecondsToFrames(4f);
+
+        /// <summary>
+        /// How amount of laser cycles the Empress performs in her avatar form during the second phase transition.
+        /// </summary>
+        public static int Phase2Transition_ShootCycleCount => 3;
+
+        /// <summary>
         /// The life ratio at which the Emperss transitions to her second phase.
         /// </summary>
         public static float Phase2LifeRatio => 0.6f;
@@ -44,7 +64,13 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.RegisterTransition(EmpressAIType.Phase2Transition, EmpressAIType.OrbitReleasedTerraprismas, false, () =>
             {
-                return AITimer >= 1000000;
+                return AITimer >= Phase2Transition_EnergyChargeUpTime + Phase2Transition_ShootCycleDelay + (Phase2Transition_FlyAroundCycleTime + Phase2Transition_ShootDeathrayTime) * Phase2Transition_ShootCycleCount + 90;
+            }, () =>
+            {
+                Phase2 = true;
+                TeleportTo(Target.Center - Vector2.UnitY * 240f);
+                ZPosition = 0f;
+                NPC.netUpdate = true;
             });
             StateMachine.ApplyToAllStatesExcept(state =>
             {
@@ -67,7 +93,7 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.Opacity = 1f;
             }
 
-            bool shootingLasers = AITimer >= Phase2Transition_EnergyChargeUpTime + 90;
+            bool shootingLasers = AITimer >= Phase2Transition_EnergyChargeUpTime + Phase2Transition_ShootCycleDelay;
 
             float maxZPosition = MathHelper.Lerp(5f, 1.1f, Utilities.Sin01(MathHelper.TwoPi * AITimer / 60f).Cubed());
             ZPosition = EasingCurves.Cubic.Evaluate(EasingType.InOut, Utilities.InverseLerp(0f, 60f, AITimer)) * maxZPosition;
@@ -107,7 +133,7 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.Opacity = MathHelper.Lerp(NPC.Opacity, 0.15f, 0.15f);
 
                 if (shootingLasers)
-                    DoBehavior_Phase2Transition_ShootLasers(AITimer - Phase2Transition_EnergyChargeUpTime - 90);
+                    DoBehavior_Phase2Transition_ShootLasers(AITimer - Phase2Transition_EnergyChargeUpTime - Phase2Transition_ShootCycleDelay);
                 else
                     NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 250f, 0.04f, 0.85f);
 
@@ -134,7 +160,6 @@ namespace WoTE.Content.NPCs.EoL
             RightHandFrame = EmpressHandFrame.HandPressedToChest;
             NPC.dontTakeDamage = true;
             NPC.ShowNameOnHover = false;
-            Phase2 = true;
             IdealDrizzleVolume = StandardDrizzleVolume + Utilities.InverseLerp(0f, 120f, AITimer) * 0.3f;
 
             DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, Utilities.InverseLerp(0f, 120f, AITimer), 0.055f);
@@ -159,7 +184,47 @@ namespace WoTE.Content.NPCs.EoL
 
         public void DoBehavior_Phase2Transition_ShootLasers(int localTimer)
         {
+            if (localTimer >= (Phase2Transition_FlyAroundCycleTime + Phase2Transition_ShootDeathrayTime) * Phase2Transition_ShootCycleCount)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    float pixelScale = Main.rand.NextFloat(1f, 5f);
+                    Vector2 pixelSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 900f, -950f);
+                    Vector2 pixelVelocity = Vector2.UnitY * Main.rand.NextFloat(12f, 30f) / pixelScale;
+                    Color pixelBloomColor = Utilities.MulticolorLerp(Main.rand.NextFloat(), Color.Yellow, Color.HotPink, Color.Violet, Color.DeepSkyBlue) * 0.6f;
 
+                    BloomPixelParticle bloom = new(pixelSpawnPosition, pixelVelocity, Color.White, pixelBloomColor, Main.rand.Next(150, 210), Vector2.One * pixelScale);
+                    bloom.Spawn();
+                }
+
+                NPC.velocity.X *= 1.04f;
+                NPC.velocity.Y -= 3f;
+                ZPosition = MathHelper.Lerp(ZPosition, 0f, 0.2f);
+                return;
+            }
+
+            int wrappedTimer = localTimer % (Phase2Transition_FlyAroundCycleTime + Phase2Transition_ShootDeathrayTime);
+            if (wrappedTimer <= Phase2Transition_FlyAroundCycleTime)
+            {
+                if (wrappedTimer <= Phase2Transition_FlyAroundCycleTime - 45)
+                    NPC.velocity += NPC.SafeDirectionTo(Target.Center) * 1.1f;
+                else
+                    NPC.velocity *= 0.98f;
+
+                return;
+            }
+
+            if (Main.netMode != NetmodeID.MultiplayerClient && wrappedTimer == Phase2Transition_FlyAroundCycleTime + 1)
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, NPC.SafeDirectionTo(Target.Center), ModContent.ProjectileType<DazzlingDeathray>(), DazzlingDeathrayDamage, 0f);
+
+            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 2 == 0)
+            {
+                Vector2 starBurstVelocity = (MathHelper.TwoPi * AITimer / 20.333f).ToRotationVector2() * 3f;
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, starBurstVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), AcceleratingRainbowDamage, 0f);
+            }
+
+            NPC.velocity *= 0.95f;
+            NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.009f);
         }
     }
 }

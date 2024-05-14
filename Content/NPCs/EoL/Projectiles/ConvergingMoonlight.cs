@@ -33,8 +33,8 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override void SetDefaults()
         {
-            Projectile.width = 70;
-            Projectile.height = 70;
+            Projectile.width = Main.rand?.Next(45, 70) ?? 70;
+            Projectile.height = Projectile.width;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -60,7 +60,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             float proximityInterpolant = Utilities.InverseLerp(70f, 200f, Projectile.Distance(end));
             float sine = MathF.Sin(MathHelper.Pi * Utilities.InverseLerp(0f, Lifetime + 4f, Time));
             Projectile.Center = Vector2.Lerp(Start, end, Utilities.InverseLerp(0f, Lifetime, Time)) + (end - Start).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * sine * MathF.Sqrt(proximityInterpolant) * 270f;
-            Projectile.Opacity = Utilities.InverseLerp(10f, 0f, Time - Lifetime);
+            Projectile.Opacity = Utilities.InverseLerp(10f, 0f, Time - Lifetime) * Utilities.InverseLerp(0f, 36f, Time);
             Projectile.velocity *= 0.5f;
 
             Time++;

@@ -166,7 +166,7 @@ namespace WoTE.Content.NPCs.EoL
 
             float[] blurWeights = new float[5];
             for (int i = 0; i < blurWeights.Length; i++)
-                blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 0.8f) / 11f;
+                blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 0.8f) / 7f;
 
             ManagedShader teleportShader = ShaderManager.GetShader("WoTE.EmpressTeleportDisappearShader");
             teleportShader.TrySetParameter("cutoffY", cutoffY);
@@ -359,7 +359,7 @@ namespace WoTE.Content.NPCs.EoL
         public override void DrawBehind(int index)
         {
             if (ButterflyProjectionScale > 0f)
-                Main.instance.DrawCacheNPCsOverPlayers.Add(index);
+                Main.instance.DrawCacheNPCsMoonMoon.Add(index);
             else if (ZPosition >= 0.45f)
                 Main.instance.DrawCacheNPCsBehindNonSolidTiles.Add(index);
             else
