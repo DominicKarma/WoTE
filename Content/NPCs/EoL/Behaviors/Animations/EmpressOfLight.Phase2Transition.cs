@@ -54,12 +54,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How amount of laser cycles the Empress performs in her avatar form during the second phase transition.
         /// </summary>
-        public static int Phase2Transition_ShootCycleCount => 3;
+        public static int Phase2Transition_ShootCycleCount => 35555;
 
         /// <summary>
         /// The life ratio at which the Emperss transitions to her second phase.
         /// </summary>
-        public static float Phase2LifeRatio => 0.6f;
+        public static float Phase2LifeRatio => 0.65f;
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_Phase2Transition()
@@ -87,14 +87,6 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_Phase2Transition()
         {
-            if (Main.mouseRight && Main.mouseRightRelease)
-            {
-                ButterflyProjectionScale = 0f;
-                ButterflyProjectionOpacity = 0f;
-                AITimer = 0;
-                NPC.Opacity = 1f;
-            }
-
             if (AITimer == 1)
                 SoundEngine.PlaySound(SoundID.Item159);
 
@@ -195,15 +187,26 @@ namespace WoTE.Content.NPCs.EoL
         {
             if (localTimer >= (Phase2Transition_FlyAroundCycleTime + Phase2Transition_ShootDeathrayTime) * Phase2Transition_ShootCycleCount)
             {
-                for (int i = 0; i < 11; i++)
+                for (int i = 0; i < 15; i++)
                 {
                     float pixelScale = Main.rand.NextFloat(1f, 5f);
-                    Vector2 pixelSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 1000f, -Main.rand.NextFloat(800f, 1000f));
-                    Vector2 pixelVelocity = Vector2.UnitY * Main.rand.NextFloat(12f, 30f) / pixelScale;
-                    Color pixelBloomColor = Utilities.MulticolorLerp(Main.rand.NextFloat(), Color.Yellow, Color.HotPink, Color.Violet, Color.DeepSkyBlue) * 0.6f;
+                    Vector2 pixelSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 1400f, -Main.rand.NextFloat(800f, 1000f));
+                    Vector2 pixelVelocity = Vector2.UnitY * Main.rand.NextFloat(12f, 85f) / pixelScale;
+                    Color pixelBloomColor = Utilities.MulticolorLerp(Main.rand.NextFloat(0.75f), Color.LightGoldenrodYellow, Color.Yellow, Color.Orange) * 0.6f;
 
                     BloomPixelParticle bloom = new(pixelSpawnPosition, pixelVelocity, Color.White, pixelBloomColor, Main.rand.Next(150, 210), Vector2.One * pixelScale);
                     bloom.Spawn();
+                }
+
+                for (int i = 0; i < 2; i++)
+                {
+                    int lacewingLifetime = Main.rand.Next(30, 56);
+                    float lacewingScale = Main.rand.NextFloat(0.4f, 1.15f);
+                    Color lacewingColor = Color.Lerp(Color.Yellow, Color.LightGoldenrodYellow, Main.rand.NextFloat());
+                    Vector2 lacewingSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 1400f, -Main.rand.NextFloat(800f, 1000f));
+                    Vector2 lacewingVelocity = Vector2.UnitY * Main.rand.NextFloat(39f, 105f);
+                    PrismaticLacewingParticle lacewing = new(lacewingSpawnPosition, lacewingVelocity, lacewingColor, lacewingLifetime, Vector2.One * lacewingScale);
+                    lacewing.Spawn();
                 }
 
                 NPC.velocity.X *= 1.04f;

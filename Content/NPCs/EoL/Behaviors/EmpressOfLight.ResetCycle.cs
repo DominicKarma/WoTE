@@ -71,7 +71,7 @@ namespace WoTE.Content.NPCs.EoL
             List<EmpressAIType> phaseCycle;
 
             int tries = 0;
-            var statesToAvoid = PreviousStatesReversed.Take(3);
+            var statesToAvoid = PreviousStatesReversed.Take(ByPhase(3, 4));
             do
             {
                 phaseCycle = Main.rand.Next(Phase2 ? Phase2AttackCombos : Phase1AttackCombos);

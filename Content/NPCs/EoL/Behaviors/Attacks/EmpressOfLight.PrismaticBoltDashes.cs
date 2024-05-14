@@ -108,7 +108,7 @@ namespace WoTE.Content.NPCs.EoL
             Vector2 hoverDestination = Target.Center - Vector2.UnitX * PrismaticBoltDashes_DashDirection * 900f;
             NPC.SmoothFlyNear(hoverDestination, hoverFlySpeed, 1f - hoverFlySpeed);
 
-            if (NPC.WithinRange(hoverDestination, 35f) && AITimer < PrismaticBoltDashes_HoverRedirectTime)
+            if (NPC.WithinRange(hoverDestination, 35f) && AITimer < PrismaticBoltDashes_HoverRedirectTime && AITimer >= PrismaticBoltDashes_HoverRedirectTime / 2)
             {
                 SoundEngine.PlaySound(SoundID.Item160 with { MaxInstances = 0 }, NPC.Center);
                 AITimer = PrismaticBoltDashes_HoverRedirectTime;

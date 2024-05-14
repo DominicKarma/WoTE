@@ -83,6 +83,17 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             float idealDirection = Projectile.AngleTo(Main.player[EmpressOfLight.Myself.target].Center);
             Projectile.velocity = currentDirection.AngleLerp(idealDirection, 0.02f).ToRotationVector2();
 
+            CreateCenterAndEndLacewings();
+            CreatePerpendicularEnergy();
+
+            Time++;
+        }
+
+        /// <summary>
+        /// Creates lacewings at the starting and ending point of this deathray.
+        /// </summary>
+        public void CreateCenterAndEndLacewings()
+        {
             for (int i = 0; i < 3; i++)
             {
                 int lacewingLifetime = Main.rand.Next(18, 45);
@@ -99,8 +110,23 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 PrismaticLacewingParticle lacewing = new(lacewingSpawnPosition, lacewingVelocity, lacewingColor, lacewingLifetime, Vector2.One * lacewingScale);
                 lacewing.Spawn();
             }
+        }
 
-            Time++;
+        /// <summary>
+        /// Creates energy particles perpendicular along this deathray.
+        /// </summary>
+        public void CreatePerpendicularEnergy()
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                float pixelScale = Main.rand.NextFloat(0.7f, 2.4f);
+                Vector2 pixelSpawnPosition = Projectile.Center + Projectile.velocity * Main.rand.NextFloat(DeathrayLength * 0.825f);
+                Vector2 pixelVelocity = Projectile.velocity.RotatedBy(Main.rand.NextFromList(-MathHelper.PiOver2, MathHelper.PiOver2)) * Main.rand.NextFloat(8f, 19f) / pixelScale;
+                Color pixelBloomColor = Utilities.MulticolorLerp(Main.rand.NextFloat(0.75f), Color.LightGoldenrodYellow, Color.Yellow, Color.Orange) * 0.6f;
+
+                BloomPixelParticle bloom = new(pixelSpawnPosition, pixelVelocity, Color.White, pixelBloomColor, Main.rand.Next(20, 45), Vector2.One * pixelScale);
+                bloom.Spawn();
+            }
         }
 
         public override Color? GetAlpha(Color lightColor) => lightColor * Projectile.Opacity;

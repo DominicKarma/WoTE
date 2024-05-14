@@ -14,14 +14,23 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
     public class ConvergingMoonlight : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<EmpressOfLight>
     {
         /// <summary>
-        /// How long this lance has existed for, in frames.
+        /// How long this moonlight has existed for, in frames.
         /// </summary>
         public ref float Time => ref Projectile.ai[0];
 
+        /// <summary>
+        /// The starting position of the moonlight.
+        /// </summary>
         public Vector2 Start;
 
+        /// <summary>
+        /// The set of past positions relative to the Empress.
+        /// </summary>
         public Vector2[] RelatveOldPositions;
 
+        /// <summary>
+        /// How long this moonlight should exist for, in frames.
+        /// </summary>
         public static int Lifetime => Utilities.SecondsToFrames(0.8f);
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;

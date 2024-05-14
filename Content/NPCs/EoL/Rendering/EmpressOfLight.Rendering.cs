@@ -76,9 +76,9 @@ namespace WoTE.Content.NPCs.EoL
 
         public void DrawButterflyProjectionBack(Vector2 baseDrawPosition, float opacity)
         {
-            float flapScale = MathHelper.Lerp(0.22f, 1f, Utilities.Cos01(MathHelper.TwoPi * Main.GlobalTimeWrappedHourly * 0.85f));
+            float flapScale = MathHelper.Lerp(0.4f, 1f, Utilities.Cos01(MathHelper.TwoPi * Main.GlobalTimeWrappedHourly * 0.85f));
             float bloomScaleFactor = ButterflyProjectionOpacity;
-            float bloomOpacity = MathHelper.Lerp(0.3f, 1f, flapScale) * opacity;
+            float bloomOpacity = MathHelper.Lerp(0.4f, 1f, flapScale) * opacity;
             Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
             Main.spriteBatch.Draw(bloom, baseDrawPosition, null, Color.White with { A = 0 } * bloomOpacity * 0.43f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 6f, 0, 0f);
             Main.spriteBatch.Draw(bloom, baseDrawPosition, null, new Color(255, 217, 142, 0) * bloomOpacity * 0.8f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 9f, 0, 0f);
@@ -90,7 +90,10 @@ namespace WoTE.Content.NPCs.EoL
             for (int i = 0; i < blurWeights.Length; i++)
                 blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 0.5f) / 11f;
 
+            Matrix projection = Matrix.CreateOrthographicOffCenter(0f, Main.screenWidth, Main.screenHeight, 0f, -10f, 10f);
+
             ManagedShader avatarShader = ShaderManager.GetShader("WoTE.EmpressButterflyAvatarShader");
+            avatarShader.TrySetParameter("horizontalScale", flapScale);
             avatarShader.TrySetParameter("gradientCount", 4f);
             avatarShader.TrySetParameter("gradient", new Vector4[]
             {
@@ -101,14 +104,19 @@ namespace WoTE.Content.NPCs.EoL
             });
             avatarShader.TrySetParameter("blurOffset", 0.003f);
             avatarShader.TrySetParameter("blurWeights", blurWeights);
+            avatarShader.TrySetParameter("center", baseDrawPosition);
+            avatarShader.TrySetParameter("uWorldViewProjection", Main.GameViewMatrix.TransformationMatrix * projection);
             avatarShader.Apply();
 
             Vector2 baseScale = Vector2.One * ButterflyProjectionScale;
-            Vector2 wingScale = new Vector2(flapScale, 1f) * baseScale;
+            Vector2 wingScale = Vector2.One * baseScale;
             Vector2 wingDrawPosition = baseDrawPosition + Vector2.UnitY * 54f;
+            Main.EntitySpriteDraw(wing, wingDrawPosition - Vector2.UnitX * ((1f - flapScale) * 300f + 110f), null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(0f, 0.5f), wingScale, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(wing, wingDrawPosition + Vector2.UnitX * ((1f - flapScale) * 300f + 110f), null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(1f, 0.5f), wingScale, SpriteEffects.FlipHorizontally, 0f);
 
-            Main.EntitySpriteDraw(wing, wingDrawPosition - Vector2.UnitX * 14f, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(0f, 0.5f), wingScale, SpriteEffects.None, 0f);
-            Main.EntitySpriteDraw(wing, wingDrawPosition + Vector2.UnitX * 14f, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(1f, 0.5f), wingScale, SpriteEffects.FlipHorizontally, 0f);
+            avatarShader.TrySetParameter("horizontalScale", 1f);
+            avatarShader.Apply();
+
             Main.EntitySpriteDraw(body, baseDrawPosition, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, body.Size() * 0.5f, baseScale * new Vector2(1f, 0.81f), 0, 0f);
         }
 
@@ -139,7 +147,7 @@ namespace WoTE.Content.NPCs.EoL
                 for (int i = 0; i < 4; i++)
                 {
                     Color backglowColor = Main.hslToRgb(rng.NextFloat(), 1f, 0.5f, 0) * 0.5f;
-                    float backglowOffsetPulse = (Utilities.Cos01(MathHelper.TwoPi * Main.GlobalTimeWrappedHourly + rng.NextFloat(MathHelper.TwoPi)) * 5f + 1f);
+                    float backglowOffsetPulse = Utilities.Cos01(MathHelper.TwoPi * Main.GlobalTimeWrappedHourly + rng.NextFloat(MathHelper.TwoPi)) * 5f + 1f;
                     Vector2 backglowDrawOffset = (MathHelper.TwoPi * i / 4f).ToRotationVector2() * backglowOffsetPulse;
                     Main.spriteBatch.Draw(lacewing, butterflyDrawPosition + backglowDrawOffset, lacewingFrame, backglowColor * ButterflyProjectionOpacity * opacity, 0f, lacewingFrame.Size() * 0.5f, ButterflyProjectionScale * 0.3f, butterflyDirection, 0f);
                 }

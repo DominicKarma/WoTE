@@ -85,7 +85,7 @@ namespace WoTE.Content.NPCs.EoL
             {
                 Texture2D sky = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/SpecificManagers/EmpressSky").Value;
 
-                Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
+                Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height + 200f);
                 Rectangle skyRectangle = new(0, 0, (int)screenSize.X, (int)screenSize.Y);
                 Main.spriteBatch.Draw(sky, skyRectangle, Color.White * Opacity * 0.4f);
 
@@ -140,7 +140,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             Texture2D clouds = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/SpecificManagers/CloudTexture").Value;
             ManagedShader mistShader = ShaderManager.GetShader("WoTE.MistBackgroundShader");
-            Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
+            Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height + 200f);
             Rectangle mistRectangle = new(0, (int)(screenSize.Y * 0.25f), Main.screenWidth, (int)(screenSize.Y * 0.7f));
             mistShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.PointWrap);
             mistShader.SetTexture(TextureAssets.Extra[ExtrasID.QueenSlimeGradient], 2, SamplerState.LinearWrap);
