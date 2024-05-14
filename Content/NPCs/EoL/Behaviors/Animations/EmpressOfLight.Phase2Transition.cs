@@ -5,6 +5,7 @@ using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Common.ShapeCurves;
@@ -47,7 +48,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends releasing laser beams and rainbows during her avatar form.
         /// </summary>
-        public static int Phase2Transition_ShootDeathrayTime => Utilities.SecondsToFrames(4f);
+        public static int Phase2Transition_ShootDeathrayTime => Utilities.SecondsToFrames(3f);
 
         /// <summary>
         /// How amount of laser cycles the Empress performs in her avatar form during the second phase transition.
@@ -93,6 +94,9 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.Opacity = 1f;
             }
 
+            if (AITimer == 1)
+                SoundEngine.PlaySound(SoundID.Item159);
+
             bool shootingLasers = AITimer >= Phase2Transition_EnergyChargeUpTime + Phase2Transition_ShootCycleDelay;
 
             float maxZPosition = MathHelper.Lerp(5f, 1.1f, Utilities.Sin01(MathHelper.TwoPi * AITimer / 60f).Cubed());
@@ -126,7 +130,10 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer >= Phase2Transition_EnergyChargeUpTime)
             {
                 if (AITimer == Phase2Transition_EnergyChargeUpTime + 10)
+                {
+                    SoundEngine.PlaySound(SoundID.Item160);
                     ScreenShakeSystem.StartShake(17.4f);
+                }
 
                 ButterflyProjectionScale = MathHelper.Lerp(ButterflyProjectionScale, 3f, 0.04f);
                 ButterflyProjectionOpacity = MathHelper.Lerp(ButterflyProjectionOpacity, 1f, 0.2f);
@@ -186,10 +193,10 @@ namespace WoTE.Content.NPCs.EoL
         {
             if (localTimer >= (Phase2Transition_FlyAroundCycleTime + Phase2Transition_ShootDeathrayTime) * Phase2Transition_ShootCycleCount)
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 11; i++)
                 {
                     float pixelScale = Main.rand.NextFloat(1f, 5f);
-                    Vector2 pixelSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 900f, -950f);
+                    Vector2 pixelSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 1000f, -Main.rand.NextFloat(800f, 1000f));
                     Vector2 pixelVelocity = Vector2.UnitY * Main.rand.NextFloat(12f, 30f) / pixelScale;
                     Color pixelBloomColor = Utilities.MulticolorLerp(Main.rand.NextFloat(), Color.Yellow, Color.HotPink, Color.Violet, Color.DeepSkyBlue) * 0.6f;
 

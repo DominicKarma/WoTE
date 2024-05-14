@@ -6,6 +6,7 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Content.Particles;
@@ -61,6 +62,12 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.Opacity = Utilities.InverseLerp(0f, 12f, Time);
             Projectile.scale = Utilities.InverseLerp(0f, 28f, Time).Squared() * Utilities.InverseLerp(0f, 15f, Projectile.timeLeft);
             Projectile.rotation = Projectile.velocity.ToRotation();
+
+            if (Time == 1)
+            {
+                SoundEngine.PlaySound(SoundID.Item122);
+                SoundEngine.PlaySound(SoundID.Item164);
+            }
 
             float[] distanceSamples = new float[10];
             Collision.LaserScan(Projectile.Center, Projectile.velocity, Projectile.width, MaxLength, distanceSamples);
