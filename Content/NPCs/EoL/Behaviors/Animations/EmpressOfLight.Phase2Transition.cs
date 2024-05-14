@@ -54,7 +54,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How amount of laser cycles the Empress performs in her avatar form during the second phase transition.
         /// </summary>
-        public static int Phase2Transition_ShootCycleCount => 35555;
+        public static int Phase2Transition_ShootCycleCount => 3;
 
         /// <summary>
         /// The life ratio at which the Emperss transitions to her second phase.
