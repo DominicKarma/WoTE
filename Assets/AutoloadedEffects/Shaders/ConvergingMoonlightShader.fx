@@ -40,14 +40,14 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     coords.y = (input.TextureCoordinates.y - 0.5) / input.TextureCoordinates.z + 0.5;
     
     float offset = 0.025;
-    float2 baseCoords = coords * 0.5 + float2(globalTime * 0.4, 0);
+    float2 baseCoords = coords * 0.6 + float2(globalTime * 0, 0);
     float4 left = tex2D(streakTexture, baseCoords + float2(-offset, 0));
     float4 right = tex2D(streakTexture, baseCoords + float2(offset, 0));
     float4 top = tex2D(streakTexture, baseCoords + float2(0, -offset));
     float4 bottom = tex2D(streakTexture, baseCoords + float2(0, offset));
     float4 center = tex2D(streakTexture, baseCoords);
     
-    float streak = pow((left + right + top + bottom + center) * 0.2, 2) / tex2D(streakTexture, baseCoords * 0.6);
+    float streak = pow((left + right + top + bottom + center) * 0.2, 2);
     
     return input.Color * saturate(streak) * pow(QuadraticBump(coords.y), 2);
 }

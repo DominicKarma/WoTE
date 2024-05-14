@@ -11,6 +11,7 @@ using Terraria.ModLoader;
 using WoTE.Common.ShapeCurves;
 using WoTE.Content.NPCs.EoL.Projectiles;
 using WoTE.Content.Particles;
+using WoTE.Content.Particles.Metaballs;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -132,7 +133,8 @@ namespace WoTE.Content.NPCs.EoL
                 if (AITimer == Phase2Transition_EnergyChargeUpTime + 10)
                 {
                     SoundEngine.PlaySound(SoundID.Item160);
-                    ScreenShakeSystem.StartShake(17.4f);
+                    ScreenShakeSystem.StartShake(14f);
+                    ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(15f, 15f), Vector2.Zero, 38f, 0.75f, 0.25f, 0.013f);
                 }
 
                 ButterflyProjectionScale = MathHelper.Lerp(ButterflyProjectionScale, 3f, 0.04f);

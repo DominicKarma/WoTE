@@ -47,9 +47,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float glow = saturate(pow(QuadraticBump(coords.y), 2)) + smoothstep(0.5, 0, horizontalCenterDistance * scaleFactor) / horizontalCenterDistance * 0.2;
     float4 baseColor = input.Color * glow;
     float4 color = baseColor;
-    color.a *= smoothstep(0.03, 0.4, coords.x);
     
-    return saturate(color) * smoothstep(0.98, 0.93, coords.x);
+    return saturate(color);
 }
 
 technique Technique1
