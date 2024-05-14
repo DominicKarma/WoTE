@@ -170,7 +170,7 @@ namespace WoTE.Content.NPCs.EoL
                 Vector2 topTextureCoordinate = new(x, 0f);
                 Vector2 bottomTextureCoordinate = new(x, 1f);
                 Vector2 topOffset = Vector2.UnitX * MathF.Cos(angle) * Size.X * 0.72f;
-                Vector2 bottomOffset = topOffset * 0.3f;
+                Vector2 bottomOffset = topOffset * -0.1f;
 
                 vertices[i * 2] = new(top + topOffset, Color.White, topTextureCoordinate, MathF.Cos(angle));
                 vertices[i * 2 + 1] = new(bottom + bottomOffset, Color.White, bottomTextureCoordinate, MathF.Cos(angle));

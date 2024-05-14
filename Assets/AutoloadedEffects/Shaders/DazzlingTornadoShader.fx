@@ -28,10 +28,9 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
 {
     VertexShaderOutput output = (VertexShaderOutput) 0;
     float4 pos = mul(input.Position, uWorldViewProjection);
-    output.Position = pos;
-    
-    output.Color = input.Color;
     output.TextureCoordinates = input.TextureCoordinates;
+    output.Position = pos;
+    output.Color = input.Color;
 
     return output;
 }

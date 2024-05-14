@@ -67,6 +67,8 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.Opacity = 1f;
             }
 
+            bool shootingLasers = AITimer >= Phase2Transition_EnergyChargeUpTime + 90;
+
             float maxZPosition = MathHelper.Lerp(5f, 1.1f, Utilities.Sin01(MathHelper.TwoPi * AITimer / 60f).Cubed());
             ZPosition = EasingCurves.Cubic.Evaluate(EasingType.InOut, Utilities.InverseLerp(0f, 60f, AITimer)) * maxZPosition;
             if (AITimer <= 120)
@@ -100,10 +102,14 @@ namespace WoTE.Content.NPCs.EoL
                 if (AITimer == Phase2Transition_EnergyChargeUpTime + 10)
                     ScreenShakeSystem.StartShake(17.4f);
 
-                ButterflyProjectionScale = MathHelper.Lerp(ButterflyProjectionScale, 2f, 0.04f);
+                ButterflyProjectionScale = MathHelper.Lerp(ButterflyProjectionScale, 3f, 0.04f);
                 ButterflyProjectionOpacity = MathHelper.Lerp(ButterflyProjectionOpacity, 1f, 0.2f);
                 NPC.Opacity = MathHelper.Lerp(NPC.Opacity, 0.15f, 0.15f);
-                NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 380f, 0.1f, 0.7f);
+
+                if (shootingLasers)
+                    DoBehavior_Phase2Transition_ShootLasers(AITimer - Phase2Transition_EnergyChargeUpTime - 90);
+                else
+                    NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 250f, 0.04f, 0.85f);
 
                 if (Main.rand.NextBool() && ShapeCurveManager.TryFind("Butterfly", out ShapeCurve butterflyCurve))
                 {
@@ -138,7 +144,7 @@ namespace WoTE.Content.NPCs.EoL
             // Idea is basically Noxus going
             // "Oh? You moved 30 pixels in this direction? Well I'm in the background bozo so I'm gonna follow you and go in the same direction by, say, 27 pixels. This will make it look like I only moved 3 pixels"
             // This obviously doesn't work in multiplayer, and as such it does not run there.
-            if (Main.netMode == NetmodeID.SinglePlayer)
+            if (Main.netMode == NetmodeID.SinglePlayer && !shootingLasers)
             {
                 float parallax = 0.8f;
                 Vector2 targetOffset = Target.velocity;
@@ -149,6 +155,11 @@ namespace WoTE.Content.NPCs.EoL
                 }
                 NPC.position += targetOffset * Utilities.Saturate(parallax);
             }
+        }
+
+        public void DoBehavior_Phase2Transition_ShootLasers(int localTimer)
+        {
+
         }
     }
 }
