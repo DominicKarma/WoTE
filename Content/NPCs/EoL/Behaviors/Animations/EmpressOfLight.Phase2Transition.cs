@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Common.ShapeCurves;
 using WoTE.Content.NPCs.EoL.Projectiles;
 using WoTE.Content.Particles;
 
@@ -103,6 +104,22 @@ namespace WoTE.Content.NPCs.EoL
                 ButterflyProjectionOpacity = MathHelper.Lerp(ButterflyProjectionOpacity, 1f, 0.2f);
                 NPC.Opacity = MathHelper.Lerp(NPC.Opacity, 0.15f, 0.15f);
                 NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 380f, 0.1f, 0.7f);
+
+                if (Main.rand.NextBool() && ShapeCurveManager.TryFind("Butterfly", out ShapeCurve butterflyCurve))
+                {
+                    int lacewingLifetime = Main.rand.Next(25, 36);
+                    float lacewingScale = Main.rand.NextFloat(0.4f, 1.15f);
+                    Color lacewingColor = Color.Lerp(Color.Yellow, Color.LightGoldenrodYellow, Main.rand.NextFloat());
+                    Vector2 lacewingVelocity = (Main.rand.Next(butterflyCurve.ShapePoints) - Vector2.One * 0.5f) * new Vector2(1.75f, 0.9f) * Main.rand.NextFloat(30f, 83f);
+                    PrismaticLacewingParticle lacewing = new(NPC.Center, lacewingVelocity, lacewingColor, lacewingLifetime, Vector2.One * lacewingScale);
+                    lacewing.Spawn();
+
+                    for (int i = 0; i < 5; i++)
+                    {
+                        BloomPixelParticle pixel = new(NPC.Center, lacewingVelocity.RotatedByRandom(0.4f) * 0.35f + Main.rand.NextVector2Circular(5f, 5f), Color.White, lacewingColor * 0.45f, 45, Vector2.One * Main.rand.NextFloat(1.5f, 4f));
+                        pixel.Spawn();
+                    }
+                }
             }
 
             ScreenShakeSystem.SetUniversalRumble(MathF.Sqrt(appearanceInterpolant) * 6f, MathHelper.TwoPi, null, 0.2f);

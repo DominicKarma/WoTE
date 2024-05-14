@@ -78,10 +78,10 @@ namespace WoTE.Content.NPCs.EoL
         {
             float flapScale = MathHelper.Lerp(0.22f, 1f, Utilities.Cos01(MathHelper.TwoPi * Main.GlobalTimeWrappedHourly * 0.85f));
             float bloomScaleFactor = ButterflyProjectionOpacity;
-            float bloomOpacity = MathHelper.Lerp(0.4f, 1f, flapScale) * opacity;
+            float bloomOpacity = MathHelper.Lerp(0.3f, 1f, flapScale) * opacity;
             Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
-            Main.spriteBatch.Draw(bloom, baseDrawPosition, null, Color.White with { A = 0 } * bloomOpacity * 0.26f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 6f, 0, 0f);
-            Main.spriteBatch.Draw(bloom, baseDrawPosition, null, new Color(255, 217, 142, 0) * bloomOpacity * 0.35f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 9f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, baseDrawPosition, null, Color.White with { A = 0 } * bloomOpacity * 0.43f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 6f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, baseDrawPosition, null, new Color(255, 217, 142, 0) * bloomOpacity * 0.8f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 9f, 0, 0f);
 
             Texture2D body = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/ButterflyProjectionBody").Value;
             Texture2D wing = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/ButterflyProjectionWing").Value;
@@ -358,7 +358,9 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void DrawBehind(int index)
         {
-            if (ZPosition >= 0.45f)
+            if (ButterflyProjectionScale > 0f)
+                Main.instance.DrawCacheNPCsOverPlayers.Add(index);
+            else if (ZPosition >= 0.45f)
                 Main.instance.DrawCacheNPCsBehindNonSolidTiles.Add(index);
             else
                 Main.instance.DrawCacheNPCsMoonMoon.Add(index);

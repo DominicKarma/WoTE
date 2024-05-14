@@ -71,7 +71,6 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public float MoonlightWidthFunction(float completionRatio)
         {
             float baseWidth = Projectile.width;
-            float tipFade = Utilities.InverseLerp(0f, 0.3f, completionRatio);
             return baseWidth * Projectile.scale;
         }
 

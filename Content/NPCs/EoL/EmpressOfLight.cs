@@ -369,7 +369,6 @@ namespace WoTE.Content.NPCs.EoL
             NPC.defense = NPC.defDefense;
             NPC.dontTakeDamage = false;
             NPC.immortal = false;
-            NPC.hide = false;
             NPC.ShowNameOnHover = true;
             DashAfterimageInterpolant = Utilities.Saturate(DashAfterimageInterpolant - 0.01f);
         }

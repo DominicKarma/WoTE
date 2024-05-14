@@ -48,10 +48,34 @@
         "y": 0.5
       }
     },
-    "Pixel.png": {
+    "Lacewing.png": {
       "frame": {
         "x": 0,
         "y": 390,
+        "w": 24,
+        "h": 70
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 70
+      },
+      "sourceSize": {
+        "w": 24,
+        "h": 72
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Pixel.png": {
+      "frame": {
+        "x": 0,
+        "y": 460,
         "w": 1,
         "h": 1
       },
@@ -80,7 +104,7 @@
     "format": "RGBA8888",
     "size": {
       "w": 200,
-      "h": 391
+      "h": 461
     },
     "scale": 1
   }
