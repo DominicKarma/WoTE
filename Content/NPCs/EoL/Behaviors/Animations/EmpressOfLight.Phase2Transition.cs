@@ -33,7 +33,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress waits during her second phase transition while charging energy.
         /// </summary>
-        public static int Phase2Transition_EnergyChargeUpTime => Utilities.SecondsToFrames(11f);
+        public static int Phase2Transition_EnergyChargeUpTime => Utilities.SecondsToFrames(9f);
 
         /// <summary>
         /// How long the Empress spends idle while entering her avatar form during her second phase.
@@ -76,7 +76,7 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.ApplyToAllStatesExcept(state =>
             {
                 StateMachine.RegisterTransition(state, EmpressAIType.Phase2Transition, false, () => EnterPhase2AfterNextAttack && CurrentState != EmpressAIType.ButterflyBurstDashes);
-            }, EmpressAIType.Phase2Transition, EmpressAIType.Die);
+            }, EmpressAIType.Phase2Transition, EmpressAIType.Die, EmpressAIType.Vanish);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Phase2Transition, DoBehavior_Phase2Transition);
         }
