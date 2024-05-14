@@ -144,8 +144,8 @@ namespace WoTE.Content.NPCs.EoL
             Rectangle mistRectangle = new(0, (int)(screenSize.Y * 0.25f), Main.screenWidth, (int)(screenSize.Y * 0.7f));
             mistShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.PointWrap);
             mistShader.SetTexture(TextureAssets.Extra[ExtrasID.QueenSlimeGradient], 2, SamplerState.LinearWrap);
-            mistShader.TrySetParameter("dewAppearanceCutoffThreshold", 0.993f);
-            mistShader.TrySetParameter("baseTextureSize", mistRectangle.Size());
+            mistShader.TrySetParameter("dewAppearanceCutoffThreshold", 0.99f);
+            mistShader.TrySetParameter("baseTextureSize", mistRectangle.Size() * 0.5f);
             mistShader.TrySetParameter("worldOffset", Main.screenPosition / clouds.Size() * 0.05f);
             mistShader.TrySetParameter("twinkleSpeed", 3f);
             mistShader.Apply();
