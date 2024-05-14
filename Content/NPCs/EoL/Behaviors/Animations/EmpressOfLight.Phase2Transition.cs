@@ -164,23 +164,6 @@ namespace WoTE.Content.NPCs.EoL
             IdealDrizzleVolume = StandardDrizzleVolume + Utilities.InverseLerp(0f, 120f, AITimer) * 0.3f;
 
             DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, Utilities.InverseLerp(0f, 120f, AITimer), 0.055f);
-
-            // God.
-            // This ensures that Noxus' apparent position isn't as responsive to camera movements if he's in the background, giving a pseudo-parallax visual.
-            // Idea is basically Noxus going
-            // "Oh? You moved 30 pixels in this direction? Well I'm in the background bozo so I'm gonna follow you and go in the same direction by, say, 27 pixels. This will make it look like I only moved 3 pixels"
-            // This obviously doesn't work in multiplayer, and as such it does not run there.
-            if (Main.netMode == NetmodeID.SinglePlayer && !shootingLasers)
-            {
-                float parallax = 0.8f;
-                Vector2 targetOffset = Target.velocity;
-                if (NPC.HasPlayerTarget)
-                {
-                    Player playerTarget = Main.player[NPC.TranslatedTargetIndex];
-                    targetOffset = playerTarget.position - playerTarget.oldPosition;
-                }
-                NPC.position += targetOffset * Utilities.Saturate(parallax);
-            }
         }
 
         public void DoBehavior_Phase2Transition_ShootLasers(int localTimer)
