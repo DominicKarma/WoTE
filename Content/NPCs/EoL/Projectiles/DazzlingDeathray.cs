@@ -59,15 +59,52 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             ScreenShakeSystem.StartShake(Utilities.InverseLerp(25f, 0f, Time) * 7f + 1.6f);
 
-            Projectile.Opacity = Utilities.InverseLerp(0f, 12f, Time);
-            Projectile.scale = Utilities.InverseLerp(0f, 28f, Time).Squared() * Utilities.InverseLerp(0f, 15f, Projectile.timeLeft);
-            Projectile.rotation = Projectile.velocity.ToRotation();
-
             if (Time == 1)
             {
                 SoundEngine.PlaySound(SoundID.Item122);
                 SoundEngine.PlaySound(SoundID.Item164);
             }
+
+            Projectile.Center = EmpressOfLight.Myself.Center;
+
+            SpinToTarget();
+            DetermineDeathrayLength();
+            CreateCenterAndEndLacewings();
+            CreatePerpendicularEnergy();
+
+            Time++;
+        }
+
+        /// <summary>
+        /// Makes this deathray appear at first.
+        /// </summary>
+        public void Appear()
+        {
+            Projectile.Opacity = Utilities.InverseLerp(0f, 12f, Time);
+            Projectile.scale = Utilities.InverseLerp(0f, 28f, Time).Squared() * Utilities.InverseLerp(0f, 15f, Projectile.timeLeft);
+        }
+
+        /// <summary>
+        /// Makes this deathray spin towards the Empress' target.
+        /// </summary>
+        public void SpinToTarget()
+        {
+            if (EmpressOfLight.Myself is null)
+                return;
+
+            float currentDirection = Projectile.velocity.ToRotation();
+            float idealDirection = Projectile.AngleTo(Main.player[EmpressOfLight.Myself.target].Center);
+            Projectile.velocity = currentDirection.AngleLerp(idealDirection, 0.02f).ToRotationVector2();
+            Projectile.rotation = Projectile.velocity.ToRotation();
+        }
+
+        /// <summary>
+        /// Calculates the length of deathray, making it collide with tiles.
+        /// </summary>
+        public void DetermineDeathrayLength()
+        {
+            if (EmpressOfLight.Myself is null)
+                return;
 
             float[] distanceSamples = new float[10];
             Collision.LaserScan(Projectile.Center, Projectile.velocity, Projectile.width, MaxLength, distanceSamples);
@@ -76,17 +113,6 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 idealLength = MaxLength;
 
             DeathrayLength = MathHelper.Clamp(DeathrayLength + 120f, 0f, idealLength);
-
-            Projectile.Center = EmpressOfLight.Myself.Center;
-
-            float currentDirection = Projectile.velocity.ToRotation();
-            float idealDirection = Projectile.AngleTo(Main.player[EmpressOfLight.Myself.target].Center);
-            Projectile.velocity = currentDirection.AngleLerp(idealDirection, 0.02f).ToRotationVector2();
-
-            CreateCenterAndEndLacewings();
-            CreatePerpendicularEnergy();
-
-            Time++;
         }
 
         /// <summary>
