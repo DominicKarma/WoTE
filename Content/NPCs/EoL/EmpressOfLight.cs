@@ -189,7 +189,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The standard volume that the drizzle sound play at.
         /// </summary>
-        public static float StandardDrizzleVolume => 0.1f;
+        public static float StandardDrizzleVolume => 0.2f;
 
         /// <summary>
         /// The ambient drizzle sound that plays throughout the fight.
