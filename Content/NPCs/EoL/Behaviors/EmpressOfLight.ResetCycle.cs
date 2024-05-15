@@ -82,6 +82,8 @@ namespace WoTE.Content.NPCs.EoL
             if (phaseCycle[0] == EmpressAIType.LanceWallSupport)
                 phaseCycle.Insert(1, Main.rand.Next(AcceptableAttacksForLanceWallSupport));
 
+            phaseCycle = [EmpressAIType.BeatSyncedBolts];
+
             return phaseCycle;
         }
     }

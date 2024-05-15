@@ -25,6 +25,7 @@
         DazzlingTornadoes,
         OrbitReleasedTerraprismas,
         LanceWallSupport,
+        BeatSyncedBolts,
 
         // Intermediate states.
         Teleport,

@@ -43,8 +43,8 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void SetDefaults()
         {
-            Projectile.width = 40;
-            Projectile.height = 40;
+            Projectile.width = 28;
+            Projectile.height = 28;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -57,7 +57,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             if (Time <= 60)
             {
-                float swerveInterpolant = MathF.Cos(Projectile.identity / 6f % 1f + Projectile.Center.X / 320f + Projectile.Center.Y / 160f);
+                float swerveInterpolant = MathF.Cos(Projectile.identity / 7f % 1f + Projectile.Center.X / 320f + Projectile.Center.Y / 160f);
                 Projectile.velocity = Projectile.velocity.RotatedBy(MathHelper.TwoPi * swerveInterpolant / 240f) * 0.98f;
             }
 
@@ -67,7 +67,7 @@ namespace WoTE.Content.NPCs.EoL
                 Vector2 idealVelocity = Projectile.SafeDirectionTo(Target.Center) * 30f;
                 Projectile.velocity = Vector2.SmoothStep(Projectile.velocity, idealVelocity, homingSharpnessInterpolant);
             }
-            else if (Projectile.velocity.Length() <= 48f)
+            else if (Projectile.velocity.Length() <= 40f)
                 Projectile.velocity *= 1.028f;
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
