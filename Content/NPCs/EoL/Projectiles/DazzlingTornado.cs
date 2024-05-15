@@ -8,10 +8,9 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTE.Content.NPCs.EoL.Projectiles;
 using WoTE.Content.Particles;
 
-namespace WoTE.Content.NPCs.EoL
+namespace WoTE.Content.NPCs.EoL.Projectiles
 {
     public class DazzlingTornado : ModProjectile, IPixelatedPrimitiveRenderer
     {

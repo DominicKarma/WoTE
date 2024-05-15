@@ -11,7 +11,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTE.Content.NPCs.EoL
+namespace WoTE.Content.NPCs.EoL.Projectiles
 {
     public class LightLance : ModProjectile, IProjOwnedByBoss<EmpressOfLight>
     {

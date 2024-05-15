@@ -10,10 +10,9 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTE.Content.NPCs.EoL.Projectiles;
 using static WoTE.Content.NPCs.EoL.EmpressOfLight;
 
-namespace WoTE.Content.NPCs.EoL
+namespace WoTE.Content.NPCs.EoL.Projectiles
 {
     public class DazzlingPetal : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<EmpressOfLight>
     {

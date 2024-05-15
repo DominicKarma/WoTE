@@ -1,4 +1,5 @@
-﻿using Luminance.Common.StateMachines;
+﻿using Luminance.Common.DataStructures;
+using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -25,7 +26,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' Beat Synced Bolts attack goes on for.
         /// </summary>
-        public static int BeatSyncedBolts_AttackDuration => Utilities.SecondsToFrames(8.5f);
+        public static int BeatSyncedBolts_AttackDuration => Utilities.SecondsToFrames(9.5f);
 
         /// <summary>
         /// The initial speed of sniper star bolts shot during the Empress' Beat Synced Bolts attack.
@@ -40,7 +41,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The starting time of the light beat. For use when determining whether the Empress should perform her Beat Synced Bolts attack.
         /// </summary>
-        public static int BeatSyncedBolts_LightBeatStartTime => Utilities.MinutesToFrames(1.0102f);
+        public static int BeatSyncedBolts_LightBeatStartTime => Utilities.MinutesToFrames(0.991f);
 
         /// <summary>
         /// The ending time of the light beat. For use when determining whether the Empress should perform her Beat Synced Bolts attack.
@@ -67,6 +68,9 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_BeatSyncedBolts()
         {
+            if (AITimer == 1)
+                IProjOwnedByBoss<EmpressOfLight>.KillAll();
+
             int beatCycleTimer = AITimer % BeatSyncedBolts_ShootRate;
 
             LeftHandFrame = EmpressHandFrame.FistedOutstretchedArm;

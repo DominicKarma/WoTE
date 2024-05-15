@@ -10,7 +10,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static WoTE.Content.NPCs.EoL.EmpressOfLight;
 
-namespace WoTE.Content.NPCs.EoL
+namespace WoTE.Content.NPCs.EoL.Projectiles
 {
     public class EmpressOrbitingTerraprisma : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<EmpressOfLight>
     {

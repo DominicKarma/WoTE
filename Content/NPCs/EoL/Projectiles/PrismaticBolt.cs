@@ -11,7 +11,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Content.Particles;
 
-namespace WoTE.Content.NPCs.EoL
+namespace WoTE.Content.NPCs.EoL.Projectiles
 {
     public class PrismaticBolt : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<EmpressOfLight>
     {

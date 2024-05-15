@@ -13,7 +13,7 @@ using WoTE.Content.Particles;
 using WoTE.Content.Particles.Metaballs;
 using static WoTE.Content.NPCs.EoL.EmpressOfLight;
 
-namespace WoTE.Content.NPCs.EoL
+namespace WoTE.Content.NPCs.EoL.Projectiles
 {
     public class SpinningTerraprisma : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<EmpressOfLight>
     {

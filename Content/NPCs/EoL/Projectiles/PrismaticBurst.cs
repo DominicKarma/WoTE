@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 using WoTE.Content.Particles;
 using WoTE.Content.Particles.Metaballs;
 
-namespace WoTE.Content.NPCs.EoL
+namespace WoTE.Content.NPCs.EoL.Projectiles
 {
     public class PrismaticBurst : ModProjectile
     {
