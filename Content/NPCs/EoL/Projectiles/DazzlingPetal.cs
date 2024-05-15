@@ -177,7 +177,7 @@ namespace WoTE.Content.NPCs.EoL
             PrimitiveRenderer.RenderTrail(controlPoints, settings, 25);
         }
 
-        public override bool? CanDamage() => Projectile.Opacity >= 0.7f;
+        public override bool? CanDamage() => Time >= 105f;
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
