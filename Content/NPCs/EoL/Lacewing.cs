@@ -242,6 +242,9 @@ namespace WoTE.Content.NPCs.EoL
                 float flySpeedInterpolant = MathHelper.Lerp(0.35f, 0.04f, Utilities.Convert01To010(wrappedAITimer / (float)redirectTime));
                 flySpeedInterpolant *= Utilities.InverseLerp(0f, 9f, wrappedAITimer);
 
+                // Get into position you fucking idiot.
+                flySpeedInterpolant = MathHelper.Lerp(flySpeedInterpolant, 0.6f, Utilities.InverseLerp(20f, 0f, AITimer));
+
                 // Store the player's direction at the start of the butterfly's dash.
                 if (wrappedAITimer <= 1)
                 {
