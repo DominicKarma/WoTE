@@ -41,6 +41,15 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// The amount of time it's been, in frames, since the music last started playing.
+        /// </summary>
+        public int MusicTimer
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The Empress' Z position.
         /// </summary>
         public float ZPosition
@@ -131,6 +140,11 @@ namespace WoTE.Content.NPCs.EoL
                     myself = value;
             }
         }
+
+        /// <summary>
+        /// The total length of the music, in frames.
+        /// </summary>
+        public static int MusicDuration => Utilities.MinutesToFrames(4.3116f);
 
         /// <summary>
         /// The amount of damage prismatic bolts summoned by the Empress do.
@@ -242,6 +256,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void SendExtraAI(BinaryWriter writer)
         {
+            writer.Write(MusicTimer);
             writer.Write(ZPosition);
             writer.Write(Phase);
             writer.Write(LanceWallXPosition);
@@ -253,6 +268,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
+            MusicTimer = reader.ReadInt32();
             ZPosition = reader.ReadSingle();
             Phase = reader.ReadInt32();
             LanceWallXPosition = reader.ReadSingle();
@@ -358,6 +374,10 @@ namespace WoTE.Content.NPCs.EoL
             }
 
             IdealDrizzleVolume = StandardDrizzleVolume;
+
+            MusicTimer = (MusicTimer + 1) % MusicDuration;
+            if (Main.netMode == NetmodeID.SinglePlayer && Main.musicVolume <= 0f)
+                MusicTimer = 0;
         }
 
         /// <summary>
