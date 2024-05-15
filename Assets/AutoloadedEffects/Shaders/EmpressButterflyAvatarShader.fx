@@ -61,7 +61,7 @@ float4 PaletteLerp(float interpolant)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    float2 coords = input.TextureCoordinates;
+    float2 coords = round(input.TextureCoordinates * 240) / 240;
     float scale = horizontalScale - distance(coords.x, 0.5) * lerp(0.5, 1.5, coords.y);
     coords.x = (coords.x - 0.5) / scale + 0.5;
     if (horizontalScale != 1)
@@ -71,7 +71,10 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     
     float greyscale = dot(baseColor.rgb, float3(0.3, 0.6, 0.1));
     float evaluation = sin(globalTime * -3 + greyscale * 9) * 0.5 + 0.499;
-    return PaletteLerp(evaluation) * baseColor.a * input.Color;
+    float4 paletteColor = PaletteLerp(evaluation);
+    float4 posterizedPalette = round(paletteColor * 16) / 16;
+    
+    return posterizedPalette * baseColor.a * input.Color;
 }
 technique Technique1
 {

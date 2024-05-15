@@ -111,8 +111,8 @@ namespace WoTE.Content.NPCs.EoL
             Vector2 baseScale = Vector2.One * ButterflyProjectionScale;
             Vector2 wingScale = Vector2.One * baseScale;
             Vector2 wingDrawPosition = baseDrawPosition + Vector2.UnitY * 54f;
-            Main.EntitySpriteDraw(wing, wingDrawPosition - Vector2.UnitX * ((1f - flapScale) * 300f + 110f), null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(0f, 0.5f), wingScale, SpriteEffects.None, 0f);
-            Main.EntitySpriteDraw(wing, wingDrawPosition + Vector2.UnitX * ((1f - flapScale) * 300f + 110f), null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(1f, 0.5f), wingScale, SpriteEffects.FlipHorizontally, 0f);
+            Main.EntitySpriteDraw(wing, wingDrawPosition - Vector2.UnitX * ((1f - flapScale) * 100f + 36f) * baseScale.X, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(0f, 0.5f), wingScale, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(wing, wingDrawPosition + Vector2.UnitX * ((1f - flapScale) * 100f + 36f) * baseScale.X, null, Color.White * ButterflyProjectionOpacity * opacity, 0f, wing.Size() * new Vector2(1f, 0.5f), wingScale, SpriteEffects.FlipHorizontally, 0f);
 
             avatarShader.TrySetParameter("horizontalScale", 1f);
             avatarShader.Apply();
