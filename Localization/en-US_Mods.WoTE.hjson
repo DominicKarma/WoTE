@@ -35,3 +35,8 @@ Buffs: {
 		Description: The Empress is letting you dance with her
 	}
 }
+
+Dialogue: {
+	BaseIntroduction: Blessed one... Let us dance beneath the silver moonglow this night.
+	AngryIntroduction: THOU GRACELESS KNAVE!
+}
