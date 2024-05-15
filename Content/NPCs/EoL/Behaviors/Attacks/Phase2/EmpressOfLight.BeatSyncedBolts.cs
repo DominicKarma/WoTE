@@ -64,7 +64,7 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
-        /// Performs the Empress' Prismatic Bolt Spin attack.
+        /// Performs the Empress' Beat Synced Bolts attack.
         /// </summary>
         public void DoBehavior_BeatSyncedBolts()
         {
