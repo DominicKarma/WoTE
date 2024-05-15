@@ -84,7 +84,6 @@ namespace WoTE.Content.NPCs.EoL
                 ScreenShakeSystem.StartShake(6f, shakeStrengthDissipationIncrement: 0.5f);
                 NPC.velocity += NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.Pi / 3f) * 60f;
                 NPC.ai[1] = NPC.velocity.ToRotation();
-                DashAfterimageInterpolant = 1f;
 
                 NPC.oldPos = new Vector2[NPC.oldPos.Length];
                 NPC.oldRot = new float[NPC.oldPos.Length];
@@ -100,7 +99,8 @@ namespace WoTE.Content.NPCs.EoL
             }
             else
             {
-                NPC.SmoothFlyNear(Target.Center + (MathHelper.PiOver4 * -beatCycleTimer / BeatSyncedBolts_ShootRate + NPC.ai[1]).ToRotationVector2() * new Vector2(700f, 560f), 0.2f, 0.8f);
+                float flySpeedInterpolant = Utilities.InverseLerp(0f, 11f, beatCycleTimer) * 0.2f;
+                NPC.SmoothFlyNear(Target.Center + (MathHelper.PiOver4 * -beatCycleTimer / BeatSyncedBolts_ShootRate + NPC.ai[1]).ToRotationVector2() * new Vector2(700f, 560f), flySpeedInterpolant, 1f - flySpeedInterpolant);
                 DashAfterimageInterpolant *= 0.85f;
             }
         }
