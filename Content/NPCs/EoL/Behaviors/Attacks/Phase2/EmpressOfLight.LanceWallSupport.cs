@@ -109,7 +109,9 @@ namespace WoTE.Content.NPCs.EoL
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
             // Store lance information for the upcoming state.
-            LanceWallXPosition = NPC.Center.X;
+            // The lance wall cannot spawn directly above the player, to prevent telefrags.
+            if (MathHelper.Distance(NPC.Center.X, Target.Center.X) >= 300f)
+                LanceWallXPosition = NPC.Center.X;
             PerformingLanceWallSupport = true;
         }
 
