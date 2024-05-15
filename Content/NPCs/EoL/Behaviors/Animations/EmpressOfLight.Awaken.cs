@@ -34,12 +34,9 @@ namespace WoTE.Content.NPCs.EoL
             RightHandFrame = EmpressHandFrame.HandPressedToChest;
 
             EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(10f, 40f, 130f, 140f, AITimer - 18);
-            EmpressDialogueSystem.DialogueKeySuffix = "BaseIntroduction";
+            EmpressDialogueSystem.DialogueKeySuffix = "AngryIntroduction";
             EmpressDialogueSystem.DialogueColor = new(255, 4, 72);
             EmpressDialogueSystem.ShakyDialogue = true;
-
-            EmpressDialogueSystem.ShakyDialogue = false;
-            EmpressDialogueSystem.DialogueColor = Color.HotPink;
         }
     }
 }
