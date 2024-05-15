@@ -222,7 +222,7 @@ namespace WoTE.Content.NPCs.EoL
             int slowdownTime = EmpressOfLight.ButterflyBurstDashes_DashSlowdownTime;
             int attackCycleTime = redirectTime + dashRepositionTime + dashTime + slowdownTime;
             int wrappedAITimer = AITimer % attackCycleTime;
-            bool doneDashing = AITimer >= attackCycleTime * EmpressOfLight.ButterflyBurstDashes_DashCount;
+            bool doneDashing = AITimer >= attackCycleTime * EmpressOfLight.ButterflyBurstDashes_DashCount || EmpressOfLight.Myself.As<EmpressOfLight>().CanDanceToBeat;
             float idealTrailOpacity = 1f;
 
             if (doneDashing)
