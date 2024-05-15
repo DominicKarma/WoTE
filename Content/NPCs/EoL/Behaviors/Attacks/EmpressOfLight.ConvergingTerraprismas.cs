@@ -23,7 +23,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long Terraprismas summoned by the Empress spend reeling back in anticipation of a dash.
         /// </summary>
-        public int ConvergingTerraprismas_ReelBackTime => Utilities.SecondsToFrames(ByPhase(0.54f, 0.49f));
+        public int ConvergingTerraprismas_ReelBackTime => Utilities.SecondsToFrames(ByPhase(0.6f, 0.56f));
 
         /// <summary>
         /// How long the Empress waits after the Converging Terraprismas attack to choose a new attack to use.
