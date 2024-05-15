@@ -188,7 +188,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void AI()
         {
-            if (EmpressOfLight.Myself is null)
+            if (EmpressOfLight.Myself is null || EmpressOfLight.Myself.As<EmpressOfLight>().CurrentState != EmpressAIType.ButterflyBurstDashes)
             {
                 NPC.active = false;
                 return;
