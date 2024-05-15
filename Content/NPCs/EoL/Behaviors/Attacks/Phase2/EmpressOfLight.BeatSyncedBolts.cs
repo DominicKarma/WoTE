@@ -104,12 +104,15 @@ namespace WoTE.Content.NPCs.EoL
 
                 ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.2f, 0.03f);
             }
-            else
+            else if (beatCycleTimer <= BeatSyncedBolts_ShootRate - 5)
             {
-                float flySpeedInterpolant = Utilities.InverseLerp(0f, 6f, beatCycleTimer) * 0.25f;
+                float flySpeedInterpolant = Utilities.InverseLerp(0f, 6f, beatCycleTimer) * 0.4f;
                 NPC.SmoothFlyNear(Target.Center + (MathHelper.PiOver4 * -beatCycleTimer / BeatSyncedBolts_ShootRate + NPC.ai[1]).ToRotationVector2() * new Vector2(700f, 560f), flySpeedInterpolant, 1f - flySpeedInterpolant);
-                DashAfterimageInterpolant *= 0.85f;
             }
+            else
+                NPC.velocity *= 0.79f;
+
+            DashAfterimageInterpolant = Utilities.InverseLerpBump(0f, 10f, BeatSyncedBolts_AttackDuration - 10f, BeatSyncedBolts_AttackDuration, AITimer) * 0.25f;
         }
     }
 }
