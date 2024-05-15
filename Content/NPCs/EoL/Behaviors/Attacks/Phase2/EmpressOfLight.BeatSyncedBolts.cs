@@ -26,7 +26,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' Beat Synced Bolts attack goes on for.
         /// </summary>
-        public static int BeatSyncedBolts_AttackDuration => Utilities.SecondsToFrames(9.5f);
+        public static int BeatSyncedBolts_AttackDuration => BeatSyncedBolts_ShootRate * 18;
 
         /// <summary>
         /// The initial speed of sniper star bolts shot during the Empress' Beat Synced Bolts attack.
