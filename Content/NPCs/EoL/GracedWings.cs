@@ -34,11 +34,11 @@ namespace WoTE.Content.NPCs.EoL
             if (!player.HasBuff<GracedWings>())
                 return;
 
-            ascentWhenFalling = MathF.Max(ascentWhenFalling, 0.85f);
-            ascentWhenRising = MathF.Max(ascentWhenRising, 0.15f);
-            maxCanAscendMultiplier = MathF.Max(ascentWhenRising, 1.1f);
-            maxAscentMultiplier = MathF.Max(maxAscentMultiplier, 2.7f);
-            constantAscend = MathF.Max(constantAscend, 0.135f);
+            ascentWhenFalling = MathF.Max(ascentWhenFalling, 2f);
+            ascentWhenRising = MathF.Max(ascentWhenRising, 0.184f);
+            maxCanAscendMultiplier = MathF.Max(ascentWhenRising, 1.2f);
+            maxAscentMultiplier = MathF.Max(maxAscentMultiplier, 3.25f);
+            constantAscend = MathF.Max(constantAscend, 0.29f);
         }
 
         public override bool WingUpdate(int wings, Player player, bool inUse)
