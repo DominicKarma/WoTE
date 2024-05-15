@@ -2,9 +2,9 @@ sampler baseTexture : register(s0);
 
 float globalTime;
 float horizontalScale;
-float gradientCount;
 float blurOffset;
 float blurWeights[7];
+float gradientCount;
 float4 gradient[20];
 float2 center;
 matrix uWorldViewProjection;

@@ -360,8 +360,26 @@ namespace WoTE.Content.NPCs.EoL
         /// <param name="drawPosition">The draw position of the dress.</param>
         public static void DrawDress(Vector2 drawPosition)
         {
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
+
+            ManagedShader gradientShader = ShaderManager.GetShader("WoTE.EmpressDressShader");
+            gradientShader.TrySetParameter("gradient", new Vector4[]
+            {
+                new Color(210, 237, 255).ToVector4(),
+                new Color(223, 186, 234).ToVector4(),
+                new Color(226, 93, 177).ToVector4(),
+                new Color(255, 36, 148).ToVector4(),
+                new Color(199, 234, 255).ToVector4(),
+            });
+            gradientShader.TrySetParameter("gradientCount", 5f);
+            gradientShader.Apply();
+
             Texture2D dressTexture = TextureAssets.Extra[ExtrasID.HallowBossSkirt].Value;
             Main.EntitySpriteDraw(dressTexture, drawPosition, null, Color.White, 0f, dressTexture.Size() * 0.5f, 1f, 0);
+
+            Main.spriteBatch.End();
+            EmpressOfLightTargetManager.BeginSpriteBatch(SpriteSortMode.Deferred);
         }
 
         public override void DrawBehind(int index)
