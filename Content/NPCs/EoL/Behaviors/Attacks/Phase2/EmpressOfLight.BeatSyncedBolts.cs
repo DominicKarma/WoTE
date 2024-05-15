@@ -7,6 +7,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Content.NPCs.EoL.Projectiles;
+using WoTE.Content.Particles.Metaballs;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -34,7 +35,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The initial speed of homing prismatic bolts shot during the Empress' Beat Synced Bolts attack.
         /// </summary>
-        public static float BeatSyncedBolts_PrismaticBoltShootSpeed => 6.25f;
+        public static float BeatSyncedBolts_PrismaticBoltShootSpeed => 3.2f;
 
         /// <summary>
         /// The starting time of the light beat. For use when determining whether the Empress should perform her Beat Synced Bolts attack.
@@ -96,10 +97,12 @@ namespace WoTE.Content.NPCs.EoL
 
                 if (Main.musicVolume <= 0f)
                     SoundEngine.PlaySound(SoundID.Item122);
+
+                ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.2f, 0.03f);
             }
             else
             {
-                float flySpeedInterpolant = Utilities.InverseLerp(0f, 11f, beatCycleTimer) * 0.2f;
+                float flySpeedInterpolant = Utilities.InverseLerp(0f, 6f, beatCycleTimer) * 0.25f;
                 NPC.SmoothFlyNear(Target.Center + (MathHelper.PiOver4 * -beatCycleTimer / BeatSyncedBolts_ShootRate + NPC.ai[1]).ToRotationVector2() * new Vector2(700f, 560f), flySpeedInterpolant, 1f - flySpeedInterpolant);
                 DashAfterimageInterpolant *= 0.85f;
             }
