@@ -24,20 +24,27 @@ namespace WoTE.Common.ShapeCurves
                 using MemoryStream byteStream = new(curveBytes);
                 using BinaryReader reader = new(byteStream);
 
-                // Determine the name of the shape based on its file name.
-                string shapeName = Path.GetFileNameWithoutExtension(path);
-
-                // Read points from the file's binary data and store them in the universal registry.
-                int pointCount = reader.ReadInt32();
-                List<Vector2> shapePoints = [];
-                for (int i = 0; i < pointCount; i++)
-                {
-                    float x = reader.ReadSingle();
-                    float y = reader.ReadSingle();
-                    shapePoints.Add(new(x, y));
-                }
-                shapes[shapeName] = new(shapePoints);
+                shapes[Path.GetFileNameWithoutExtension(path)] = ReadFrom(reader);
             }
+        }
+
+        /// <summary>
+        /// Reads the contents of a <see cref="ShapeCurve"/> instance from a given <see cref="BinaryReader"/>.
+        /// </summary>
+        /// <param name="reader">The binary reader to read contents from.</param>
+        private static ShapeCurve ReadFrom(BinaryReader reader)
+        {
+            // Read points from the file's binary data and store them in the universal registry.
+            int pointCount = reader.ReadInt32();
+            List<Vector2> shapePoints = new(pointCount);
+            for (int i = 0; i < pointCount; i++)
+            {
+                float x = reader.ReadSingle();
+                float y = reader.ReadSingle();
+                shapePoints.Add(new(x, y));
+            }
+
+            return new(shapePoints);
         }
 
         /// <summary>
