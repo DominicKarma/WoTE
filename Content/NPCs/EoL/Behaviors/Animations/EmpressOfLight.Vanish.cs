@@ -25,7 +25,7 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.ApplyToAllStatesExcept(state =>
             {
                 StateMachine.RegisterTransition(state, EmpressAIType.Vanish, false, () => NoTargetCouldBeFound && CurrentState != EmpressAIType.Teleport);
-            }, EmpressAIType.Vanish);
+            }, EmpressAIType.Vanish, EmpressAIType.Die);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Vanish, DoBehavior_Vanish);
         }

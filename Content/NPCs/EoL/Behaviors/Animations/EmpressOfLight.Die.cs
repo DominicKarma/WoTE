@@ -13,7 +13,7 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.ApplyToAllStatesExcept(state =>
             {
                 StateMachine.RegisterTransition(state, EmpressAIType.Die, false, () => NPC.life <= 1 && CurrentState != EmpressAIType.Teleport);
-            }, EmpressAIType.Die, EmpressAIType.Vanish);
+            }, EmpressAIType.Die, EmpressAIType.Vanish, EmpressAIType.BeatSyncedBolts);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Die, DoBehavior_Die);
         }

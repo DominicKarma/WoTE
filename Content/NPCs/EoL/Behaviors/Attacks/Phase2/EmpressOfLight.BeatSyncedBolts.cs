@@ -3,6 +3,7 @@ using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Content.NPCs.EoL.Projectiles;
@@ -35,6 +36,16 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static float BeatSyncedBolts_PrismaticBoltShootSpeed => 6.25f;
 
+        /// <summary>
+        /// The starting time of the light beat. For use when determining whether the Empress should perform her Beat Synced Bolts attack.
+        /// </summary>
+        public static int BeatSyncedBolts_LightBeatStartTime => Utilities.MinutesToFrames(1.0102f);
+
+        /// <summary>
+        /// The ending time of the light beat. For use when determining whether the Empress should perform her Beat Synced Bolts attack.
+        /// </summary>
+        public static int BeatSyncedBolts_LightBeatEndTime => Utilities.MinutesToFrames(1.1207f);
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_BeatSyncedBolts()
         {
@@ -44,8 +55,8 @@ namespace WoTE.Content.NPCs.EoL
             });
             StateMachine.ApplyToAllStatesExcept(state =>
             {
-                StateMachine.RegisterTransition(state, EmpressAIType.Phase2Transition, false, () => EnterPhase2AfterNextAttack);
-            }, EmpressAIType.Phase2Transition, EmpressAIType.Die, EmpressAIType.Vanish, EmpressAIType.Teleport);
+                StateMachine.RegisterTransition(state, EmpressAIType.BeatSyncedBolts, false, () => MusicTimer >= BeatSyncedBolts_LightBeatStartTime && MusicTimer <= BeatSyncedBolts_LightBeatEndTime);
+            }, EmpressAIType.Phase2Transition, EmpressAIType.Die, EmpressAIType.Vanish, EmpressAIType.Teleport, EmpressAIType.BeatSyncedBolts);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.BeatSyncedBolts, DoBehavior_BeatSyncedBolts);
         }
@@ -83,6 +94,9 @@ namespace WoTE.Content.NPCs.EoL
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, NPC.SafeDirectionTo(Target.Center) * BeatSyncedBolts_StarBoltShootSpeed, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f);
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, NPC.SafeDirectionTo(Target.Center) * -BeatSyncedBolts_PrismaticBoltShootSpeed, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f);
                 }
+
+                if (Main.musicVolume <= 0f)
+                    SoundEngine.PlaySound(SoundID.Item122);
             }
             else
             {
