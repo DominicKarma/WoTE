@@ -156,7 +156,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             float verticalOffset = Vector3.Transform(Vector3.Forward, Rotation).Y * appearanceScaleFactor.Squared() * 1000f;
             Vector2 top = -Vector2.UnitY * verticalOffset;
             Vector2 bottom = top + Vector2.UnitY * verticalOffset * 1.4f;
-            GenerateCylinderUVs(new(514f, 508f), top, bottom, ringColor, out short[] indices, out VertexPosition2DColorTexture[] vertices);
+            GenerateCylinderUVs(new(524f, 508f), top, bottom, ringColor, out short[] indices, out VertexPosition2DColorTexture[] vertices);
 
             Matrix scale = Matrix.CreateScale(Projectile.scale, Projectile.scale, 1f);
             Matrix view = Matrix.CreateTranslation(new Vector3(Projectile.Center.X + drawOffset.X - Main.screenPosition.X, Projectile.Center.Y + drawOffset.Y - Main.screenPosition.Y, 0f));
