@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Luminance.Assets;
+using Luminance.Common.DataStructures;
 using Luminance.Common.Easings;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -14,7 +15,7 @@ using WoTE.Content.Particles;
 
 namespace WoTE.Content.NPCs.EoL.Projectiles
 {
-    public class MagicCircle : ModProjectile
+    public class MagicCircle : ModProjectile, IProjOwnedByBoss<EmpressOfLight>
     {
         internal static ManagedRenderTarget UnrotatedCircleTarget;
 
@@ -78,23 +79,20 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.scale = EasingCurves.Elastic.Evaluate(EasingType.Out, Utilities.InverseLerp(0f, 75f, Time).Squared()) * 0.45f;
             Projectile.Center = EmpressOfLight.Myself.Center - Vector2.UnitY * Projectile.scale * 400f;
 
-            Rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.24f));
+            Rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.14f));
 
             Vector2 edgeParticleSpawnPosition = Projectile.Center + Vector2.Transform(Main.rand.NextVector2CircularEdge(250f, 250f), Rotation) * Projectile.scale * 2f;
             Vector2 edgeParticleVelocity = -Vector2.UnitY * Main.rand.NextFloat(2f, 12f);
             BloomCircleParticle edgeParticle = new(edgeParticleSpawnPosition, edgeParticleVelocity, new(0.2f, 0.06f), Color.Wheat, Color.DeepSkyBlue * 0.5f, 24, 1.5f);
             edgeParticle.Spawn();
-
-            if (Main.mouseRight && Main.mouseRightRelease)
-                Time = 0f;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
             Vector2 ringDrawOffset = Vector2.Transform(UnrotatedCircleTarget.Size() * new Vector2(-0.5f, 0.5f), Rotation);
 
-            DrawRing(Vector2.Zero, Rotation, Color.SkyBlue with { A = 0 });
             DrawFromTarget(ringDrawOffset, Rotation, Color.White);
+            DrawRing(Vector2.Zero, Rotation, Color.SkyBlue with { A = 0 });
 
             return false;
         }
@@ -107,7 +105,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             for (int i = 0; i < blurWeights.Length; i++)
                 blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 2f) / 13f;
             ManagedShader underglowShader = ShaderManager.GetShader("WoTE.BlurUnderglowShader");
-            underglowShader.TrySetParameter("blurOffset", Projectile.scale * 0.005f);
+            underglowShader.TrySetParameter("blurOffset", Projectile.scale * 0.004f);
             underglowShader.TrySetParameter("blurWeights", blurWeights);
 
             PrimitiveRenderer.RenderQuad(drawnCircle, Projectile.Center + drawOffset, Vector2.One, 0f, circleColor, underglowShader, rotation);
@@ -151,7 +149,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public void DrawRing(Vector2 drawOffset, Quaternion rotation, Color ringColor)
         {
             float appearanceScaleFactor = 1f;
-            float downwardOffset = Vector3.Transform(Vector3.Forward, Rotation).Y * 350f;
+            float downwardOffset = Vector3.Transform(Vector3.Forward, Rotation).Y * 250f;
             Vector2 top = Vector2.UnitY * -4f;
             Vector2 bottom = top + Vector2.UnitY * appearanceScaleFactor.Squared() * downwardOffset;
             GenerateCylinderUVs(top, bottom, ringColor, out short[] indices, out VertexPosition2DColorTexture[] vertices);
@@ -191,9 +189,9 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 DrawMagicCircle(Color.White, drawOffset, appearInterpolantC, -drawOffset.ToRotation(), Projectile.scale * 0.14f, 3, 6);
             }
 
-            DrawMagicCircle(Color.Aqua, Vector2.Zero, appearInterpolantB, -MathHelper.PiOver2, Projectile.scale * 0.5f, 3);
             DrawMagicCircle(Color.HotPink, Vector2.Zero, appearInterpolantB, innerAngleOffset * -2f, Projectile.scale * 0.5f, 6);
             DrawMagicCircle(Color.LightGoldenrodYellow, Vector2.Zero, appearInterpolantB, innerAngleOffset * 0.5f, Projectile.scale * 0.5f, 5);
+            DrawMagicCircle(Color.Aqua, Vector2.Zero, appearInterpolantB, -MathHelper.PiOver2, Projectile.scale * 0.5f, 3);
             DrawLacewingAtCenterOfRing(appearInterpolantC.Squared());
 
             Main.spriteBatch.End();
