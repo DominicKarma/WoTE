@@ -81,16 +81,22 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             Rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.14f));
 
-            Vector2 edgeParticleSpawnPosition = Projectile.Center + Vector2.Transform(Main.rand.NextVector2CircularEdge(250f, 250f), Rotation) * Projectile.scale * 2f;
-            Vector2 edgeParticleVelocity = -Vector2.UnitY * Main.rand.NextFloat(2f, 12f);
-            BloomCircleParticle edgeParticle = new(edgeParticleSpawnPosition, edgeParticleVelocity, new(0.2f, 0.06f), Color.Wheat, Color.DeepSkyBlue * 0.5f, 24, 1.5f);
-            edgeParticle.Spawn();
+            for (int i = 0; i < 2; i++)
+            {
+                float particleSpeedInterpolant = Main.rand.NextFloat();
+                int particleLifetime = (int)MathHelper.Lerp(36f, 10f, particleSpeedInterpolant);
+                Vector2 edgeParticleSpawnPosition = Projectile.Center + Vector2.Transform(Main.rand.NextVector2CircularEdge(250f, 250f), Rotation) * Projectile.scale * 2f;
+                Vector2 edgeParticleVelocity = -Vector2.UnitY * MathHelper.Lerp(2f, 14f, particleSpeedInterpolant);
+                BloomCircleParticle edgeParticle = new(edgeParticleSpawnPosition, edgeParticleVelocity, new(0.2f, 0.06f), Color.Wheat, Color.DeepSkyBlue * 0.5f, particleLifetime, 1.5f);
+                edgeParticle.Spawn();
+            }
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
             Vector2 ringDrawOffset = Vector2.Transform(UnrotatedCircleTarget.Size() * new Vector2(-0.5f, 0.5f), Rotation);
 
+            DrawBackglowCylinder(Vector2.Zero, Rotation, Color.SkyBlue with { A = 0 } * Utilities.InverseLerp(0.25f, 0.8f, AppearanceInterpolant));
             DrawFromTarget(ringDrawOffset, Rotation, Color.White);
             DrawRing(Vector2.Zero, Rotation, Color.SkyBlue with { A = 0 });
 
@@ -112,13 +118,11 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             PrimitiveRenderer.RenderQuad(drawnCircle, Projectile.Center + drawOffset, Vector2.One, 0f, circleColor, null, rotation);
         }
 
-        public static void GenerateCylinderUVs(Vector2 top, Vector2 bottom, Color cylinderColor, out short[] indices, out VertexPosition2DColorTexture[] vertices)
+        public static void GenerateCylinderUVs(Vector2 maxSize, Vector2 top, Vector2 bottom, Color cylinderColor, out short[] indices, out VertexPosition2DColorTexture[] vertices)
         {
             int precision = 240;
             float appearanceScaleFactor = 1f;
             vertices = new VertexPosition2DColorTexture[precision * 2];
-            Vector2 maxSize = new(524f, 508f);
-
             for (int i = 0; i < precision; i++)
             {
                 float angle = MathHelper.TwoPi * i / precision * 2f;
@@ -146,13 +150,36 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             }
         }
 
+        public void DrawBackglowCylinder(Vector2 drawOffset, Quaternion rotation, Color ringColor)
+        {
+            float appearanceScaleFactor = 1f;
+            float verticalOffset = Vector3.Transform(Vector3.Forward, Rotation).Y * appearanceScaleFactor.Squared() * 1000f;
+            Vector2 top = -Vector2.UnitY * verticalOffset;
+            Vector2 bottom = top + Vector2.UnitY * verticalOffset * 1.4f;
+            GenerateCylinderUVs(new(514f, 508f), top, bottom, ringColor, out short[] indices, out VertexPosition2DColorTexture[] vertices);
+
+            Matrix scale = Matrix.CreateScale(Projectile.scale, Projectile.scale, 1f);
+            Matrix view = Matrix.CreateTranslation(new Vector3(Projectile.Center.X + drawOffset.X - Main.screenPosition.X, Projectile.Center.Y + drawOffset.Y - Main.screenPosition.Y, 0f));
+            Matrix projection = Matrix.CreateOrthographicOffCenter(0f, Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height, 0f, -2000f, 2000f);
+
+            ManagedShader ringShader = ShaderManager.GetShader("WoTE.MagicCircleGlowRingShader");
+            ringShader.TrySetParameter("spinScrollOffset", Time / -240f);
+            ringShader.TrySetParameter("uWorldViewProjection", Matrix.CreateFromQuaternion(rotation) * scale * view * Main.GameViewMatrix.TransformationMatrix * projection);
+            ringShader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
+            ringShader.Apply();
+
+            var gd = Main.instance.GraphicsDevice;
+            gd.RasterizerState = RasterizerState.CullNone;
+            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length, indices, 0, vertices.Length / 2);
+        }
+
         public void DrawRing(Vector2 drawOffset, Quaternion rotation, Color ringColor)
         {
             float appearanceScaleFactor = 1f;
             float downwardOffset = Vector3.Transform(Vector3.Forward, Rotation).Y * 250f;
             Vector2 top = Vector2.UnitY * -4f;
             Vector2 bottom = top + Vector2.UnitY * appearanceScaleFactor.Squared() * downwardOffset;
-            GenerateCylinderUVs(top, bottom, ringColor, out short[] indices, out VertexPosition2DColorTexture[] vertices);
+            GenerateCylinderUVs(new(524f, 508f), top, bottom, ringColor, out short[] indices, out VertexPosition2DColorTexture[] vertices);
 
             Matrix scale = Matrix.CreateScale(Projectile.scale, Projectile.scale, 1f);
             Matrix view = Matrix.CreateTranslation(new Vector3(Projectile.Center.X + drawOffset.X - Main.screenPosition.X, Projectile.Center.Y + drawOffset.Y - Main.screenPosition.Y, 0f));
@@ -168,8 +195,6 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             var gd = Main.instance.GraphicsDevice;
             gd.RasterizerState = RasterizerState.CullNone;
             gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length, indices, 0, vertices.Length / 2);
-            gd.SetVertexBuffer(null);
-            gd.Indices = null;
         }
 
         public void DrawToTarget()
