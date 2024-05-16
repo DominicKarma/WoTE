@@ -80,7 +80,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Quaternion rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.05f));
             Vector2 ringDrawOffset = Vector2.Transform(UnrotatedCircleTarget.Size() * new Vector2(-0.5f, 0.5f), rotation);
 
-            //DrawRing(Vector2.Zero, rotation, Color.SkyBlue with { A = 0 });
+            DrawRing(Vector2.Zero, rotation, Color.SkyBlue with { A = 0 });
             DrawFromTarget(ringDrawOffset, rotation, Color.White);
 
             return false;
@@ -108,7 +108,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             VertexPosition2DColorTexture[] vertices = new VertexPosition2DColorTexture[precision * 2];
             Vector2 top = Vector2.UnitY * -4f;
             Vector2 bottom = top + Vector2.UnitY * appearanceScaleFactor.Squared() * 192f;
-            Vector2 maxSize = new(524f, 504f);
+            Vector2 maxSize = new(524f, 508f);
 
             for (int i = 0; i < precision; i++)
             {
@@ -143,7 +143,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             ManagedShader ringShader = ShaderManager.GetShader("WoTE.MagicCircleRingShader");
             ringShader.SetTexture(ring, 1, SamplerState.LinearWrap);
-            ringShader.TrySetParameter("spinScrollOffset", Time / -120f);
+            ringShader.TrySetParameter("spinScrollOffset", Time / -240f);
             ringShader.TrySetParameter("uWorldViewProjection", Matrix.CreateFromQuaternion(rotation) * scale * view * Main.GameViewMatrix.TransformationMatrix * projection);
             ringShader.Apply();
 

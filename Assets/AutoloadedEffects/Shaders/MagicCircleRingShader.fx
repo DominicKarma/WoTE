@@ -33,7 +33,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     // Calculate the base coordinates.
     float glow = 1 - (smoothstep(0, 0.15, input.TextureCoordinates.y) * smoothstep(1, 0.85, input.TextureCoordinates.y));
-    return saturate(input.Color) * (tex2D(ringTexture, input.TextureCoordinates.xy * float2(-1, 1) + float2(-spinScrollOffset, 0)) + glow);
+    glow *= pow(sin(input.TextureCoordinates.y * 3.141), 0.3);
+    
+    return saturate(input.Color) * (tex2D(ringTexture, input.TextureCoordinates.xy * float2(-1, 1) + float2(-spinScrollOffset, 0)) + glow * 2);
 }
 
 technique Technique1
