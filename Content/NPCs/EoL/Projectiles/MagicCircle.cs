@@ -80,7 +80,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Quaternion rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.05f));
             Vector2 ringDrawOffset = Vector2.Transform(UnrotatedCircleTarget.Size() * new Vector2(-0.5f, 0.5f), rotation);
 
-            DrawRing(Vector2.Zero, rotation, Color.SkyBlue with { A = 0 });
+            //DrawRing(Vector2.Zero, rotation, Color.SkyBlue with { A = 0 });
             DrawFromTarget(ringDrawOffset, rotation, Color.White);
 
             return false;
@@ -89,6 +89,15 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public void DrawFromTarget(Vector2 drawOffset, Quaternion rotation, Color circleColor)
         {
             Texture2D drawnCircle = UnrotatedCircleTarget;
+
+            float[] blurWeights = new float[11];
+            for (int i = 0; i < blurWeights.Length; i++)
+                blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 2f) / 12f;
+            ManagedShader underglowShader = ShaderManager.GetShader("WoTE.BlurUnderglowShader");
+            underglowShader.TrySetParameter("blurOffset", Projectile.scale * 0.006f);
+            underglowShader.TrySetParameter("blurWeights", blurWeights);
+
+            PrimitiveRenderer.RenderQuad(drawnCircle, Projectile.Center + drawOffset, Vector2.One, 0f, circleColor, underglowShader, rotation);
             PrimitiveRenderer.RenderQuad(drawnCircle, Projectile.Center + drawOffset, Vector2.One, 0f, circleColor, null, rotation);
         }
 
