@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
@@ -28,6 +29,10 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public ref float Time => ref Projectile.ai[0];
 
         public ref float AppearanceInterpolant => ref Projectile.ai[1];
+
+        public ref float AimDirection => ref Projectile.ai[2];
+
+        public ref float RingHeight => ref Projectile.localAI[0];
 
         public override void SetStaticDefaults()
         {
@@ -64,6 +69,23 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.timeLeft = 9999999;
         }
 
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(Rotation.X);
+            writer.Write(Rotation.Y);
+            writer.Write(Rotation.Z);
+            writer.Write(Rotation.W);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            float x = reader.ReadSingle();
+            float y = reader.ReadSingle();
+            float z = reader.ReadSingle();
+            float w = reader.ReadSingle();
+            Rotation = new(x, y, z, w);
+        }
+
         public override void AI()
         {
             if (EmpressOfLight.Myself is null)
@@ -74,19 +96,32 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             Time++;
 
+            Player target = Main.player[EmpressOfLight.Myself.target];
+            float idealDirection = EmpressOfLight.Myself.AngleTo(target.Center) + MathHelper.PiOver2;
+            float keyframeInterpolant = MathHelper.SmoothStep(0f, 1f, Utilities.InverseLerp(45f, 72f, Time));
+            float aimAtPlayerInterpolant = MathHelper.SmoothStep(0f, 1f, Utilities.InverseLerp(75f, 145f, Time));
+            idealDirection = idealDirection.AngleLerp(0f, 1f - aimAtPlayerInterpolant);
+            AimDirection = AimDirection.AngleLerp(idealDirection, 0.019f);
+
             AppearanceInterpolant = Utilities.InverseLerp(0f, 105f, Time);
+            RingHeight = keyframeInterpolant * 280f;
             Projectile.rotation += MathHelper.TwoPi * Utilities.InverseLerp(0.35f, 0.95f, AppearanceInterpolant).Squared() / 120f;
             Projectile.scale = EasingCurves.Elastic.Evaluate(EasingType.Out, Utilities.InverseLerp(0f, 75f, Time).Squared()) * 0.45f;
-            Projectile.Center = EmpressOfLight.Myself.Center - Vector2.UnitY * Projectile.scale * 400f;
+            Projectile.Center = EmpressOfLight.Myself.Center + (AimDirection - MathHelper.PiOver2).ToRotationVector2() * Projectile.scale * 380f;
 
-            Rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.14f));
+            Quaternion keyframe1 = Quaternion.Identity;
+            Quaternion keyframe2 = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.14f));
+            Quaternion keyframe3 = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.14f) * Matrix.CreateRotationZ(AimDirection));
+
+            Rotation = Quaternion.Slerp(keyframe1, keyframe2, keyframeInterpolant * (1f - aimAtPlayerInterpolant));
+            Rotation = Quaternion.Slerp(Rotation, keyframe3, aimAtPlayerInterpolant);
 
             for (int i = 0; i < 2; i++)
             {
                 float particleSpeedInterpolant = Main.rand.NextFloat();
                 int particleLifetime = (int)MathHelper.Lerp(36f, 10f, particleSpeedInterpolant);
                 Vector2 edgeParticleSpawnPosition = Projectile.Center + Vector2.Transform(Main.rand.NextVector2CircularEdge(250f, 250f), Rotation) * Projectile.scale * 2f;
-                Vector2 edgeParticleVelocity = -Vector2.UnitY * MathHelper.Lerp(2f, 14f, particleSpeedInterpolant);
+                Vector2 edgeParticleVelocity = (AimDirection - MathHelper.PiOver2).ToRotationVector2() * MathHelper.Lerp(2f, 14f, particleSpeedInterpolant);
                 BloomCircleParticle edgeParticle = new(edgeParticleSpawnPosition, edgeParticleVelocity, new(0.2f, 0.06f), Color.Wheat, Color.DeepSkyBlue * 0.5f, particleLifetime, 1.5f);
                 edgeParticle.Spawn();
             }
@@ -153,7 +188,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public void DrawBackglowCylinder(Vector2 drawOffset, Quaternion rotation, Color ringColor)
         {
             float appearanceScaleFactor = 1f;
-            float verticalOffset = Vector3.Transform(Vector3.Forward, Rotation).Y * appearanceScaleFactor.Squared() * 1000f;
+            float verticalOffset = appearanceScaleFactor.Squared() * RingHeight * 3f;
             Vector2 top = -Vector2.UnitY * verticalOffset;
             Vector2 bottom = top + Vector2.UnitY * verticalOffset * 1.4f;
             GenerateCylinderUVs(new(524f, 508f), top, bottom, ringColor, out short[] indices, out VertexPosition2DColorTexture[] vertices);
@@ -176,9 +211,8 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public void DrawRing(Vector2 drawOffset, Quaternion rotation, Color ringColor)
         {
             float appearanceScaleFactor = 1f;
-            float downwardOffset = Vector3.Transform(Vector3.Forward, Rotation).Y * 250f;
             Vector2 top = Vector2.UnitY * -4f;
-            Vector2 bottom = top + Vector2.UnitY * appearanceScaleFactor.Squared() * downwardOffset;
+            Vector2 bottom = top + Vector2.UnitY * appearanceScaleFactor.Squared() * RingHeight;
             GenerateCylinderUVs(new(524f, 508f), top, bottom, ringColor, out short[] indices, out VertexPosition2DColorTexture[] vertices);
 
             Matrix scale = Matrix.CreateScale(Projectile.scale, Projectile.scale, 1f);
