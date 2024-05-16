@@ -3,6 +3,7 @@ sampler streakTexture : register(s2);
 
 float fireColorInterpolant;
 float globalTime;
+float brightness;
 matrix uWorldViewProjection;
 
 struct VertexShaderInput
@@ -58,7 +59,7 @@ float4 CalculateFireColor(float2 coords)
     // Apply darkening effects to the fire, for contrast purposes.
     fireColor -= tex2D(streakTexture, coords + float2(globalTime * -4.15, 0)) * fireColor.a / glow * 2;
     
-    return fireColor * 2;
+    return fireColor * brightness * 2;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0

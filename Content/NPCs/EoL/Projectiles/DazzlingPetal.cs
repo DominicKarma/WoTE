@@ -159,6 +159,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         {
             ManagedShader trailShader = ShaderManager.GetShader("WoTE.DazzlingPetalShader");
             trailShader.TrySetParameter("fireColorInterpolant", FlareInterpolant);
+            trailShader.TrySetParameter("brightness", 1f + Utilities.InverseLerp(1000f, 600f, PetalLength) * 0.64f);
             trailShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
             trailShader.SetTexture(TextureAssets.Extra[ExtrasID.FlameLashTrailShape], 2, SamplerState.LinearWrap);
             trailShader.Apply();

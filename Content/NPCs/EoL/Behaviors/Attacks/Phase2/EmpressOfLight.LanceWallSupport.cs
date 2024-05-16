@@ -101,9 +101,6 @@ namespace WoTE.Content.NPCs.EoL
             else if (AITimer >= LanceWallSupport_FlyUpwardDelay)
                 NPC.velocity.Y -= 3.2f;
 
-            if (AITimer == LanceWallSupport_FlyUpwardDelay + LanceWallSupport_FlyUpwardTime)
-                SoundEngine.PlaySound(SoundID.Item160);
-
             DashAfterimageInterpolant = Utilities.InverseLerp(0f, 30f, AITimer - LanceWallSupport_FlyUpwardDelay);
 
             NPC.spriteDirection = 1;

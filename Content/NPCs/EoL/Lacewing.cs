@@ -286,7 +286,7 @@ namespace WoTE.Content.NPCs.EoL
             else if (wrappedAITimer <= redirectTime + dashDelay + dashRepositionTime)
             {
                 // Make the first lacewing play dash sounds.
-                if (wrappedAITimer == redirectTime + 1 && Index == 0)
+                if (wrappedAITimer == redirectTime + dashDelay + 1 && Index == 0)
                     SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
 
                 NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 54f, 0.29f);
