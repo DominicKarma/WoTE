@@ -1,4 +1,5 @@
-﻿using Luminance.Common.StateMachines;
+﻿using Luminance.Common.DataStructures;
+using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -27,10 +28,19 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_PrismaticOverload()
         {
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == 1)
+            {
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MagicCircle>(), 0, 0f);
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<PrismaticBurst>(), 0, 0f);
+            }
 
             LeftHandFrame = EmpressHandFrame.PalmRaisedUp;
             RightHandFrame = EmpressHandFrame.PalmRaisedUp;
+
+            if (Main.mouseRight && Main.mouseRightRelease)
+            {
+                IProjOwnedByBoss<EmpressOfLight>.KillAll();
+                AITimer = 0;
+            }
 
             NPC.velocity *= 0.9f;
             NPC.spriteDirection = 1;

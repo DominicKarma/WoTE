@@ -71,10 +71,10 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(sinusoidalAngle) * Main.rand.NextFloat(2.5f, 3.3f) + Main.rand.NextVector2Circular(1.6f, 1.6f);
             Color particleColor = Main.hslToRgb(Main.rand.NextFloat(0.93f, 1.15f) % 1f, 1f, 0.7f) * 0.8f;
 
-            BloomCircleParticle particle = new(Projectile.Center + Main.rand.NextVector2Circular(10f, 10f), particleVelocity, 0.045f, Color.Wheat, particleColor, 60, 1.8f, 1.75f);
+            BloomCircleParticle particle = new(Projectile.Center + Main.rand.NextVector2Circular(10f, 10f), particleVelocity, Vector2.One * Vector2.One * 0.045f, Color.Wheat, particleColor, 60, 1.8f, 1.75f);
             particle.Spawn();
 
-            particle = new(Projectile.Center + Main.rand.NextVector2Circular(10f, 10f), -particleVelocity, 0.045f, Color.Wheat, particleColor, 60, 1.8f, 1.75f);
+            particle = new(Projectile.Center + Main.rand.NextVector2Circular(10f, 10f), -particleVelocity, Vector2.One * 0.045f, Color.Wheat, particleColor, 60, 1.8f, 1.75f);
             particle.Spawn();
         }
 

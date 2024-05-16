@@ -77,7 +77,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 float sinusoidalAngle = CalculateSinusoidalOffset(0.4f) * 0.7f;
                 Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(sinusoidalAngle) * Main.rand.NextFloat(2.5f, 3.3f) + Main.rand.NextVector2Circular(1.6f, 1.6f);
                 Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.8f) * 0.8f;
-                BloomCircleParticle particle = new(Projectile.Center + Main.rand.NextVector2Circular(30f, 30f), particleVelocity, 0.028f, Color.Wheat, particleColor, 60, 1.8f, 1.75f);
+                BloomCircleParticle particle = new(Projectile.Center + Main.rand.NextVector2Circular(30f, 30f), particleVelocity, Vector2.One * 0.028f, Color.Wheat, particleColor, 60, 1.8f, 1.75f);
                 particle.Spawn();
             }
 

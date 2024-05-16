@@ -154,7 +154,7 @@ namespace WoTE.Content.NPCs.EoL
             {
                 Vector2 particleVelocity = -NPC.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(15f, 25f) + Main.rand.NextVector2Circular(3f, 3f);
                 Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.67f) * 0.8f;
-                BloomCircleParticle particle = new(NPC.Center + Main.rand.NextVector2Circular(80f, 80f), particleVelocity, Main.rand.NextFloat(0.015f, 0.042f), Color.Wheat, particleColor, 120, 1.8f, 1.75f);
+                BloomCircleParticle particle = new(NPC.Center + Main.rand.NextVector2Circular(80f, 80f), particleVelocity, Vector2.One * Main.rand.NextFloat(0.015f, 0.042f), Color.Wheat, particleColor, 120, 1.8f, 1.75f);
                 particle.Spawn();
             }
         }

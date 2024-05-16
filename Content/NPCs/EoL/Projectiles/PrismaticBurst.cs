@@ -71,7 +71,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             {
                 Vector2 particleSpawnPosition = Projectile.Center + Main.rand.NextVector2Unit() * Radius * Projectile.scale * Main.rand.NextFloat(0.66f, 0.98f);
                 Vector2 particleVelocity = (particleSpawnPosition - Projectile.Center).SafeNormalize(Vector2.UnitY).RotatedBy(fireVelocityArc) * Main.rand.NextFloat(2f, 11f);
-                BloomCircleParticle particle = new(particleSpawnPosition, particleVelocity, Main.rand.NextFloat(0.03f, 0.07f), Color.White, Color.Lerp(Color.DeepSkyBlue, Color.HotPink, Main.rand.NextFloat(0.8f)), Main.rand.Next(25, 44), 2f);
+                BloomCircleParticle particle = new(particleSpawnPosition, particleVelocity, Vector2.One * Main.rand.NextFloat(0.03f, 0.07f), Color.White, Color.Lerp(Color.DeepSkyBlue, Color.HotPink, Main.rand.NextFloat(0.8f)), Main.rand.Next(25, 44), 2f);
                 particle.Spawn();
             }
         }

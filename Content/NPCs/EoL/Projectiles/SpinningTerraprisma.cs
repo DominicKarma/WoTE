@@ -150,7 +150,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.7f) * 0.8f;
             Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(3f, 7f) + Main.rand.NextVector2Circular(2f, 2f);
             Vector2 particleSpawnPosition = Projectile.Center + Main.rand.NextVector2Circular(20f, 20f);
-            BloomCircleParticle particle = new(particleSpawnPosition, particleVelocity, Main.rand.NextFloat(0.02f, 0.05f), Color.Wheat, particleColor, 40, 1.6f, 1.75f);
+            BloomCircleParticle particle = new(particleSpawnPosition, particleVelocity, Vector2.One * Main.rand.NextFloat(0.02f, 0.05f), Color.Wheat, particleColor, 40, 1.6f, 1.75f);
             particle.Spawn();
 
             DashVisualsIntensity = 1f;
