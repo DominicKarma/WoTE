@@ -21,7 +21,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' butterflies spend redirecting during her Butterfly Burst Dashes attack.
         /// </summary>
-        public static int ButterflyBurstDashes_RedirectTime => Utilities.SecondsToFrames(1.55f);
+        public static int ButterflyBurstDashes_RedirectTime => Utilities.SecondsToFrames(1.5f);
+
+        /// <summary>
+        /// How long the Empress' butterflies wait before dashing during her Butterfly Burst Dashes attack.
+        /// </summary>
+        public static int ButterflyBurstDashes_DashDelay => Utilities.SecondsToFrames(0.12f);
 
         /// <summary>
         /// How long the Empress' butterflies spend repositioning for the dash during her Butterfly Burst Dashes attack.
@@ -79,7 +84,7 @@ namespace WoTE.Content.NPCs.EoL
                 if (AITimer == ButterflyBurstDashes_ButterflyTransitionDelay)
                     DoBehavior_ButterflyBurstDashes_SummonLacewings();
 
-                int attackCycleTime = ButterflyBurstDashes_RedirectTime + ButterflyBurstDashes_DashRepositionTime + ButterflyBurstDashes_DashTime + ButterflyBurstDashes_DashSlowdownTime;
+                int attackCycleTime = ButterflyBurstDashes_RedirectTime + ButterflyBurstDashes_DashDelay + ButterflyBurstDashes_DashRepositionTime + ButterflyBurstDashes_DashTime + ButterflyBurstDashes_DashSlowdownTime;
                 bool doneDashing = AITimer >= attackCycleTime * ButterflyBurstDashes_DashCount;
                 int lacewingCount = NPC.CountNPCS(ModContent.NPCType<Lacewing>());
                 if (lacewingCount >= 1 && !doneDashing)

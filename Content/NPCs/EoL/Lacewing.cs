@@ -218,9 +218,10 @@ namespace WoTE.Content.NPCs.EoL
 
             int redirectTime = EmpressOfLight.ButterflyBurstDashes_RedirectTime;
             int dashRepositionTime = EmpressOfLight.ButterflyBurstDashes_DashRepositionTime;
+            int dashDelay = EmpressOfLight.ButterflyBurstDashes_DashDelay;
             int dashTime = EmpressOfLight.ButterflyBurstDashes_DashTime;
             int slowdownTime = EmpressOfLight.ButterflyBurstDashes_DashSlowdownTime;
-            int attackCycleTime = redirectTime + dashRepositionTime + dashTime + slowdownTime;
+            int attackCycleTime = redirectTime + dashRepositionTime + dashDelay + dashTime + slowdownTime;
             int wrappedAITimer = AITimer % attackCycleTime;
             bool doneDashing = AITimer >= attackCycleTime * EmpressOfLight.ButterflyBurstDashes_DashCount || EmpressOfLight.Myself.As<EmpressOfLight>().CanDanceToBeat;
             float idealTrailOpacity = 1f;
@@ -276,18 +277,24 @@ namespace WoTE.Content.NPCs.EoL
 
                 NPC.damage = 0;
             }
-            else if (wrappedAITimer <= redirectTime + dashRepositionTime)
+            else if (wrappedAITimer <= redirectTime + dashDelay)
+            {
+                NPC.velocity *= 0.9f;
+                NPC.defense = 9999;
+            }
+
+            else if (wrappedAITimer <= redirectTime + dashDelay + dashRepositionTime)
             {
                 // Make the first lacewing play dash sounds.
                 if (wrappedAITimer == redirectTime + 1 && Index == 0)
                     SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
 
-                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 54f, 0.27f);
+                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 54f, 0.29f);
                 NPC.defense = 9999;
                 idealTrailOpacity = 2f;
             }
 
-            else if (wrappedAITimer <= redirectTime + dashRepositionTime + dashTime)
+            else if (wrappedAITimer <= redirectTime + dashDelay + dashRepositionTime + dashTime)
             {
                 NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 3.5f;
                 NPC.defense = 9999;
