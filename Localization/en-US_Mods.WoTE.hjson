@@ -16,6 +16,7 @@ Projectiles: {
 	EmpressOrbitingTerraprisma.DisplayName: Terraprisma
 	ConvergingMoonlight.DisplayName: Converging Moonlight
 	DazzlingDeathray.DisplayName: Dazzling Deathray
+	MagicCircle.DisplayName: Magic Circle
 }
 
 Configs: {

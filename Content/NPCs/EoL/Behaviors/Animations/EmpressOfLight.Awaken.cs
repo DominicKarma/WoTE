@@ -27,6 +27,11 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer <= 5)
                 NPC.velocity = Vector2.UnitY * 12f;
 
+            /*
+            if (AITimer == 1)
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<MagicCircle>(), 0, 0f);
+            */
+
             NPC.velocity *= 0.84f;
             NPC.Opacity = Utilities.InverseLerp(0f, 30f, AITimer);
 
