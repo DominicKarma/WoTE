@@ -35,24 +35,27 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.Center = EmpressOfLight.Myself.Center;
             Time++;
 
+            Projectile.rotation += MathHelper.TwoPi * Utilities.InverseLerp(10f, 90f, Time).Squared() / 120f;
+
             if (Main.mouseRight && Main.mouseRightRelease)
                 Time = 0f;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            float innerAngleOffset = Main.GlobalTimeWrappedHourly * 0.9f;
+            float innerAngleOffset = Projectile.rotation;
             float appearanceInterpolant = Utilities.InverseLerp(0f, 74f, Time);
 
             DrawMagicCircle(Color.Pink, Vector2.Zero, appearanceInterpolant, innerAngleOffset + MathHelper.PiOver2, 0.5f, 5, 3);
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 5; i++)
             {
-                Vector2 drawOffset = (MathHelper.TwoPi * (i + 0.5f) / 6f - innerAngleOffset).ToRotationVector2() * ScaleByAppearanceInterpolant(appearanceInterpolant) * 218f;
-                DrawMagicCircle(Color.LightCyan, drawOffset, appearanceInterpolant.Cubed(), -drawOffset.ToRotation(), 0.07f, 3, 6);
+                Vector2 drawOffset = (MathHelper.TwoPi * (i + 0.5f) / 5f - innerAngleOffset - MathHelper.Pi / 3f).ToRotationVector2() * ScaleByAppearanceInterpolant(appearanceInterpolant) * 218f;
+                DrawMagicCircle(Color.White, drawOffset, appearanceInterpolant.Cubed(), -drawOffset.ToRotation(), 0.07f, 3, 6);
             }
-            DrawMagicCircle(Color.CadetBlue, Vector2.Zero, appearanceInterpolant, innerAngleOffset * -3f, 0.25f, 3, 6);
-            DrawMagicCircle(Color.LightCyan, Vector2.Zero, appearanceInterpolant, innerAngleOffset * 0.5f, 0.25f, 8);
+            DrawMagicCircle(Color.White, Vector2.Zero, appearanceInterpolant, -MathHelper.PiOver2, 0.25f, 3);
+            DrawMagicCircle(Color.White, Vector2.Zero, appearanceInterpolant, innerAngleOffset * -2f, 0.25f, 6);
+            DrawMagicCircle(Color.White, Vector2.Zero, appearanceInterpolant, innerAngleOffset * 0.5f, 0.25f, 8);
 
             return false;
         }
@@ -75,6 +78,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 shader.TrySetParameter("offsetAngle", angleOffset + MathHelper.Pi / polygonSideCount * (polygonSideCount % 2 == 1).ToInt());
                 shader.TrySetParameter("appearanceInterpolant", appearanceInterpolant);
                 shader.TrySetParameter("scale", scale);
+                shader.TrySetParameter("sectionStartOffsetAngle", -MathHelper.Pi / polygonSideCount + MathHelper.PiOver2);
                 shader.Apply();
 
                 Main.spriteBatch.Draw(circle, drawPosition, null, Projectile.GetAlpha(circleColor) with { A = 0 }, 0f, circle.Size() * 0.5f, scale, 0, 0f);
