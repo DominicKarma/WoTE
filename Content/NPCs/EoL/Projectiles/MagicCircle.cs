@@ -10,12 +10,19 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.Particles;
 
 namespace WoTE.Content.NPCs.EoL.Projectiles
 {
     public class MagicCircle : ModProjectile
     {
         internal static ManagedRenderTarget UnrotatedCircleTarget;
+
+        public Quaternion Rotation
+        {
+            get;
+            set;
+        }
 
         public ref float Time => ref Projectile.ai[0];
 
@@ -64,12 +71,19 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 return;
             }
 
-            Projectile.Center = EmpressOfLight.Myself.Center - Vector2.UnitY * 150f;
             Time++;
 
-            AppearanceInterpolant = Utilities.InverseLerp(0f, 125f, Time);
+            AppearanceInterpolant = Utilities.InverseLerp(0f, 105f, Time);
             Projectile.rotation += MathHelper.TwoPi * Utilities.InverseLerp(0.35f, 0.95f, AppearanceInterpolant).Squared() / 120f;
-            Projectile.scale = EasingCurves.Elastic.Evaluate(EasingType.Out, Utilities.InverseLerp(0f, 60f, Time).Squared()) * 0.5f;
+            Projectile.scale = EasingCurves.Elastic.Evaluate(EasingType.Out, Utilities.InverseLerp(0f, 75f, Time).Squared()) * 0.45f;
+            Projectile.Center = EmpressOfLight.Myself.Center - Vector2.UnitY * Projectile.scale * 400f;
+
+            Rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.24f));
+
+            Vector2 edgeParticleSpawnPosition = Projectile.Center + Vector2.Transform(Main.rand.NextVector2CircularEdge(250f, 250f), Rotation) * Projectile.scale * 2f;
+            Vector2 edgeParticleVelocity = -Vector2.UnitY * Main.rand.NextFloat(2f, 12f);
+            BloomCircleParticle edgeParticle = new(edgeParticleSpawnPosition, edgeParticleVelocity, new(0.2f, 0.06f), Color.Wheat, Color.DeepSkyBlue * 0.5f, 24, 1.5f);
+            edgeParticle.Spawn();
 
             if (Main.mouseRight && Main.mouseRightRelease)
                 Time = 0f;
@@ -77,11 +91,10 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Quaternion rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.05f));
-            Vector2 ringDrawOffset = Vector2.Transform(UnrotatedCircleTarget.Size() * new Vector2(-0.5f, 0.5f), rotation);
+            Vector2 ringDrawOffset = Vector2.Transform(UnrotatedCircleTarget.Size() * new Vector2(-0.5f, 0.5f), Rotation);
 
-            DrawRing(Vector2.Zero, rotation, Color.SkyBlue with { A = 0 });
-            DrawFromTarget(ringDrawOffset, rotation, Color.White);
+            DrawRing(Vector2.Zero, Rotation, Color.SkyBlue with { A = 0 });
+            DrawFromTarget(ringDrawOffset, Rotation, Color.White);
 
             return false;
         }
@@ -92,22 +105,20 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             float[] blurWeights = new float[11];
             for (int i = 0; i < blurWeights.Length; i++)
-                blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 2f) / 12f;
+                blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 2f) / 13f;
             ManagedShader underglowShader = ShaderManager.GetShader("WoTE.BlurUnderglowShader");
-            underglowShader.TrySetParameter("blurOffset", Projectile.scale * 0.006f);
+            underglowShader.TrySetParameter("blurOffset", Projectile.scale * 0.005f);
             underglowShader.TrySetParameter("blurWeights", blurWeights);
 
             PrimitiveRenderer.RenderQuad(drawnCircle, Projectile.Center + drawOffset, Vector2.One, 0f, circleColor, underglowShader, rotation);
             PrimitiveRenderer.RenderQuad(drawnCircle, Projectile.Center + drawOffset, Vector2.One, 0f, circleColor, null, rotation);
         }
 
-        public void DrawRing(Vector2 drawOffset, Quaternion rotation, Color ringColor)
+        public static void GenerateCylinderUVs(Vector2 top, Vector2 bottom, Color cylinderColor, out short[] indices, out VertexPosition2DColorTexture[] vertices)
         {
             int precision = 240;
             float appearanceScaleFactor = 1f;
-            VertexPosition2DColorTexture[] vertices = new VertexPosition2DColorTexture[precision * 2];
-            Vector2 top = Vector2.UnitY * -4f;
-            Vector2 bottom = top + Vector2.UnitY * appearanceScaleFactor.Squared() * 192f;
+            vertices = new VertexPosition2DColorTexture[precision * 2];
             Vector2 maxSize = new(524f, 508f);
 
             for (int i = 0; i < precision; i++)
@@ -119,12 +130,12 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 Vector2 bottomTextureCoordinate = new(x, 1f);
                 Vector2 circularOffset = angle.ToRotationVector2() * maxSize * appearanceScaleFactor;
 
-                vertices[i * 2] = new(top + circularOffset, ringColor, topTextureCoordinate, MathF.Cos(angle));
-                vertices[i * 2 + 1] = new(bottom + circularOffset, ringColor, bottomTextureCoordinate, MathF.Cos(angle));
+                vertices[i * 2] = new(top + circularOffset, cylinderColor, topTextureCoordinate, MathF.Cos(angle));
+                vertices[i * 2 + 1] = new(bottom + circularOffset, cylinderColor, bottomTextureCoordinate, MathF.Cos(angle));
             }
 
             short indicesIndex = 0;
-            short[] indices = new short[(precision - 2) * 6];
+            indices = new short[(precision - 2) * 6];
             for (short i = 0; i < precision - 2; i++)
             {
                 short connectToIndex = (short)(i * 2);
@@ -135,6 +146,15 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 indices[indicesIndex++] = (short)(connectToIndex + 1);
                 indices[indicesIndex++] = (short)(connectToIndex + 3);
             }
+        }
+
+        public void DrawRing(Vector2 drawOffset, Quaternion rotation, Color ringColor)
+        {
+            float appearanceScaleFactor = 1f;
+            float downwardOffset = Vector3.Transform(Vector3.Forward, Rotation).Y * 350f;
+            Vector2 top = Vector2.UnitY * -4f;
+            Vector2 bottom = top + Vector2.UnitY * appearanceScaleFactor.Squared() * downwardOffset;
+            GenerateCylinderUVs(top, bottom, ringColor, out short[] indices, out VertexPosition2DColorTexture[] vertices);
 
             Matrix scale = Matrix.CreateScale(Projectile.scale, Projectile.scale, 1f);
             Matrix view = Matrix.CreateTranslation(new Vector3(Projectile.Center.X + drawOffset.X - Main.screenPosition.X, Projectile.Center.Y + drawOffset.Y - Main.screenPosition.Y, 0f));

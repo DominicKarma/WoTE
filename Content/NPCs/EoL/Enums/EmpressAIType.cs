@@ -26,6 +26,7 @@
         OrbitReleasedTerraprismas,
         LanceWallSupport,
         BeatSyncedBolts,
+        PrismaticOverload,
 
         // Intermediate states.
         Teleport,
