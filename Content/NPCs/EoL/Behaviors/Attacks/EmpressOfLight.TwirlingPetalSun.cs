@@ -39,7 +39,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of time the Empress should wait after the twirling petals burst to choose a new attack.
         /// </summary>
-        public static int TwirlingPetalSun_AttackTransitionDelay => Utilities.SecondsToFrames(2f);
+        public int TwirlingPetalSun_AttackTransitionDelay => Utilities.SecondsToFrames(ByPhase(2f, 1f));
 
         /// <summary>
         /// The amount of petals the Empress summons during the Twirling Petal Sun attack.
@@ -100,12 +100,6 @@ namespace WoTE.Content.NPCs.EoL
                     {
                         Vector2 boltVelocity = (MathHelper.TwoPi * i / TwirlingPetalSun_PrismaticBoltCount).ToRotationVector2() * 12f + Main.rand.NextVector2Circular(3.5f, 3.5f);
                         Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target);
-
-                        if (Phase2)
-                        {
-                            boltVelocity = (MathHelper.TwoPi * (i + 0.5f) / TwirlingPetalSun_PrismaticBoltCount).ToRotationVector2() * 1.2f;
-                            Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f);
-                        }
                     }
                 }
             }
