@@ -80,12 +80,12 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_PrismaticBoltSpin_Spin()
         {
-            float spinSpeedInterpolant = Utilities.InverseLerp(0f, 30f, AITimer);
+            float spinSpeedInterpolant = Utilities.InverseLerp(0f, 75f, AITimer);
             Vector2 spinDestination = Target.Center + PrismaticBoltSpin_SpinAngle.ToRotationVector2() * PrismaticBoltSpin_SpinRadius;
             NPC.SmoothFlyNear(spinDestination, spinSpeedInterpolant * 0.6f, 1f - spinSpeedInterpolant * 0.54f);
             DashAfterimageInterpolant = spinSpeedInterpolant;
 
-            float spinSpeed = MathHelper.TwoPi / 36f;
+            float spinSpeed = Utilities.InverseLerp(0f, 40f, AITimer) * MathHelper.TwoPi / 36f;
             PrismaticBoltSpin_SpinAngle += spinSpeed * PrismaticBoltSpin_SpinDirection;
 
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 5 == 4 && AITimer >= 24)
