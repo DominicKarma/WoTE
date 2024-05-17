@@ -34,7 +34,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress waits during her second phase transition while charging energy.
         /// </summary>
-        public static int Phase2Transition_EnergyChargeUpTime => Utilities.SecondsToFrames(9f);
+        public static int Phase2Transition_EnergyChargeUpTime => Utilities.SecondsToFrames(7.4f);
 
         /// <summary>
         /// How long the Empress spends idle while entering her avatar form during her second phase.
