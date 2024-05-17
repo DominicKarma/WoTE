@@ -116,7 +116,7 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_BeatSyncedBolts_ReleaseBolts()
         {
-            if (Main.netMode != NetmodeID.MultiplayerClient && !NPC.WithinRange(Target.Center, 285f))
+            if (Main.netMode != NetmodeID.MultiplayerClient && !NPC.WithinRange(Target.Center, 356f))
             {
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, NPC.SafeDirectionTo(Target.Center) * BeatSyncedBolts_StarBoltShootSpeed, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f);
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, NPC.SafeDirectionTo(Target.Center) * -BeatSyncedBolts_PrismaticBoltShootSpeed, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f);
