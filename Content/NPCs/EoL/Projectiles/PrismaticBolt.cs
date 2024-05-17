@@ -58,21 +58,21 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             if (Time <= 60)
             {
                 float swerveInterpolant = MathF.Cos(Projectile.identity / 7f % 1f + Projectile.Center.X / 320f + Projectile.Center.Y / 160f);
-                Projectile.velocity = Projectile.velocity.RotatedBy(MathHelper.TwoPi * swerveInterpolant / 240f) * 0.98f;
+                Projectile.velocity = Projectile.velocity.RotatedBy(MathHelper.TwoPi * swerveInterpolant / 240f) * 0.983f;
             }
 
             if (Time <= 90)
             {
-                float homingSharpnessInterpolant = Utils.Remap(Time, 15f, 85f, 0.005f, 0.19f);
-                Vector2 idealVelocity = Projectile.SafeDirectionTo(Target.Center) * 30f;
+                float homingSharpnessInterpolant = Utils.Remap(Time, 15f, 85f, 0.0067f, 0.196f);
+                Vector2 idealVelocity = Projectile.SafeDirectionTo(Target.Center) * 34f;
                 Projectile.velocity = Vector2.SmoothStep(Projectile.velocity, idealVelocity, homingSharpnessInterpolant);
             }
-            else if (Projectile.velocity.Length() <= 40f)
+            else if (Projectile.velocity.Length() <= 43.5f)
                 Projectile.velocity *= 1.028f;
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
-            if (Main.rand.NextBool() && Projectile.velocity.Length() >= 12f)
+            if (Main.rand.NextBool() && Projectile.velocity.Length() >= 11f)
             {
                 float sinusoidalAngle = CalculateSinusoidalOffset(0.4f) * 0.7f;
                 Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(sinusoidalAngle) * Main.rand.NextFloat(2.5f, 3.3f) + Main.rand.NextVector2Circular(1.6f, 1.6f);
