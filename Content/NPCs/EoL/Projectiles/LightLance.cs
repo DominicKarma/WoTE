@@ -114,9 +114,9 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             c2.A = 0;
 
             Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
-            Vector2 bloomScale = new Vector2(1f, 2f) * Projectile.scale;
-            Main.EntitySpriteDraw(bloom, Projectile.Center - Main.screenPosition, null, c2 * bloomOpacity, 0f, bloom.Size() * 0.5f, bloomScale * 1.01f, 0, 0);
-            Main.EntitySpriteDraw(bloom, Projectile.Center - Main.screenPosition, null, c1 * bloomOpacity, 0f, bloom.Size() * 0.5f, bloomScale * 0.6f, 0, 0);
+            Vector2 bloomScale = new Vector2(2f, 1f) * Projectile.scale;
+            Main.EntitySpriteDraw(bloom, Projectile.Center - Main.screenPosition, null, c2 * bloomOpacity, Projectile.rotation, bloom.Size() * 0.5f, bloomScale * 1.01f, 0, 0);
+            Main.EntitySpriteDraw(bloom, Projectile.Center - Main.screenPosition, null, c1 * bloomOpacity, Projectile.rotation, bloom.Size() * 0.5f, bloomScale * 0.6f, 0, 0);
 
             // Make the dagger appear near the end of the telegraph fade-in.
             float daggerOffsetFactor = Projectile.velocity.Length() * 0.2f;
