@@ -102,14 +102,14 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_SequentialDashes_Redirect()
         {
             // Determine which direction the Empress should attempt to hover relative to the target.
-            // The abs(x) * -0.92 calculation serves two functions:
+            // The abs(x) * -0.94 calculation serves two functions:
             // 1. It ensures that the Empress always attempts to stay above the player, not below them.
             // 2. It makes the vertical hover offset regress to a horizontal one.
             Vector2 hoverOffsetDirection = Target.SafeDirectionTo(NPC.Center);
-            hoverOffsetDirection.Y = MathF.Abs(hoverOffsetDirection.Y) * -0.92f;
+            hoverOffsetDirection.Y = MathF.Abs(hoverOffsetDirection.Y) * -0.94f;
 
-            float backwardsWindUpOffset = Utilities.InverseLerp(-16f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 360f;
-            Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(540f, 480f) - NPC.SafeDirectionTo(Target.Center) * backwardsWindUpOffset;
+            float backwardsWindUpOffset = Utilities.InverseLerp(-16f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 400f;
+            Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(400f, 345f) - NPC.SafeDirectionTo(Target.Center) * backwardsWindUpOffset;
 
             NPC.SmoothFlyNear(hoverDestination, 0.17f, 0.85f);
         }
