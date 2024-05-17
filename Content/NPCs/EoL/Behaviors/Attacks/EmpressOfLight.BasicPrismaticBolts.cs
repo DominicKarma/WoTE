@@ -69,7 +69,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, redirectSpeed, 1f - redirectSpeed, 50f);
             NPC.rotation = NPC.velocity.X * 0.01f;
 
-            if (AITimer == 1)
+            if (AITimer == BasicPrismaticBolts_BoltShootDelay)
                 SoundEngine.PlaySound(SoundID.Item164);
 
             bool ableToShoot = AITimer >= BasicPrismaticBolts_BoltShootDelay && AITimer <= BasicPrismaticBolts_BoltShootDelay + BasicPrismaticBolts_BoltShootTime && !NPC.WithinRange(Target.Center, 150f);
