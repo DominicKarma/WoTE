@@ -17,7 +17,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// Whether the music is at a point where the Empress can start her Beat Synced Bolts attack.
         /// </summary>
-        public bool BeatSyncedBolts_CanDanceToBeat => MusicTimer >= BeatSyncedBolts_LightBeatStartTime && MusicTimer <= BeatSyncedBolts_LightBeatEndTime;
+        public bool BeatSyncedBolts_CanDanceToBeat => MusicTimer >= BeatSyncedBolts_LightBeatStartTime - BeatSyncedBolts_AttackStartDelay && MusicTimer <= BeatSyncedBolts_LightBeatEndTime - BeatSyncedBolts_AttackStartDelay;
 
         /// <summary>
         /// The starting direction angle that the Empress started her dash with during her Beat Synced Bolts attack.
@@ -47,6 +47,11 @@ namespace WoTE.Content.NPCs.EoL
         /// The initial speed of homing prismatic bolts shot during the Empress' Beat Synced Bolts attack.
         /// </summary>
         public static float BeatSyncedBolts_PrismaticBoltShootSpeed => 3.2f;
+
+        /// <summary>
+        /// How long the Empress waits, prepating before starting her Beat Synced Bolts attack.
+        /// </summary>
+        public static int BeatSyncedBolts_AttackStartDelay => Utilities.SecondsToFrames(2f);
 
         /// <summary>
         /// The starting time of the light beat. For use when determining whether the Empress should perform her Beat Synced Bolts attack.
@@ -81,7 +86,16 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer == 1)
                 IProjOwnedByBoss<EmpressOfLight>.KillAll();
 
-            int beatCycleTimer = AITimer % BeatSyncedBolts_ShootRate;
+            if (AITimer <= BeatSyncedBolts_AttackStartDelay)
+            {
+                float flySpeed = (1f - AITimer / (float)BeatSyncedBolts_AttackStartDelay) * 0.3f;
+                Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(NPC.Center).RotatedBy(MathHelper.PiOver2 * AITimer / BeatSyncedBolts_AttackStartDelay) * 400f;
+
+                NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, flySpeed, 1f - flySpeed * 0.78f, 100f);
+                return;
+            }
+
+            int beatCycleTimer = (AITimer - BeatSyncedBolts_AttackStartDelay) % BeatSyncedBolts_ShootRate;
 
             LeftHandFrame = EmpressHandFrame.FistedOutstretchedArm;
             RightHandFrame = EmpressHandFrame.FistedOutstretchedArm;
@@ -108,7 +122,7 @@ namespace WoTE.Content.NPCs.EoL
             else
                 NPC.velocity *= 0.79f;
 
-            DashAfterimageInterpolant = Utilities.InverseLerpBump(0f, 10f, BeatSyncedBolts_AttackDuration - 10f, BeatSyncedBolts_AttackDuration, AITimer) * 0.25f;
+            DashAfterimageInterpolant = Utilities.InverseLerpBump(0f, 10f, BeatSyncedBolts_AttackDuration - 10f, BeatSyncedBolts_AttackDuration, AITimer - BeatSyncedBolts_AttackStartDelay) * 0.25f;
         }
 
         /// <summary>
