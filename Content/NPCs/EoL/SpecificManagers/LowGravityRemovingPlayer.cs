@@ -13,7 +13,7 @@ namespace WoTE
             float spaceGravityMult = (float)((Player.position.Y / 16f - (60f + 10f * x)) / (Main.worldSurface / 6f));
             bool inSpace = spaceGravityMult < 1f; ;
 
-            if (EmpressOfLight.Myself is not null && inSpace)
+            if (EmpressOfLight.Myself is not null)
                 Player.gravity = Player.defaultGravity;
         }
     }
