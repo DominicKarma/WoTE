@@ -35,6 +35,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.hostile = true;
             Projectile.timeLeft = Lifetime;
             Projectile.scale = 1.5f;
+            CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
         public override void AI()
