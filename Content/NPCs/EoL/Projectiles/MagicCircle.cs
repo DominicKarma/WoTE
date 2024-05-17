@@ -20,18 +20,33 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
     {
         internal static ManagedRenderTarget UnrotatedCircleTarget;
 
+        /// <summary>
+        /// The 3D rotation of this magic circle.
+        /// </summary>
         public Quaternion Rotation
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// How long this magic circle has existed for, in frames.
+        /// </summary>
         public ref float Time => ref Projectile.ai[0];
 
+        /// <summary>
+        /// The general appearance interpolant of this magic circle.
+        /// </summary>
         public ref float AppearanceInterpolant => ref Projectile.ai[1];
 
+        /// <summary>
+        /// The current aim direction of the circle.
+        /// </summary>
         public ref float AimDirection => ref Projectile.ai[2];
 
+        /// <summary>
+        /// The ring height of this circle.
+        /// </summary>
         public ref float RingHeight => ref Projectile.localAI[0];
 
         public override void SetStaticDefaults()
@@ -99,11 +114,10 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             AppearanceInterpolant = Utilities.InverseLerp(0f, EmpressOfLight.PrismaticOverload_MagicCircleAppearTime, Time);
             RingHeight = aimUpwardInterpolant * 280f;
-            Projectile.rotation = EmpressOfLight.Myself.As<EmpressOfLight>().PrismaticOverload_MagicCircleSpinAngle;
             Projectile.scale = EasingCurves.Elastic.Evaluate(EasingType.Out, Utilities.InverseLerp(0f, EmpressOfLight.PrismaticOverload_ScaleIntoExistenceTime, Time).Squared()) * 0.425f;
             Projectile.scale += EasingCurves.Elastic.Evaluate(EasingType.InOut, Utilities.InverseLerp(-60f, 0f, Time - EmpressOfLight.PrismaticOverload_ShootDelay)) * 0.25f;
-
             Projectile.Center = EmpressOfLight.Myself.Center + (AimDirection - MathHelper.PiOver2).ToRotationVector2() * Projectile.scale * 380f;
+            Projectile.rotation = EmpressOfLight.Myself.As<EmpressOfLight>().PrismaticOverload_MagicCircleSpinAngle;
 
             for (int i = 0; i < 2; i++)
                 ReleaseCircleParticleForward();
