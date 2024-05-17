@@ -137,7 +137,7 @@ namespace WoTE.Content.NPCs.EoL
 
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 2 == 0)
             {
-                Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / PrismaticBoltSpin_SpinTime * PrismaticBoltDashes_DashDirection * 3f + PrismaticBoltDashes_BoltSpinOffsetAngle).ToRotationVector2() * 1.15f;
+                Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / PrismaticBoltSpin_SpinTime * PrismaticBoltDashes_DashDirection * 3f + PrismaticBoltDashes_BoltSpinOffsetAngle).ToRotationVector2() * 0.9f;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f, -1);
             }
 
