@@ -16,12 +16,12 @@
         ButterflyBurstDashes,
         OutwardRainbows,
         ConvergingTerraprismas,
-        PrismaticBoltSpin,
         TwirlingPetalSun,
         RadialStarBurst,
 
         // Phase 2 attack states.
         BasicPrismaticBolts2,
+        PrismaticBoltSpin,
         DazzlingTornadoes,
         OrbitReleasedTerraprismas,
         LanceWallSupport,
