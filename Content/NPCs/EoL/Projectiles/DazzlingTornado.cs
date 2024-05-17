@@ -1,5 +1,6 @@
 ﻿using System;
 using Luminance.Assets;
+using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -12,7 +13,7 @@ using WoTE.Content.Particles;
 
 namespace WoTE.Content.NPCs.EoL.Projectiles
 {
-    public class DazzlingTornado : ModProjectile, IPixelatedPrimitiveRenderer
+    public class DazzlingTornado : ModProjectile, IProjOwnedByBoss<EmpressOfLight>, IPixelatedPrimitiveRenderer
     {
         /// <summary>
         /// The vertex buffer used for this tornado.

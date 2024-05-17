@@ -1,5 +1,6 @@
 ﻿using System;
 using Luminance.Assets;
+using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -12,7 +13,7 @@ using WoTE.Content.Particles.Metaballs;
 
 namespace WoTE.Content.NPCs.EoL.Projectiles
 {
-    public class PrismaticBurst : ModProjectile
+    public class PrismaticBurst : ModProjectile, IProjOwnedByBoss<EmpressOfLight>
     {
         /// <summary>
         /// The lifetime ratio of this burst as a 0-1 interpolant.

@@ -17,6 +17,7 @@ Projectiles: {
 	ConvergingMoonlight.DisplayName: Converging Moonlight
 	DazzlingDeathray.DisplayName: Dazzling Deathray
 	MagicCircle.DisplayName: Magic Circle
+	HomingLacewing.DisplayName: Lacewing
 }
 
 Configs: {

@@ -68,7 +68,6 @@ namespace WoTE.Content.NPCs.EoL
             else
                 NPC.SmoothFlyNearWithSlowdownRadius(Target.Center, flySpeedInterpolant * 0.02f, 1f - flySpeedInterpolant * 0.13f, 250f);
 
-            NPC.spriteDirection = -NPC.OnRightSideOf(Target.Center).ToDirectionInt();
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
             float appearanceInterpolant = Utilities.InverseLerp(0f, PrismaticOverload_MagicCircleAppearTime, AITimer);
@@ -98,6 +97,8 @@ namespace WoTE.Content.NPCs.EoL
                 if (AITimer % 20 == 19)
                     SoundEngine.PlaySound(SoundID.Item162 with { MaxInstances = 0 });
             }
+            else
+                NPC.spriteDirection = -NPC.OnRightSideOf(Target.Center).ToDirectionInt();
 
             PrismaticOverload_MagicCircleSpinAngle += MathHelper.TwoPi * (1f - shootSuspenseInterpolant) * Utilities.InverseLerp(0.35f, 0.95f, appearanceInterpolant).Squared() / 90f;
             PrismaticOverload_MagicCircleSpinAngle += MathHelper.TwoPi * Utilities.InverseLerp(0f, 20, AITimer - PrismaticOverload_ShootDelay) / 33f;

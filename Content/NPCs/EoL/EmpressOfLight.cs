@@ -167,6 +167,11 @@ namespace WoTE.Content.NPCs.EoL
         public static int LightLanceDamage => Main.expertMode ? 190 : 120;
 
         /// <summary>
+        /// The amount of damage lacewings summoned by the Empress' magic circle do.
+        /// </summary>
+        public static int MagicRingLacewingDamage => Main.expertMode ? 200 : 120;
+
+        /// <summary>
         /// The amount of damage dazzling petals summoned by the Empress do.
         /// </summary>
         public static int DazzlingPetalDamage => Main.expertMode ? 205 : 135;
