@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Luminance.Common.Utilities;
 using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
@@ -357,6 +358,12 @@ namespace WoTE.Content.NPCs.EoL
             {
                 ButterflyProjectionScale = 0f;
                 ButterflyProjectionOpacity = 0f;
+            }
+
+            if (PerformingLanceWallSupport && !AcceptableAttacksForLanceWallSupport.Contains(CurrentState))
+            {
+                PerformingLanceWallSupport = false;
+                NPC.netUpdate = true;
             }
         }
 

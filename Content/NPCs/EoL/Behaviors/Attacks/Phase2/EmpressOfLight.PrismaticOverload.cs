@@ -13,31 +13,82 @@ namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
+        /// <summary>
+        /// Whether the butterfly dashes attack should be avoided completely if possible, due to the Prismatic Overload's timing to the music coming up.
+        /// </summary>
+        public bool PrismaticOverload_ShouldntDoButterflyDashes => MusicTimer / (float)PrismaticOverload_HighBeatStartTime >= 0.75f && MusicTimer / (float)PrismaticOverload_HighBeatStartTime <= 1.01f;
+
+        /// <summary>
+        /// Whether the music is at a point where the Empress can start her Prismatic Overload attack.
+        /// </summary>
+        public bool PrismaticOverload_CanDanceToBeat => MathHelper.Distance(MusicTimer - PrismaticOverload_RotateUpwardDelay, PrismaticOverload_HighBeatStartTime) <= 3f;
+
+        /// <summary>
+        /// The spin angle of the magic circle during the Empress' Prismatic Overload attack.
+        /// </summary>
         public ref float PrismaticOverload_MagicCircleSpinAngle => ref NPC.ai[0];
 
+        /// <summary>
+        /// How long it takes for the magic circle to appear during the Empress' Prismatic Overload attack.
+        /// </summary>
         public static int PrismaticOverload_MagicCircleAppearTime => Utilities.SecondsToFrames(1.75f);
 
+        /// <summary>
+        /// How long it takes for the magic circle to appear during the Empress' Prismatic Overload attack.
+        /// </summary>
         public static int PrismaticOverload_RotateUpwardDelay => Utilities.SecondsToFrames(0.75f);
 
+        /// <summary>
+        /// How long it takes for the magic circle to begin aiming aim towards the player during the Empress' Prismatic Overload attack.
+        /// </summary>
         public static int PrismaticOverload_AimTowardsTargetDelay => Utilities.SecondsToFrames(1.25f);
 
+        /// <summary>
+        /// How long it takes for the magic circle to correct its aim towards the player during the Empress' Prismatic Overload attack.
+        /// </summary>
         public static int PrismaticOverload_AimTowardsTargetTime => Utilities.SecondsToFrames(1.167f);
 
+        /// <summary>
+        /// How long it takes for the magic circle to prepare for firing during the Empress' Prismatic Overload attack.
+        /// </summary>
         public static int PrismaticOverload_ShootPrepareDelay => Utilities.SecondsToFrames(2f);
 
+        /// <summary>
+        /// How long it takes for the magic circle to perform its suspsense the player during the Empress' Prismatic Overload attack.
+        /// </summary>
         public static int PrismaticOverload_ShootSuspenseTime => Utilities.SecondsToFrames(2.5f);
 
+        /// <summary>
+        /// How long it takes for the magic circle to fire lances outward during the Empress' Prismatic Overload attack.
+        /// </summary>
         public static int PrismaticOverload_ShootDelay => PrismaticOverload_ShootPrepareDelay + PrismaticOverload_ShootSuspenseTime + Utilities.SecondsToFrames(1f);
 
+        /// <summary>
+        /// How long the magic circle spends releasing projectiles during the Empress' Prismatic Overload attack.
+        /// </summary>
+        public static int PrismaticOverload_ShootTime => Utilities.SecondsToFrames(11.5f);
+
+        /// <summary>
+        /// How long it takes for the magic circle to scale up during the Empress' Prismatic Overload attack.
+        /// </summary>
         public static int PrismaticOverload_ScaleIntoExistenceTime => Utilities.SecondsToFrames(1.25f);
+
+        /// <summary>
+        /// The starting time of the high beat. For use when determining whether the Empress should perform her Prismatic Overload attack.
+        /// </summary>
+        public static int PrismaticOverload_HighBeatStartTime => Utilities.MinutesToFrames(2.8756f);
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_PrismaticOverload()
         {
             StateMachine.RegisterTransition(EmpressAIType.PrismaticOverload, null, false, () =>
             {
-                return AITimer >= 99999999;
-            });
+                return AITimer >= PrismaticOverload_ShootDelay + PrismaticOverload_ShootTime;
+            }, IProjOwnedByBoss<EmpressOfLight>.KillAll);
+            StateMachine.ApplyToAllStatesExcept(state =>
+            {
+                StateMachine.RegisterTransition(state, EmpressAIType.PrismaticOverload, false, () => PrismaticOverload_CanDanceToBeat);
+            }, EmpressAIType.Phase2Transition, EmpressAIType.Die, EmpressAIType.Vanish, EmpressAIType.Teleport, EmpressAIType.PrismaticOverload, EmpressAIType.ButterflyBurstDashes);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.PrismaticOverload, DoBehavior_PrismaticOverload);
         }

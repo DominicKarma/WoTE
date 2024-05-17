@@ -17,7 +17,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// Whether the music is at a point where the Empress can start her Beat Synced Bolts attack.
         /// </summary>
-        public bool CanDanceToBeat => MusicTimer >= BeatSyncedBolts_LightBeatStartTime && MusicTimer <= BeatSyncedBolts_LightBeatEndTime;
+        public bool BeatSyncedBolts_CanDanceToBeat => MusicTimer >= BeatSyncedBolts_LightBeatStartTime && MusicTimer <= BeatSyncedBolts_LightBeatEndTime;
 
         /// <summary>
         /// The starting direction angle that the Empress started her dash with during her Beat Synced Bolts attack.
@@ -67,7 +67,7 @@ namespace WoTE.Content.NPCs.EoL
             });
             StateMachine.ApplyToAllStatesExcept(state =>
             {
-                StateMachine.RegisterTransition(state, EmpressAIType.BeatSyncedBolts, false, () => CanDanceToBeat);
+                StateMachine.RegisterTransition(state, EmpressAIType.BeatSyncedBolts, false, () => BeatSyncedBolts_CanDanceToBeat);
             }, EmpressAIType.Phase2Transition, EmpressAIType.Die, EmpressAIType.Vanish, EmpressAIType.Teleport, EmpressAIType.BeatSyncedBolts, EmpressAIType.ButterflyBurstDashes);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.BeatSyncedBolts, DoBehavior_BeatSyncedBolts);

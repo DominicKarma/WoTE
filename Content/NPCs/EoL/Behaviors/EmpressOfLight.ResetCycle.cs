@@ -77,14 +77,23 @@ namespace WoTE.Content.NPCs.EoL
                 phaseCycle = Main.rand.Next(Phase2 ? Phase2AttackCombos : Phase1AttackCombos);
                 tries++;
             }
-            while (statesToAvoid.Any(s => phaseCycle.Contains(s)) && tries <= 50);
+            while (!StateCycleIsValid(statesToAvoid, phaseCycle) && tries <= 50);
 
             if (phaseCycle[0] == EmpressAIType.LanceWallSupport)
                 phaseCycle.Insert(1, Main.rand.Next(AcceptableAttacksForLanceWallSupport));
 
-            phaseCycle = [EmpressAIType.PrismaticOverload];
-
             return phaseCycle;
+        }
+
+        public bool StateCycleIsValid(IEnumerable<EmpressAIType> statesToAvoid, List<EmpressAIType> chosenCycle)
+        {
+            if (PrismaticOverload_ShouldntDoButterflyDashes && chosenCycle.Contains(EmpressAIType.ButterflyBurstDashes))
+                return false;
+
+            if (statesToAvoid.Any(chosenCycle.Contains))
+                return false;
+
+            return true;
         }
     }
 }

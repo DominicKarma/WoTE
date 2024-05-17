@@ -81,7 +81,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
-            Projectile.timeLeft = 9999999;
+            Projectile.timeLeft = EmpressOfLight.PrismaticOverload_ShootDelay + EmpressOfLight.PrismaticOverload_ShootTime;
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -114,15 +114,18 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             AppearanceInterpolant = Utilities.InverseLerp(0f, EmpressOfLight.PrismaticOverload_MagicCircleAppearTime, Time);
             RingHeight = aimUpwardInterpolant * 280f;
+
             Projectile.scale = EasingCurves.Elastic.Evaluate(EasingType.Out, Utilities.InverseLerp(0f, EmpressOfLight.PrismaticOverload_ScaleIntoExistenceTime, Time).Squared()) * 0.425f;
             Projectile.scale += EasingCurves.Elastic.Evaluate(EasingType.InOut, Utilities.InverseLerp(-60f, 0f, Time - EmpressOfLight.PrismaticOverload_ShootDelay)) * 0.25f;
+            Projectile.scale *= Utilities.InverseLerp(0f, 10f, Projectile.timeLeft);
+
             Projectile.Center = EmpressOfLight.Myself.Center + (AimDirection - MathHelper.PiOver2).ToRotationVector2() * Projectile.scale * 380f;
             Projectile.rotation = EmpressOfLight.Myself.As<EmpressOfLight>().PrismaticOverload_MagicCircleSpinAngle;
 
             for (int i = 0; i < 2; i++)
                 ReleaseCircleParticleForward();
 
-            if (Time >= EmpressOfLight.PrismaticOverload_ShootDelay)
+            if (Time >= EmpressOfLight.PrismaticOverload_ShootDelay && Projectile.timeLeft >= 10)
             {
                 for (int i = 0; i < 7; i++)
                     ReleaseLanceForward();
