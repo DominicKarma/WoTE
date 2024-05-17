@@ -38,7 +38,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     
     float verticalGlowFadeoutSharpness = baseNoise;
     float verticalGlowPower = 0.96 + (1 - baseNoise) * 2;
-    float verticalGlow = smoothstep(1, 0.9, input.TextureCoordinates.y) * pow(input.TextureCoordinates.y, verticalGlowPower);
+    float verticalGlow = smoothstep(1, 0.1, input.TextureCoordinates.y) * pow(input.TextureCoordinates.y, verticalGlowPower);
     return saturate(edgeGlow * glow * verticalGlow) * input.Color;
 }
 
