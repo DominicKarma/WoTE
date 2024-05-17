@@ -230,7 +230,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.damage = 180;
             NPC.width = 136;
             NPC.height = 124;
-            NPC.defense = 100;
+            NPC.defense = 20;
             NPC.SetLifeMaxByMode(240000, 320000, 400000);
 
             if (Main.expertMode)
