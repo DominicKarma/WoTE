@@ -176,7 +176,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             float lanceHue = (Time / 30f + Main.rand.NextFloat(0.19f)) % 1f;
             Vector2 lanceSpawnPosition = Projectile.Center + Vector2.Transform(Main.rand.NextVector2CircularEdge(250f, 250f), Rotation) * Projectile.scale * 2f;
-            Vector2 lanceVelocity = (AimDirection - MathHelper.PiOver2).ToRotationVector2() * 80f;
+            Vector2 lanceVelocity = (AimDirection - MathHelper.PiOver2 + Main.rand.NextFloatDirection() * 0.08f).ToRotationVector2() * 80f;
 
             Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), lanceSpawnPosition, lanceVelocity, ModContent.ProjectileType<LightLance>(), EmpressOfLight.LightLanceDamage, 0f, -1, 0f, lanceHue, 1f);
         }
