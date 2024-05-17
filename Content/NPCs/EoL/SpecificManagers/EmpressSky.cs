@@ -76,6 +76,9 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
+            if (Main.dayTime)
+                return;
+
             Matrix backgroundMatrix = Main.BackgroundViewMatrix.TransformationMatrix;
             Vector3 translationDirection = new(1f, Main.BackgroundViewMatrix.Effects.HasFlag(SpriteEffects.FlipVertically) ? -1f : 1f, 1f);
             backgroundMatrix.Translation -= Main.BackgroundViewMatrix.ZoomMatrix.Translation * translationDirection;
