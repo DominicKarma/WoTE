@@ -68,6 +68,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             Projectile.timeLeft = Projectile.MaxUpdates * 120;
             Projectile.Opacity = 0f;
+            Projectile.scale = Main.rand?.NextFloat(0.67f, 1.85f) ?? 1f;
 
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
