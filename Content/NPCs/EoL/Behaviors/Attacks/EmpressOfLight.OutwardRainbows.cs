@@ -23,6 +23,11 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// The starting angle during the Empress' Outward Rainbows attack.
+        /// </summary>
+        public ref float OutwardRainbows_HoverOffsetStartingAngle => ref NPC.ai[1];
+
+        /// <summary>
         /// How long the Empress spends redirecting during her Outward Rainbows attack.
         /// </summary>
         public int OutwardRainbows_RainbowShootDelay => Utilities.SecondsToFrames(ByPhase(0.9f, 0.78f));
@@ -69,13 +74,14 @@ namespace WoTE.Content.NPCs.EoL
                     NPC.oldPos = new Vector2[NPC.oldPos.Length];
                     NPC.oldRot = new float[NPC.oldRot.Length];
 
+                    OutwardRainbows_HoverOffsetStartingAngle = Main.rand.NextFloat(MathHelper.PiOver2);
                     OutwardRainbows_StartedOnRightSideOfTarget = NPC.OnRightSideOf(Target.Center);
                     NPC.netUpdate = true;
                 }
 
                 float dashInterpolant = AITimer / (float)OutwardRainbows_RainbowShootDelay;
                 float spinInterpolant = EasingCurves.Quadratic.Evaluate(EasingType.InOut, dashInterpolant);
-                Vector2 hoverDestination = Target.Center + Vector2.UnitY.RotatedBy(MathHelper.TwoPi * OutwardRainbows_StartedOnRightSideOfTarget.ToDirectionInt() * spinInterpolant * 1.5f) * 900f;
+                Vector2 hoverDestination = Target.Center + Vector2.UnitY.RotatedBy(MathHelper.TwoPi * OutwardRainbows_StartedOnRightSideOfTarget.ToDirectionInt() * spinInterpolant * 1.5f + OutwardRainbows_HoverOffsetStartingAngle) * 950f;
                 NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, (1f - dashInterpolant) * 0.15f + 0.06f, 0.67f, 30f);
                 DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, Utilities.InverseLerp(4f, 30f, NPC.velocity.Length()), 0.2f);
 
