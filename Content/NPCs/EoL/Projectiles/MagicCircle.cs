@@ -322,7 +322,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             DrawMagicCircle(Color.HotPink, Vector2.Zero, appearInterpolantB, innerAngleOffset * -2f, Projectile.scale * 0.5f, 6);
             DrawMagicCircle(Color.LightGoldenrodYellow, Vector2.Zero, appearInterpolantB, innerAngleOffset * 0.5f, Projectile.scale * 0.5f, 5);
-            DrawMagicCircle(Color.Aqua, Vector2.Zero, appearInterpolantB, -MathHelper.PiOver2, Projectile.scale * 0.5f, 3);
+            DrawMagicCircle(Color.Pink, Vector2.Zero, appearInterpolantB, -MathHelper.PiOver2, Projectile.scale * 0.5f, 3);
             DrawLacewingAtCenterOfRing(appearInterpolantC.Squared());
 
             Main.spriteBatch.End();
