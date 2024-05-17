@@ -4,6 +4,7 @@ using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Content.NPCs.EoL.Projectiles;
@@ -61,7 +62,12 @@ namespace WoTE.Content.NPCs.EoL
                 AITimer = 0;
             }
 
-            NPC.velocity *= 0.9f;
+            float flySpeedInterpolant = Utilities.InverseLerp(PrismaticOverload_ShootPrepareDelay, 0f, AITimer - PrismaticOverload_ShootSuspenseTime);
+            if (flySpeedInterpolant <= 0f)
+                NPC.velocity *= 0.9f;
+            else
+                NPC.SmoothFlyNearWithSlowdownRadius(Target.Center, flySpeedInterpolant * 0.02f, 1f - flySpeedInterpolant * 0.13f, 250f);
+
             NPC.spriteDirection = -NPC.OnRightSideOf(Target.Center).ToDirectionInt();
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
@@ -80,6 +86,7 @@ namespace WoTE.Content.NPCs.EoL
                     Vector2 fistPosition = NPC.Center + new Vector2(NPC.spriteDirection * 64f, 8f).RotatedBy(NPC.rotation);
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), fistPosition, Vector2.Zero, ModContent.ProjectileType<PrismaticBurst>(), 0, 0f);
                 }
+                SoundEngine.PlaySound(SoundID.Item122);
             }
 
             if (AITimer >= PrismaticOverload_ShootDelay)
@@ -87,6 +94,9 @@ namespace WoTE.Content.NPCs.EoL
                 ScreenShakeSystem.StartShake(1.85f, shakeStrengthDissipationIncrement: 0.33f);
                 LeftHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
                 RightHandFrame = EmpressHandFrame.FistedOutstretchedArm;
+
+                if (AITimer % 20 == 19)
+                    SoundEngine.PlaySound(SoundID.Item162 with { MaxInstances = 0 });
             }
 
             PrismaticOverload_MagicCircleSpinAngle += MathHelper.TwoPi * (1f - shootSuspenseInterpolant) * Utilities.InverseLerp(0.35f, 0.95f, appearanceInterpolant).Squared() / 90f;
