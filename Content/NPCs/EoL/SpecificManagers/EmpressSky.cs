@@ -111,7 +111,7 @@ namespace WoTE.Content.NPCs.EoL
 
             else
             {
-                // Draw mist
+                // Draw mist.
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, backgroundMatrix);
                 DrawMist();
