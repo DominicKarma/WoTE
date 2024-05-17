@@ -109,9 +109,9 @@ namespace WoTE.Content.NPCs.EoL
             hoverOffsetDirection.Y = MathF.Abs(hoverOffsetDirection.Y) * -0.92f;
 
             float backwardsWindUpOffset = Utilities.InverseLerp(-16f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 360f;
-            Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(600f, 400f) - NPC.SafeDirectionTo(Target.Center) * backwardsWindUpOffset;
+            Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(540f, 480f) - NPC.SafeDirectionTo(Target.Center) * backwardsWindUpOffset;
 
-            NPC.SmoothFlyNear(hoverDestination, 0.125f, 0.875f);
+            NPC.SmoothFlyNear(hoverDestination, 0.17f, 0.85f);
         }
 
         /// <summary>
