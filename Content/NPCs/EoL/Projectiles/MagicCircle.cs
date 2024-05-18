@@ -132,8 +132,8 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
                 if (Time % 90 == 89)
                 {
-                    for (int i = 0; i < 7; i++)
-                        ReleaseLacewing((MathHelper.TwoPi * i / 7f).ToRotationVector2());
+                    for (int i = 0; i < 6; i++)
+                        ReleaseLacewing((MathHelper.TwoPi * i / 6f).ToRotationVector2());
                 }
             }
 
