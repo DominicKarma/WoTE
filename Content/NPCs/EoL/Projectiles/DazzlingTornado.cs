@@ -86,6 +86,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
             Projectile.timeLeft = Lifetime;
+            CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
         public override void AI()
