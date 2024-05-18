@@ -79,6 +79,8 @@ namespace WoTE.Content.NPCs.EoL
             }
             while (!StateCycleIsValid(statesToAvoid, phaseCycle) && tries <= 50);
 
+            phaseCycle = [EmpressAIType.EventideLances];
+
             if (phaseCycle[0] == EmpressAIType.LanceWallSupport)
             {
                 phaseCycle.Insert(1, Main.rand.Next(AcceptableAttacksForLanceWallSupport));

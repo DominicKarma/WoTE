@@ -18,6 +18,7 @@
         ConvergingTerraprismas,
         TwirlingPetalSun,
         RadialStarBurst,
+        EventideLances,
 
         // Phase 2 attack states.
         BasicPrismaticBolts2,
