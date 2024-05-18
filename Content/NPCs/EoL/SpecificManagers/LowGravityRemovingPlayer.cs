@@ -6,7 +6,7 @@ namespace WoTE
 {
     public class LowGravityRemovingPlayer : ModPlayer
     {
-        public override void PreUpdate()
+        public override void UpdateEquips()
         {
             if (NPC.AnyNPCs(ModContent.NPCType<EmpressOfLight>()))
                 Player.gravity = Player.defaultGravity;
