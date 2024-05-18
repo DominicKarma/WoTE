@@ -1,4 +1,6 @@
-﻿using Luminance.Common.StateMachines;
+﻿using System;
+using Luminance.Assets;
+using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,6 +14,8 @@ namespace WoTE.Content.NPCs.EoL
         public Vector2 EventideLances_UndirectionedBowOffset => new Vector2(-72f, -14f).RotatedBy(NPC.rotation);
 
         public ref float EventideLances_BowDirection => ref NPC.ai[0];
+
+        public ref float EventideLances_BowGlimmerInterpolant => ref NPC.ai[1];
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_EventideLances()
@@ -37,7 +41,10 @@ namespace WoTE.Content.NPCs.EoL
 
             EventideLances_BowDirection = NPC.AngleTo(Target.Center);
 
-            NPC.SmoothFlyNearWithSlowdownRadius(Target.Center, 0.1f, 0.9f, 376f);
+            Vector2 hoverDestination = Target.Center + Vector2.UnitX * NPC.OnRightSideOf(Target).ToDirectionInt() * 400f;
+            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, 0.2f, 0.8f, 76f);
+
+            EventideLances_BowGlimmerInterpolant = Utilities.InverseLerp(0f, 60f, AITimer % 150f);
         }
 
         public void DoBehavior_EventideLances_DrawBowString(Vector2 drawPosition)
@@ -71,6 +78,24 @@ namespace WoTE.Content.NPCs.EoL
             Texture2D eventide = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/Eventide").Value;
             Vector2 eventidePosition = drawPosition + EventideLances_UndirectionedBowOffset;
             Main.spriteBatch.Draw(eventide, eventidePosition, null, Color.White, rotation, eventide.Size() * 0.5f, NPC.scale * 1.5f, SpriteEffects.FlipHorizontally, 0f);
+
+            if (EventideLances_BowGlimmerInterpolant > 0f && EventideLances_BowGlimmerInterpolant < 1f)
+                DoBehavior_EventideLances_DrawBowGleam(drawPosition);
+        }
+
+        public void DoBehavior_EventideLances_DrawBowGleam(Vector2 drawPosition)
+        {
+            Texture2D flare = MiscTexturesRegistry.ShineFlareTexture.Value;
+            Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
+
+            float flareOpacity = Utilities.InverseLerp(1f, 0.75f, EventideLances_BowGlimmerInterpolant);
+            float flareScale = MathF.Pow(Utilities.Convert01To010(EventideLances_BowGlimmerInterpolant), 1.4f) * 0.7f + 0.1f;
+            float flareRotation = MathHelper.SmoothStep(0f, MathHelper.TwoPi, MathF.Pow(EventideLances_BowGlimmerInterpolant, 0.2f)) + MathHelper.PiOver4;
+            Vector2 flarePosition = drawPosition + EventideLances_UndirectionedBowOffset + Vector2.UnitX.RotatedBy(NPC.rotation) * -18f;
+
+            Main.spriteBatch.Draw(bloom, flarePosition, null, Color.Cyan with { A = 0 } * flareOpacity * 0.3f, 0f, bloom.Size() * 0.5f, flareScale * 1.9f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, flarePosition, null, Color.Wheat with { A = 0 } * flareOpacity * 0.54f, 0f, bloom.Size() * 0.5f, flareScale, 0, 0f);
+            Main.spriteBatch.Draw(flare, flarePosition, null, Color.LightCyan with { A = 0 } * flareOpacity, flareRotation, flare.Size() * 0.5f, flareScale, 0, 0f);
         }
     }
 }
