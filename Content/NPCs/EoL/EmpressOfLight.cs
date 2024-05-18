@@ -150,47 +150,47 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of damage prismatic bolts summoned by the Empress do.
         /// </summary>
-        public static int PrismaticBoltDamage => Main.expertMode ? 180 : 110;
+        public static int PrismaticBoltDamage => Main.expertMode ? 150 : 110;
 
         /// <summary>
         /// The amount of damage star bursts summoned by the Empress do.
         /// </summary>
-        public static int StarBurstDamage => Main.expertMode ? 180 : 110;
+        public static int StarBurstDamage => Main.expertMode ? 150 : 110;
 
         /// <summary>
         /// The amount of damage accelerating rainbows summoned by the Empress do.
         /// </summary>
-        public static int AcceleratingRainbowDamage => Main.expertMode ? 190 : 120;
+        public static int AcceleratingRainbowDamage => Main.expertMode ? 160 : 120;
 
         /// <summary>
         /// The amount of damage light lances summoned by the Empress do.
         /// </summary>
-        public static int LightLanceDamage => Main.expertMode ? 190 : 120;
+        public static int LightLanceDamage => Main.expertMode ? 160 : 120;
 
         /// <summary>
         /// The amount of damage lacewings summoned by the Empress' magic circle do.
         /// </summary>
-        public static int MagicRingLacewingDamage => Main.expertMode ? 200 : 120;
+        public static int MagicRingLacewingDamage => Main.expertMode ? 165 : 120;
 
         /// <summary>
         /// The amount of damage dazzling petals summoned by the Empress do.
         /// </summary>
-        public static int DazzlingPetalDamage => Main.expertMode ? 205 : 135;
+        public static int DazzlingPetalDamage => Main.expertMode ? 170 : 135;
 
         /// <summary>
         /// The amount of damage dazzling tornadoes summoned by the Empress do.
         /// </summary>
-        public static int DazzlingTornadoDamage => Main.expertMode ? 205 : 135;
+        public static int DazzlingTornadoDamage => Main.expertMode ? 170 : 135;
 
         /// <summary>
         /// The amount of damage terraprismas summoned by the Empress do.
         /// </summary>
-        public static int TerraprismaDamage => Main.expertMode ? 205 : 135;
+        public static int TerraprismaDamage => Main.expertMode ? 170 : 135;
 
         /// <summary>
         /// The amount of damage dazzling deathrays casted by the Empress do.
         /// </summary>
-        public static int DazzlingDeathrayDamage => Main.expertMode ? 300 : 190;
+        public static int DazzlingDeathrayDamage => Main.expertMode ? 210 : 190;
 
         /// <summary>
         /// The standard volume that the drizzle sound play at.
