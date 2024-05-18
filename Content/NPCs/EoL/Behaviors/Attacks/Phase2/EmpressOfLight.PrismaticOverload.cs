@@ -113,14 +113,6 @@ namespace WoTE.Content.NPCs.EoL
                 AITimer = 0;
             }
 
-            float flySpeedInterpolant = Utilities.InverseLerp(PrismaticOverload_ShootPrepareDelay, 0f, AITimer - PrismaticOverload_ShootSuspenseTime);
-            if (flySpeedInterpolant <= 0f)
-                NPC.velocity *= 0.9f;
-            else
-                NPC.SmoothFlyNearWithSlowdownRadius(Target.Center, flySpeedInterpolant * 0.02f, 1f - flySpeedInterpolant * 0.13f, 250f);
-
-            NPC.rotation = NPC.velocity.X * 0.0035f;
-
             float appearanceInterpolant = Utilities.InverseLerp(0f, PrismaticOverload_MagicCircleAppearTime, AITimer);
             float shootSuspenseInterpolant = Utilities.InverseLerp(0f, PrismaticOverload_ShootSuspenseTime, AITimer - PrismaticOverload_ShootPrepareDelay);
 
@@ -147,9 +139,21 @@ namespace WoTE.Content.NPCs.EoL
 
                 if (AITimer % 20 == 19)
                     SoundEngine.PlaySound(SoundID.Item162 with { MaxInstances = 0 });
+
+                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * -2.4f, 0.03f);
             }
             else
+            {
                 NPC.spriteDirection = -NPC.OnRightSideOf(Target.Center).ToDirectionInt();
+
+                float flySpeedInterpolant = Utilities.InverseLerp(PrismaticOverload_ShootPrepareDelay, 0f, AITimer - PrismaticOverload_ShootSuspenseTime);
+                if (flySpeedInterpolant <= 0f)
+                    NPC.velocity *= 0.9f;
+                else
+                    NPC.SmoothFlyNearWithSlowdownRadius(Target.Center, flySpeedInterpolant * 0.02f, 1f - flySpeedInterpolant * 0.13f, 250f);
+            }
+
+            NPC.rotation = NPC.velocity.X * 0.0035f;
 
             PrismaticOverload_MagicCircleSpinAngle += MathHelper.TwoPi * (1f - shootSuspenseInterpolant) * Utilities.InverseLerp(0.35f, 0.95f, appearanceInterpolant).Squared() / 90f;
             PrismaticOverload_MagicCircleSpinAngle += MathHelper.TwoPi * Utilities.InverseLerp(0f, 20, AITimer - PrismaticOverload_ShootDelay) / 33f;
