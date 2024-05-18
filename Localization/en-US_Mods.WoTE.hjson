@@ -18,6 +18,7 @@ Projectiles: {
 	DazzlingDeathray.DisplayName: Dazzling Deathray
 	MagicCircle.DisplayName: Magic Circle
 	HomingLacewing.DisplayName: Lacewing
+	LanceWallTelegraph.DisplayName: Lance Wall Telegraph
 }
 
 Configs: {

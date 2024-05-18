@@ -75,6 +75,12 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.RegisterTransition(EmpressAIType.LanceWallSupport, null, false, () =>
             {
                 return AITimer >= LanceWallSupport_FlyUpwardDelay + LanceWallSupport_FlyUpwardTime + LanceWallSupport_FlyDownwardTime;
+            }, () =>
+            {
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                    return;
+
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), new Vector2(LanceWallXPosition, Target.Center.Y + 1400f), Vector2.Zero, ModContent.ProjectileType<LanceWallTelegraph>(), 0, 0f);
             });
 
             StateMachine.RegisterStateBehavior(EmpressAIType.LanceWallSupport, DoBehavior_LanceWallSupport);
@@ -88,7 +94,7 @@ namespace WoTE.Content.NPCs.EoL
             LeftHandFrame = EmpressHandFrame.PalmRaisedUp;
             RightHandFrame = EmpressHandFrame.PalmRaisedUp;
 
-            NPC.velocity.X *= 1.02f;
+            NPC.velocity.X *= 1.005f;
 
             if (AITimer == 1)
                 TeleportTo(Target.Center + Vector2.UnitX * Target.direction * 720f);
@@ -126,6 +132,9 @@ namespace WoTE.Content.NPCs.EoL
 
             // Wait until the support activation is completed before actually doing anything.
             if (CurrentState == EmpressAIType.LanceWallSupport || CurrentState == EmpressAIType.Teleport)
+                return;
+
+            if (AITimer <= 30)
                 return;
 
             float previousLanceWallX = LanceWallXPosition;
