@@ -41,24 +41,9 @@ namespace WoTE.Content.Particles
             Opacity = Utilities.InverseLerpBump(0f, 0.03f, 0.5f, 1f, LifetimeRatio);
 
             if (HomeInDestination is null)
-            {
-                if (Velocity.Length() >= 50f)
-                    Velocity *= 0.65f;
-                else if (Velocity.Length() >= 15f)
-                    Velocity *= 0.85f;
-                else
-                    Velocity *= 0.93f;
-            }
+                FlyOutward();
             else
-            {
-                Vector2 homeInDestination = HomeInDestination?.Invoke() ?? Position;
-                Velocity = Vector2.Lerp(Velocity, Position.SafeDirectionTo(homeInDestination), 0.015f);
-                if (Position.WithinRange(homeInDestination, 300f))
-                    Velocity *= 0.979f;
-
-                if (Position.WithinRange(homeInDestination, 16f))
-                    Kill();
-            }
+                HomeIn();
 
             float idealRotation = MathHelper.Clamp(Velocity.X * 0.02f, -0.46f, 0.46f);
             Rotation = MathHelper.Lerp(Rotation, idealRotation, 0.18f);
@@ -68,6 +53,33 @@ namespace WoTE.Content.Particles
 
             if (Time % 5 == 4)
                 CurrentFrame = (CurrentFrame + 1) % 3;
+        }
+
+        /// <summary>
+        /// Makes this lacewing fly outward while decelerating.
+        /// </summary>
+        public void FlyOutward()
+        {
+            if (Velocity.Length() >= 50f)
+                Velocity *= 0.65f;
+            else if (Velocity.Length() >= 15f)
+                Velocity *= 0.85f;
+            else
+                Velocity *= 0.93f;
+        }
+
+        /// <summary>
+        /// Makes this Lacewing home in on its chosen destination.
+        /// </summary>
+        public void HomeIn()
+        {
+            Vector2 homeInDestination = HomeInDestination?.Invoke() ?? Position;
+            Velocity = Vector2.Lerp(Velocity, Position.SafeDirectionTo(homeInDestination), 0.015f);
+            if (Position.WithinRange(homeInDestination, 300f))
+                Velocity *= 0.979f;
+
+            if (Position.WithinRange(homeInDestination, 16f))
+                Kill();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
