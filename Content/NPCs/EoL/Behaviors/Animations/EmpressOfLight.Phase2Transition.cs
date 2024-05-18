@@ -55,7 +55,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How amount of laser cycles the Empress performs in her avatar form during the second phase transition.
         /// </summary>
-        public static int Phase2Transition_ShootCycleCount => 3;
+        public static int Phase2Transition_ShootCycleCount => 2;
 
         /// <summary>
         /// The life ratio at which the Emperss transitions to her second phase.
@@ -203,10 +203,11 @@ namespace WoTE.Content.NPCs.EoL
             }
 
             int wrappedTimer = localTimer % (Phase2Transition_FlyAroundCycleTime + Phase2Transition_ShootDeathrayTime);
+            Vector2 flyDestination = Target.Center - Vector2.UnitY * 120f;
             if (wrappedTimer <= Phase2Transition_FlyAroundCycleTime)
             {
                 if (wrappedTimer <= Phase2Transition_FlyAroundCycleTime - 45)
-                    NPC.velocity += NPC.SafeDirectionTo(Target.Center) * 1.1f;
+                    NPC.velocity += NPC.SafeDirectionTo(flyDestination) * 1.1f;
                 else
                     NPC.velocity *= 0.98f;
 
@@ -223,7 +224,7 @@ namespace WoTE.Content.NPCs.EoL
             }
 
             NPC.velocity *= 0.95f;
-            NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.009f);
+            NPC.Center = Vector2.Lerp(NPC.Center, flyDestination, 0.009f);
         }
     }
 }
