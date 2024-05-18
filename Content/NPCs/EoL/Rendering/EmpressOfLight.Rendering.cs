@@ -347,14 +347,38 @@ namespace WoTE.Content.NPCs.EoL
         /// <param name="drawPosition">The draw position of the arms.</param>
         public void DrawHands(Vector2 drawPosition)
         {
-            Texture2D handTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/Arm").Value;
-            Rectangle leftHandFrame = handTexture.Frame(1, 8, 0, (int)LeftHandFrame);
-            Main.EntitySpriteDraw(handTexture, drawPosition, leftHandFrame, Color.White, 0f, leftHandFrame.Size() * 0.5f, 1f, SpriteEffects.None);
+            GetHandDrawData((int)LeftHandFrame, out Texture2D leftHandTexture, out Rectangle leftHandFrame);
+            Main.EntitySpriteDraw(leftHandTexture, drawPosition, leftHandFrame, Color.White, 0f, leftHandFrame.Size() * 0.5f, 1f, SpriteEffects.None);
 
             DoBehavior_EventideLances_DrawBowString(drawPosition);
 
-            Rectangle rightHandFrame = handTexture.Frame(1, 8, 0, (int)RightHandFrame);
-            Main.EntitySpriteDraw(handTexture, drawPosition, rightHandFrame, Color.White, 0f, rightHandFrame.Size() * 0.5f, 1f, SpriteEffects.FlipHorizontally);
+            GetHandDrawData((int)RightHandFrame, out Texture2D rightHandTexture, out Rectangle rightHandFrame);
+            Main.EntitySpriteDraw(rightHandTexture, drawPosition, rightHandFrame, Color.White, 0f, rightHandFrame.Size() * 0.5f, 1f, SpriteEffects.FlipHorizontally);
+        }
+
+        /// <summary>
+        /// Collects draw data for a given arm frame that the Empress uses, providing maximum respect to texture pack changes where possible.
+        /// </summary>
+        /// <param name="frameY">The arm's Y frame.</param>
+        /// <param name="handTexture">The selected hand texture.</param>
+        /// <param name="handFrame">The selected hand frame rectangle.</param>
+        public static void GetHandDrawData(int frameY, out Texture2D handTexture, out Rectangle handFrame)
+        {
+            // In order to minimize conflicts with texture packs, vanilla frames are sampled by default from the vanilla texture.
+            // This way, vanilla textures may preserve their texture pack changes.
+            // However, in cases where this is not possible due to custom poses, the custom texture is used.
+            bool mustUseCustomTexture = frameY >= 7;
+
+            if (mustUseCustomTexture)
+            {
+                handTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/Arm").Value;
+                handFrame = handTexture.Frame(1, 8, 0, frameY);
+            }
+            else
+            {
+                handTexture = TextureAssets.Extra[ExtrasID.HallowBossArmsLeft].Value;
+                handFrame = handTexture.Frame(1, 7, 0, frameY);
+            }
         }
 
         /// <summary>
