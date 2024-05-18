@@ -80,7 +80,7 @@ namespace WoTE.Content.NPCs.EoL
                 if (Main.netMode == NetmodeID.MultiplayerClient)
                     return;
 
-                Vector2 lanceWallStart = new Vector2(LanceWallXPosition, Target.Center.Y + 1400f);
+                Vector2 lanceWallStart = new(LanceWallXPosition, Target.Center.Y + 1400f);
                 TeleportTo(Target.Center + Vector2.UnitX * Target.SafeDirectionTo(lanceWallStart).X.NonZeroSign() * 500f);
 
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), lanceWallStart, Vector2.Zero, ModContent.ProjectileType<LanceWallTelegraph>(), 0, 0f);
