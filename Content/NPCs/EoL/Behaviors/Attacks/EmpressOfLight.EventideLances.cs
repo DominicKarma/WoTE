@@ -6,6 +6,7 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Content.NPCs.EoL.Projectiles;
@@ -28,7 +29,11 @@ namespace WoTE.Content.NPCs.EoL
 
         public ref float EventideLances_BowGlimmerInterpolant => ref NPC.ai[2];
 
-        public static int EventideLances_BowGleamTime => Utilities.SecondsToFrames(0.95f);
+        public static int EventideLances_BowGleamTime => Utilities.SecondsToFrames(0.5f);
+
+        public static int EventideLances_ShootDelay => Utilities.SecondsToFrames(0.25f);
+
+        public static int EventideLances_RiftArrowLifetime => Utilities.SecondsToFrames(0.46f);
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_EventideLances()
@@ -50,37 +55,43 @@ namespace WoTE.Content.NPCs.EoL
             RightHandFrame = EmpressHandFrame.UpwardGrip;
             EventideLances_UsingBow = true;
 
-            NPC.spriteDirection = NPC.OnRightSideOf(Target).ToDirectionInt();
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
             float hoverSpeedInterpolant = Utilities.InverseLerpBump(0f, 4f, EventideLances_BowGleamTime, EventideLances_BowGleamTime + 8f, AITimer);
-            Vector2 hoverDestination = Target.Center + new Vector2(NPC.OnRightSideOf(Target).ToDirectionInt() * 400f, -100f);
-            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, hoverSpeedInterpolant * 0.55f, 1f - hoverSpeedInterpolant * 0.3f, 45f);
+            Vector2 horizontalHoverOffset = new Vector2(NPC.OnRightSideOf(Target).ToDirectionInt() * 400f, -100f);
+            Vector2 omnidirectionalHoverOffset = Target.SafeDirectionTo(NPC.Center) * 450f;
+            Vector2 hoverDestination = Target.Center + Vector2.Lerp(horizontalHoverOffset, omnidirectionalHoverOffset, 0.8f);
+            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, hoverSpeedInterpolant * 0.55f, 1f - hoverSpeedInterpolant * 0.3f, 120f);
             NPC.velocity *= MathHelper.Lerp(0.7f, 1f, Utilities.InverseLerp(0f, 15f, AITimer - EventideLances_BowGleamTime));
 
+            Vector2 eventideEnd = NPC.Center + EventideLances_DirectionedBowOffset;
             if (AITimer <= EventideLances_BowGleamTime)
-                EventideLances_BowDirection = NPC.AngleTo(Target.Center);
+                EventideLances_BowDirection = eventideEnd.AngleTo(Target.Center);
 
             float idealDashAfterimageInterpolant = Utilities.InverseLerp(32f, 80f, NPC.velocity.Length());
             DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, idealDashAfterimageInterpolant, 0.12f);
 
             EventideLances_BowGlimmerInterpolant = Utilities.InverseLerp(0f, EventideLances_BowGleamTime, AITimer);
 
-            if (AITimer == EventideLances_BowGleamTime + 15)
+            if (AITimer == EventideLances_BowGleamTime + EventideLances_ShootDelay)
             {
+                SoundEngine.PlaySound(SoundID.Item122);
+                SoundEngine.PlaySound(SoundID.Item163);
                 ScreenShakeSystem.StartShake(50f, MathHelper.Pi * 0.16f, -NPC.SafeDirectionTo(Target.Center), 2f);
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Vector2 eventideEnd = NPC.Center + EventideLances_DirectionedBowOffset;
-
-                    for (int i = -3; i <= 3; i++)
+                    for (int i = -4; i <= 4; i++)
                     {
                         if (i == 0)
+                        {
+                            Vector2 arrowVelocity = EventideLances_BowDirection.ToRotationVector2() * 32f;
+                            Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), eventideEnd, arrowVelocity, ModContent.ProjectileType<RainbowRiftArrow>(), LightLanceDamage, 0f, -1, 0.45f);
                             continue;
+                        }
 
-                        float lanceFireOffsetAngle = i * 0.12f;
-                        float lanceSpeed = 22f - MathF.Abs(i) * 1.4f;
+                        float lanceFireOffsetAngle = i * 0.27f;
+                        float lanceSpeed = 21f - MathF.Abs(i) * 3f;
                         Vector2 lanceVelocity = (EventideLances_BowDirection + lanceFireOffsetAngle).ToRotationVector2() * lanceSpeed;
 
                         Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), eventideEnd, lanceVelocity, ModContent.ProjectileType<LightLance>(), LightLanceDamage, 0f, -1, 0f, Main.rand.NextFloat());
@@ -92,7 +103,7 @@ namespace WoTE.Content.NPCs.EoL
                 }
             }
 
-            if (AITimer >= EventideLances_BowGleamTime + 15)
+            if (AITimer >= EventideLances_BowGleamTime + EventideLances_ShootDelay)
             {
                 NPC.velocity *= 0.6f;
 
@@ -100,9 +111,18 @@ namespace WoTE.Content.NPCs.EoL
                 RightHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
                 EventideLances_UsingBow = false;
             }
+            else
+                NPC.spriteDirection = NPC.OnRightSideOf(Target).ToDirectionInt();
 
-            if (AITimer >= 150)
-                AITimer = 0;
+            NPC.Opacity = Utilities.InverseLerp(8f, 0f, AITimer - EventideLances_BowGleamTime - EventideLances_ShootDelay);
+        }
+
+        public void DoBehavior_EventideLances_TeleportTo(Vector2 teleportPosition)
+        {
+            AITimer = 0;
+            NPC.Center = teleportPosition;
+            NPC.velocity = -Vector2.UnitY * 40f;
+            NPC.netUpdate = true;
         }
 
         public void DoBehavior_EventideLances_DrawBowString(Vector2 drawPosition)

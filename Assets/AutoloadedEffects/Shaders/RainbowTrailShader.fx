@@ -3,6 +3,7 @@ sampler noiseTexture : register(s2);
 
 float localTime;
 float hueOffset;
+float hueSpectrum;
 matrix uWorldViewProjection;
 
 struct VertexShaderInput
@@ -53,7 +54,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     glow += saturate(pow(innerGlow / (horizontalEdgeDistance - tipNoise * 0.3), 3.5)) * (1 - coords.x) * 2;
     
     // Calculate a hue and opacity value, combining everything together.
-    float hue = tex2D(noiseTexture, coords * 0.6 + float2(localTime * 2.5, 0)) * 0.2 + glow * 0.2 + coords.x * 0.08 + hueOffset;
+    float hue = (tex2D(noiseTexture, coords * 0.6 + float2(localTime * 2.5, 0)) * 0.2 + glow * 0.2 + coords.x * 0.08) * hueSpectrum + hueOffset;
     float opacity = smoothstep(0.5, 0.4, horizontalEdgeDistance);
     return tex2D(rainbowTexture, float2(hue, 0)) * glow * opacity + pow(glow, 4) * opacity * 0.4;
 }

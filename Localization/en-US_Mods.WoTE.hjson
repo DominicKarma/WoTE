@@ -19,6 +19,7 @@ Projectiles: {
 	MagicCircle.DisplayName: Magic Circle
 	HomingLacewing.DisplayName: Lacewing
 	LanceWallTelegraph.DisplayName: Lance Wall Telegraph
+	RainbowRiftArrow.DisplayName: Rainbow Rift Arrow
 }
 
 Configs: {
