@@ -57,7 +57,7 @@ float4 CalculateFireColor(float2 coords)
     fireColor.a *= smoothstep(0.2, 0.4, coords.x);
     
     // Apply darkening effects to the fire, for contrast purposes.
-    fireColor -= tex2D(streakTexture, coords + float2(globalTime * -4.15, 0)) * fireColor.a / glow * 2;
+    fireColor -= tex2D(streakTexture, coords + float2(globalTime * -4.15, 0)) * fireColor.a / glow * 1.15;
     
     return fireColor * brightness * 2;
 }
