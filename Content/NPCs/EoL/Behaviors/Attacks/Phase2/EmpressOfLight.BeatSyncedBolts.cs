@@ -51,7 +51,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress waits, prepating before starting her Beat Synced Bolts attack.
         /// </summary>
-        public static int BeatSyncedBolts_AttackStartDelay => Utilities.SecondsToFrames(2f);
+        public static int BeatSyncedBolts_AttackStartDelay => Utilities.SecondsToFrames(1.12f);
 
         /// <summary>
         /// The starting time of the light beat. For use when determining whether the Empress should perform her Beat Synced Bolts attack.
