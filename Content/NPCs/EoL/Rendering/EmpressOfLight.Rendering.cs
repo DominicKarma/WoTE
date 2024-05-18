@@ -266,7 +266,9 @@ namespace WoTE.Content.NPCs.EoL
             Main.EntitySpriteDraw(texture, drawPosition, NPC.frame, Color.White, 0f, NPC.frame.Size() * 0.5f, 1f, 0);
             if (Phase2)
                 DrawDress(drawPosition);
+
             DrawHands(drawPosition);
+            DoBehavior_EventideLances_DrawBow(drawPosition);
         }
 
         /// <summary>
@@ -345,13 +347,14 @@ namespace WoTE.Content.NPCs.EoL
         /// <param name="drawPosition">The draw position of the arms.</param>
         public void DrawHands(Vector2 drawPosition)
         {
-            Texture2D leftHandTexture = TextureAssets.Extra[ExtrasID.HallowBossArmsLeft].Value;
-            Rectangle leftHandFrame = leftHandTexture.Frame(1, 7, 0, (int)LeftHandFrame);
-            Main.EntitySpriteDraw(leftHandTexture, drawPosition, leftHandFrame, Color.White, 0f, leftHandFrame.Size() * 0.5f, 1f, 0);
+            Texture2D handTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/Arm").Value;
+            Rectangle leftHandFrame = handTexture.Frame(1, 8, 0, (int)LeftHandFrame);
+            Main.EntitySpriteDraw(handTexture, drawPosition, leftHandFrame, Color.White, 0f, leftHandFrame.Size() * 0.5f, 1f, SpriteEffects.None);
 
-            Texture2D rightHandTexture = TextureAssets.Extra[ExtrasID.HallowBossArmsRight].Value;
-            Rectangle rightHandFrame = rightHandTexture.Frame(1, 7, 0, (int)RightHandFrame);
-            Main.EntitySpriteDraw(rightHandTexture, drawPosition, rightHandFrame, Color.White, 0f, rightHandFrame.Size() * 0.5f, 1f, 0);
+            DoBehavior_EventideLances_DrawBowString(drawPosition);
+
+            Rectangle rightHandFrame = handTexture.Frame(1, 8, 0, (int)RightHandFrame);
+            Main.EntitySpriteDraw(handTexture, drawPosition, rightHandFrame, Color.White, 0f, rightHandFrame.Size() * 0.5f, 1f, SpriteEffects.FlipHorizontally);
         }
 
         /// <summary>
