@@ -15,8 +15,8 @@ namespace WoTE.Content.NPCs.EoL
         {
             new() { EmpressAIType.VanillaPrismaticBolts, EmpressAIType.ButterflyBurstDashes },
             new() { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
-            new() { EmpressAIType.SpinSwirlRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
-            new() { EmpressAIType.SpinSwirlRainbows, EmpressAIType.ButterflyBurstDashes },
+            new() { EmpressAIType.SequentialDashes, EmpressAIType.SpinSwirlRainbows, EmpressAIType.ConvergingTerraprismas },
+            new() { EmpressAIType.ButterflyBurstDashes, EmpressAIType.SpinSwirlRainbows },
             new() { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst },
         };
 
@@ -28,7 +28,7 @@ namespace WoTE.Content.NPCs.EoL
             new() { EmpressAIType.VanillaPrismaticBolts, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
             new() { EmpressAIType.VanillaPrismaticBolts2, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
             new() { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
-            new() { EmpressAIType.SpinSwirlRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
+            new() { EmpressAIType.SequentialDashes, EmpressAIType.SpinSwirlRainbows, EmpressAIType.ConvergingTerraprismas },
             new() { EmpressAIType.EventideLances, EmpressAIType.SpinSwirlRainbows, EmpressAIType.OrbitReleasedTerraprismas },
             new() { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst, EmpressAIType.VanillaPrismaticBolts2 },
             new() { EmpressAIType.PrismaticBoltSpin, EmpressAIType.OrbitReleasedTerraprismas, EmpressAIType.PrismaticBoltDashes },
