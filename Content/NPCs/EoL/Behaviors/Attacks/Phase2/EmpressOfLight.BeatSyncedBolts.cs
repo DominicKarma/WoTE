@@ -89,7 +89,7 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer <= BeatSyncedBolts_AttackStartDelay)
             {
                 float flySpeed = (1f - AITimer / (float)BeatSyncedBolts_AttackStartDelay) * 0.3f;
-                Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(NPC.Center).RotatedBy(MathHelper.PiOver2 * AITimer / BeatSyncedBolts_AttackStartDelay) * 400f;
+                Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(NPC.Center).RotatedBy(MathHelper.PiOver2 * (1f - AITimer / BeatSyncedBolts_AttackStartDelay)) * 400f;
 
                 NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, flySpeed, 1f - flySpeed * 0.78f, 100f);
                 return;
