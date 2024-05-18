@@ -51,9 +51,9 @@ namespace WoTE.Content.NPCs.EoL
             if (NPC.spriteDirection == -1)
                 angleOffset += MathHelper.Pi;
 
-            Vector2 eventideTop = eventidePosition - Vector2.UnitY.RotatedBy(NPC.rotation + angleOffset) * 34f;
-            Vector2 eventideBottom = eventidePosition + Vector2.UnitY.RotatedBy(NPC.rotation + angleOffset) * 34f;
-            Vector2 stringEnd = drawPosition + new Vector2(2f, -42f).RotatedBy(NPC.rotation);
+            Vector2 eventideTop = eventidePosition - Vector2.UnitY.RotatedBy(NPC.rotation + angleOffset) * 37f;
+            Vector2 eventideBottom = eventidePosition + Vector2.UnitY.RotatedBy(NPC.rotation + angleOffset) * 37f;
+            Vector2 stringEnd = drawPosition + new Vector2(2f, -36f).RotatedBy(NPC.rotation);
 
             Utils.DrawLine(Main.spriteBatch, eventideTop + Main.screenPosition, stringEnd + Main.screenPosition, Color.DeepSkyBlue, Color.Wheat, 2f);
             Utils.DrawLine(Main.spriteBatch, eventideBottom + Main.screenPosition, stringEnd + Main.screenPosition, Color.HotPink, Color.Wheat, 2f);
@@ -70,7 +70,7 @@ namespace WoTE.Content.NPCs.EoL
 
             Texture2D eventide = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/Eventide").Value;
             Vector2 eventidePosition = drawPosition + EventideLances_UndirectionedBowOffset;
-            Main.spriteBatch.Draw(eventide, eventidePosition, null, Color.White, rotation, eventide.Size() * 0.5f, NPC.scale * 1.4f, SpriteEffects.FlipHorizontally, 0f);
+            Main.spriteBatch.Draw(eventide, eventidePosition, null, Color.White, rotation, eventide.Size() * 0.5f, NPC.scale * 1.5f, SpriteEffects.FlipHorizontally, 0f);
         }
     }
 }
