@@ -86,16 +86,21 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer == 1)
                 IProjOwnedByBoss<EmpressOfLight>.KillAll();
 
-            if (AITimer <= BeatSyncedBolts_AttackStartDelay)
+            NPC.spriteDirection = NPC.OnRightSideOf(Target.Center).ToDirectionInt();
+            NPC.rotation = NPC.velocity.X * 0.0015f;
+
+            float preparationInterpolant = Utilities.InverseLerp(-BeatSyncedBolts_AttackStartDelay, 0f, MusicTimer - BeatSyncedBolts_LightBeatStartTime);
+            if (preparationInterpolant < 1f)
             {
-                float flySpeed = (1f - AITimer / (float)BeatSyncedBolts_AttackStartDelay) * 0.3f;
-                Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(NPC.Center).RotatedBy(MathHelper.PiOver2 * (1f - AITimer / BeatSyncedBolts_AttackStartDelay)) * 400f;
+                float flySpeed = preparationInterpolant * 0.3f;
+                Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(NPC.Center).RotatedBy(MathHelper.PiOver2 * (1f - preparationInterpolant)) * 400f;
 
                 NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, flySpeed, 1f - flySpeed * 0.78f, 100f);
+                AITimer = 0;
                 return;
             }
 
-            int beatCycleTimer = (AITimer - BeatSyncedBolts_AttackStartDelay) % BeatSyncedBolts_ShootRate;
+            int beatCycleTimer = AITimer % BeatSyncedBolts_ShootRate;
 
             LeftHandFrame = EmpressHandFrame.FistedOutstretchedArm;
             RightHandFrame = EmpressHandFrame.FistedOutstretchedArm;
@@ -104,9 +109,6 @@ namespace WoTE.Content.NPCs.EoL
                 LeftHandFrame = EmpressHandFrame.HandPressedToChest;
                 RightHandFrame = EmpressHandFrame.HandPressedToChest;
             }
-
-            NPC.spriteDirection = NPC.OnRightSideOf(Target.Center).ToDirectionInt();
-            NPC.rotation = NPC.velocity.X * 0.0015f;
 
             if (beatCycleTimer == 0)
             {
@@ -122,7 +124,7 @@ namespace WoTE.Content.NPCs.EoL
             else
                 NPC.velocity *= 0.79f;
 
-            DashAfterimageInterpolant = Utilities.InverseLerpBump(0f, 10f, BeatSyncedBolts_AttackDuration - 10f, BeatSyncedBolts_AttackDuration, AITimer - BeatSyncedBolts_AttackStartDelay) * 0.25f;
+            DashAfterimageInterpolant = Utilities.InverseLerpBump(0f, 10f, BeatSyncedBolts_AttackDuration - 10f, BeatSyncedBolts_AttackDuration, AITimer) * 0.25f;
         }
 
         /// <summary>
