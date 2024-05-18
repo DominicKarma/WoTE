@@ -11,7 +11,7 @@ namespace WoTE.Content.NPCs.EoL
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_Awaken()
         {
-            StateMachine.RegisterTransition(EmpressAIType.Awaken, EmpressAIType.SpinSwirlRainbows, false, () =>
+            StateMachine.RegisterTransition(EmpressAIType.Awaken, EmpressAIType.VanillaPrismaticBolts, false, () =>
             {
                 return AITimer >= 170;
             });
