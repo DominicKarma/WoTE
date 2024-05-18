@@ -127,7 +127,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             if (Time >= EmpressOfLight.PrismaticOverload_ShootDelay && Projectile.timeLeft >= 10)
             {
-                for (int i = 0; i < 7; i++)
+                for (int i = 0; i < 6; i++)
                     ReleaseLanceForward();
 
                 if (Time % 90 == 89)

@@ -69,7 +69,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             // Increased so that the hitbox checks are more precise.
             Projectile.MaxUpdates = 2;
 
-            Projectile.timeLeft = Projectile.MaxUpdates * 120;
+            Projectile.timeLeft = Projectile.MaxUpdates * 90;
             Projectile.Opacity = 0f;
             if (EmpressOfLight.Myself is not null && EmpressOfLight.Myself.As<EmpressOfLight>().CurrentState == EmpressAIType.PrismaticOverload)
                 Projectile.scale = Main.rand?.NextFloat(0.67f, 1.85f) ?? 1f;
