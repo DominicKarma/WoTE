@@ -34,7 +34,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of Terraprisma instances the Empress summons for her Converging Terraprismas attack.
         /// </summary>
-        public int ConvergingTerraprismas_TerraprismaCount => 8;
+        public static int ConvergingTerraprismas_TerraprismaCount => 7;
 
         /// <summary>
         /// How long Terraprismas summoned by the Empress take to fade in.
