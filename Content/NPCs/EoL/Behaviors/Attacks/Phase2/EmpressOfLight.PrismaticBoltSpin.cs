@@ -88,7 +88,7 @@ namespace WoTE.Content.NPCs.EoL
             float spinSpeed = Utilities.InverseLerp(0f, 40f, AITimer) * MathHelper.TwoPi / 36f;
             PrismaticBoltSpin_SpinAngle += spinSpeed * PrismaticBoltSpin_SpinDirection;
 
-            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 5 == 4 && AITimer >= 24)
+            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 5 == 4 && AITimer >= 36)
             {
                 Vector2 boltVelocity = NPC.velocity.SafeNormalize(Vector2.UnitY) * 10f;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target, AITimer / 45f % 1f);
