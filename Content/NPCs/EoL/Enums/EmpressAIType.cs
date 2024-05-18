@@ -12,7 +12,6 @@
         // Attack states.
         SequentialDashes,
         VanillaPrismaticBolts,
-        PrismaticBoltDashes,
         ButterflyBurstDashes,
         SpinSwirlRainbows,
         ConvergingTerraprismas,

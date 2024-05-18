@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.NPCs.EoL.Projectiles;
 using WoTE.Content.Particles;
 using WoTE.Content.Particles.Metaballs;
 
@@ -37,7 +38,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends slowing down during her Sequential Dashes attack, after her dash.
         /// </summary>
-        public static int SequentialDashes_SlowDownTime => Utilities.SecondsToFrames(0.11f);
+        public static int SequentialDashes_SlowDownTime => Utilities.SecondsToFrames(0.15f);
 
         /// <summary>
         /// The amount of dashes that the Empress should perform during her Sequential Dashes attack before choosing a new attack. 
@@ -83,6 +84,15 @@ namespace WoTE.Content.NPCs.EoL
             }
             else
             {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = 0; i < 6; i++)
+                    {
+                        Vector2 boltVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.TwoPi * i / 6f) * 1.3f;
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f, -1);
+                    }
+                }
+
                 AITimer = 0;
                 SequentialDashes_DashCounter++;
                 TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(500f, 500f), (int)(DefaultTeleportDuration * 1.15f));
