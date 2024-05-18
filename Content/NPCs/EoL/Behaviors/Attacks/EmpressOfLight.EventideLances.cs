@@ -39,6 +39,11 @@ namespace WoTE.Content.NPCs.EoL
         public ref float EventideLances_BowGlimmerInterpolant => ref NPC.ai[2];
 
         /// <summary>
+        /// The amount of teleports the Empress has performed so far during her Eventide Lances attack.
+        /// </summary>
+        public ref float EventideLances_TeleportCounter => ref NPC.ai[3];
+
+        /// <summary>
         /// How long the Empress' bow should spend performing its gleam animation during her Eventide Lances attack.
         /// </summary>
         public static int EventideLances_BowGleamTime => Utilities.SecondsToFrames(0.5f);
@@ -53,12 +58,17 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static int EventideLances_RiftArrowLifetime => Utilities.SecondsToFrames(0.5f);
 
+        /// <summary>
+        /// The amount of teleports the Empress should perform during her Eventide Lances attack before transitioning to a different attack.
+        /// </summary>
+        public static int EventideLances_TeleportCount => 4;
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_EventideLances()
         {
             StateMachine.RegisterTransition(EmpressAIType.EventideLances, null, false, () =>
             {
-                return AITimer >= 99999999;
+                return EventideLances_TeleportCounter >= EventideLances_TeleportCount && AITimer >= 12;
             });
 
             StateMachine.RegisterStateBehavior(EmpressAIType.EventideLances, DoBehavior_EventideLances);
@@ -88,7 +98,10 @@ namespace WoTE.Content.NPCs.EoL
                     DoBehavior_EventideLances_Shoot(eventideEnd);
             }
             else
+            {
                 NPC.spriteDirection = NPC.OnRightSideOf(Target).ToDirectionInt();
+                NPC.Opacity = 1f;
+            }
 
             DoBehavior_EventideLances_HoverNearTarget();
         }
@@ -169,10 +182,13 @@ namespace WoTE.Content.NPCs.EoL
             AITimer = 0;
             NPC.Center = teleportPosition;
             NPC.velocity = -Vector2.UnitY * 40f;
-            NPC.netUpdate = true;
 
             NPC.oldPos = new Vector2[NPC.oldPos.Length];
             NPC.oldRot = new float[NPC.oldRot.Length];
+
+            EventideLances_TeleportCounter++;
+
+            NPC.netUpdate = true;
         }
 
         /// <summary>
