@@ -35,7 +35,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.spriteDirection = NPC.OnRightSideOf(Target).ToDirectionInt();
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
-            EventideLances_BowDirection = NPC.AngleTo(Target.Center) - 0.2f;
+            EventideLances_BowDirection = NPC.AngleTo(Target.Center);
 
             NPC.SmoothFlyNearWithSlowdownRadius(Target.Center, 0.1f, 0.9f, 376f);
         }
