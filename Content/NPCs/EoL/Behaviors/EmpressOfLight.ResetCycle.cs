@@ -13,7 +13,7 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static List<List<EmpressAIType>> Phase1AttackCombos => new()
         {
-            new() { EmpressAIType.BasicPrismaticBolts, EmpressAIType.ButterflyBurstDashes },
+            new() { EmpressAIType.VanillaPrismaticBolts, EmpressAIType.ButterflyBurstDashes },
             new() { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
             new() { EmpressAIType.OutwardRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
             new() { EmpressAIType.OutwardRainbows, EmpressAIType.ButterflyBurstDashes },
@@ -25,12 +25,12 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static List<List<EmpressAIType>> Phase2AttackCombos => new()
         {
-            new() { EmpressAIType.BasicPrismaticBolts, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
-            new() { EmpressAIType.BasicPrismaticBolts2, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
+            new() { EmpressAIType.VanillaPrismaticBolts, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
+            new() { EmpressAIType.VanillaPrismaticBolts2, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
             new() { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
             new() { EmpressAIType.OutwardRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
             new() { EmpressAIType.OutwardRainbows, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
-            new() { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst, EmpressAIType.BasicPrismaticBolts2 },
+            new() { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst, EmpressAIType.VanillaPrismaticBolts2 },
             new() { EmpressAIType.PrismaticBoltSpin, EmpressAIType.OrbitReleasedTerraprismas, EmpressAIType.PrismaticBoltDashes },
             new() { EmpressAIType.LanceWallSupport },
         };

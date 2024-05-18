@@ -11,7 +11,7 @@
 
         // Attack states.
         SequentialDashes,
-        BasicPrismaticBolts,
+        VanillaPrismaticBolts,
         PrismaticBoltDashes,
         ButterflyBurstDashes,
         OutwardRainbows,
@@ -21,7 +21,7 @@
         EventideLances,
 
         // Phase 2 attack states.
-        BasicPrismaticBolts2,
+        VanillaPrismaticBolts2,
         PrismaticBoltSpin,
         OrbitReleasedTerraprismas,
         LanceWallSupport,
