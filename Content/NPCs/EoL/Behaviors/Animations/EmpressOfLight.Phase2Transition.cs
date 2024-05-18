@@ -94,11 +94,11 @@ namespace WoTE.Content.NPCs.EoL
 
             float maxZPosition = MathHelper.Lerp(5f, 1.1f, Utilities.Sin01(MathHelper.TwoPi * AITimer / 60f).Cubed());
             ZPosition = EasingCurves.Cubic.Evaluate(EasingType.InOut, Utilities.InverseLerp(0f, 60f, AITimer)) * maxZPosition;
+
             if (AITimer <= 120)
                 NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 270f, ZPosition * 0.1f, 1f - ZPosition * 0.15f);
             else if (AITimer <= 180)
-                NPC.velocity *= 0.9f;
-
+                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * 5f, 0.03f);
             NPC.rotation = MathHelper.Lerp(NPC.rotation, 0f, 0.3f);
 
             float appearanceInterpolant = Utilities.InverseLerpBump(0f, 0.4f, 0.7f, 0.75f, AITimer / (float)Phase2Transition_EnergyChargeUpTime).Squared();
