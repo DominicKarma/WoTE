@@ -227,16 +227,16 @@ namespace WoTE.Content.NPCs.EoL
         public override void SetDefaults()
         {
             NPC.npcSlots = 100f;
-            NPC.damage = 180;
-            NPC.width = 136;
-            NPC.height = 124;
+            NPC.damage = 120;
+            NPC.width = 120;
+            NPC.height = 104;
             NPC.defense = 20;
             NPC.SetLifeMaxByMode(240000, 320000, 400000);
 
             if (Main.expertMode)
             {
                 NPC.lifeMax /= 2;
-                NPC.damage = 105;
+                NPC.damage = 92;
             }
 
             NPC.aiStyle = -1;
