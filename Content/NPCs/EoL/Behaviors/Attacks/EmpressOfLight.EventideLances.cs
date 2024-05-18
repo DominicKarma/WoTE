@@ -46,7 +46,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' bow should spend performing its gleam animation during her Eventide Lances attack.
         /// </summary>
-        public static int EventideLances_BowGleamTime => Utilities.SecondsToFrames(0.5f);
+        public int EventideLances_BowGleamTime => Utilities.SecondsToFrames(EventideLances_TeleportCounter <= 0f ? 1.2f : 0.5f);
 
         /// <summary>
         /// How long the Empress' bow should wait after the bows gleam animation before firing during her Eventide Lances attack.
