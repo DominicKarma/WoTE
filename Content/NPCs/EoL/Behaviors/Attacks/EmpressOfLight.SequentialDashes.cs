@@ -148,12 +148,12 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_SequentialDashes_PerformDash()
         {
-            float dashInterpolant = Utilities.InverseLerp(0f, 6f, AITimer - SequentialDashes_RedirectTime);
+            float dashInterpolant = Utilities.InverseLerp(0f, 9f, AITimer - SequentialDashes_RedirectTime);
             float targetDirectionErringInterpolant = Utilities.InverseLerp(0f, SequentialDashes_DashTime, AITimer - SequentialDashes_RedirectTime) * Utilities.InverseLerp(200f, 400f, NPC.Distance(Target.Center));
             Vector2 targetDirectionErring = NPC.SafeDirectionTo(Target.Center - Vector2.UnitY * 9f) * targetDirectionErringInterpolant;
             Vector2 idealVelocity = (SequentialDashes_DashDirection.ToRotationVector2() + targetDirectionErring * 0.66f) * SequentialDashes_DashSpeed;
 
-            NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, dashInterpolant * 0.6f);
+            NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, dashInterpolant * 0.27f);
             NPC.damage = NPC.defDamage;
             DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, 1f, 0.3f);
 
