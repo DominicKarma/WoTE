@@ -84,7 +84,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public override void AI()
         {
             // Sharply fade in.
-            Projectile.Opacity = Utilities.InverseLerp(0f, 12f, Time);
+            Projectile.Opacity = Utilities.InverseLerp(0f, 6f, Time) * Utilities.InverseLerp(0f, Projectile.MaxUpdates * 12f, Projectile.timeLeft);
 
             // Decide rotation based on direction.
             Projectile.rotation = Projectile.velocity.ToRotation();
@@ -131,7 +131,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 Main.EntitySpriteDraw(daggerTexture, Projectile.Center + daggerDrawOffset - Main.screenPosition, null, daggerDrawColor, Projectile.rotation, daggerTexture.Size() * 0.5f, daggerScale, 0, 0);
             }
 
-            Color mainDaggerColor = Color.Wheat * AppearInterpolant;
+            Color mainDaggerColor = Color.Wheat * Projectile.Opacity * AppearInterpolant;
             mainDaggerColor.A /= 9;
             Main.EntitySpriteDraw(daggerTexture, Projectile.Center - Main.screenPosition, null, mainDaggerColor, Projectile.rotation, daggerTexture.Size() * 0.5f, Projectile.scale, 0, 0);
             return false;
