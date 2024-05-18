@@ -3,7 +3,6 @@ using System.IO;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
-using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -15,6 +14,15 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 {
     public class LightLance : ModProjectile, IProjOwnedByBoss<EmpressOfLight>
     {
+        /// <summary>
+        /// Whether this lance should accelerate or not.
+        /// </summary>
+        public bool Accelerate
+        {
+            get => Projectile.ai[2] == 1f;
+            set => Projectile.ai[2] = value.ToInt();
+        }
+
         /// <summary>
         /// The appearance interpolant for the lance.
         /// </summary>
@@ -40,11 +48,6 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         /// </summary>
         public ref float HueInterpolant => ref Projectile.ai[1];
 
-        /// <summary>
-        /// Ths index of this lance, relative to all other lances.
-        /// </summary>
-        public ref float Index => ref Projectile.ai[2];
-
         public override string Texture => $"Terraria/Images/Projectile_{ProjectileID.FairyQueenLance}";
 
         public override void SetStaticDefaults()
@@ -68,7 +71,8 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             Projectile.timeLeft = Projectile.MaxUpdates * 120;
             Projectile.Opacity = 0f;
-            Projectile.scale = Main.rand?.NextFloat(0.67f, 1.85f) ?? 1f;
+            if (EmpressOfLight.Myself is not null && EmpressOfLight.Myself.As<EmpressOfLight>().CurrentState == EmpressAIType.PrismaticOverload)
+                Projectile.scale = Main.rand?.NextFloat(0.67f, 1.85f) ?? 1f;
 
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
@@ -86,14 +90,11 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.rotation = Projectile.velocity.ToRotation();
 
             // Accelerate after the telegraph dissipates.
-            if (Time >= TelegraphTime)
+            if (Time >= TelegraphTime && Accelerate)
             {
                 float newSpeed = MathHelper.Clamp(Projectile.velocity.Length() + 2f / Projectile.MaxUpdates, 14f, 100f / Projectile.MaxUpdates);
                 Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitY) * newSpeed;
             }
-
-            if (Time == TelegraphTime + 8f && Index == 0f)
-                ScreenShakeSystem.StartShake(4f);
 
             if (Projectile.IsFinalExtraUpdate())
                 Time++;

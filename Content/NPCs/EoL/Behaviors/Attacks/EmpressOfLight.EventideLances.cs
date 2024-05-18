@@ -2,10 +2,13 @@
 using Luminance.Assets;
 using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.NPCs.EoL.Projectiles;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -13,9 +16,19 @@ namespace WoTE.Content.NPCs.EoL
     {
         public Vector2 EventideLances_UndirectionedBowOffset => new Vector2(-72f, -14f).RotatedBy(NPC.rotation);
 
-        public ref float EventideLances_BowDirection => ref NPC.ai[0];
+        public Vector2 EventideLances_DirectionedBowOffset => new Vector2(NPC.spriteDirection * -72f, -14f).RotatedBy(NPC.rotation);
 
-        public ref float EventideLances_BowGlimmerInterpolant => ref NPC.ai[1];
+        public bool EventideLances_UsingBow
+        {
+            get => NPC.ai[0] == 1f;
+            set => NPC.ai[0] = value.ToInt();
+        }
+
+        public ref float EventideLances_BowDirection => ref NPC.ai[1];
+
+        public ref float EventideLances_BowGlimmerInterpolant => ref NPC.ai[2];
+
+        public static int EventideLances_BowGleamTime => Utilities.SecondsToFrames(0.95f);
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_EventideLances()
@@ -35,21 +48,66 @@ namespace WoTE.Content.NPCs.EoL
         {
             LeftHandFrame = EmpressHandFrame.FistedOutstretchedArm;
             RightHandFrame = EmpressHandFrame.UpwardGrip;
+            EventideLances_UsingBow = true;
 
             NPC.spriteDirection = NPC.OnRightSideOf(Target).ToDirectionInt();
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
-            EventideLances_BowDirection = NPC.AngleTo(Target.Center);
+            float hoverSpeedInterpolant = Utilities.InverseLerpBump(0f, 4f, EventideLances_BowGleamTime, EventideLances_BowGleamTime + 8f, AITimer);
+            Vector2 hoverDestination = Target.Center + new Vector2(NPC.OnRightSideOf(Target).ToDirectionInt() * 400f, -100f);
+            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, hoverSpeedInterpolant * 0.55f, 1f - hoverSpeedInterpolant * 0.3f, 45f);
+            NPC.velocity *= MathHelper.Lerp(0.7f, 1f, Utilities.InverseLerp(0f, 15f, AITimer - EventideLances_BowGleamTime));
 
-            Vector2 hoverDestination = Target.Center + Vector2.UnitX * NPC.OnRightSideOf(Target).ToDirectionInt() * 400f;
-            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, 0.2f, 0.8f, 76f);
+            if (AITimer <= EventideLances_BowGleamTime)
+                EventideLances_BowDirection = NPC.AngleTo(Target.Center);
 
-            EventideLances_BowGlimmerInterpolant = Utilities.InverseLerp(0f, 60f, AITimer % 150f);
+            float idealDashAfterimageInterpolant = Utilities.InverseLerp(32f, 80f, NPC.velocity.Length());
+            DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, idealDashAfterimageInterpolant, 0.12f);
+
+            EventideLances_BowGlimmerInterpolant = Utilities.InverseLerp(0f, EventideLances_BowGleamTime, AITimer);
+
+            if (AITimer == EventideLances_BowGleamTime + 15)
+            {
+                ScreenShakeSystem.StartShake(50f, MathHelper.Pi * 0.16f, -NPC.SafeDirectionTo(Target.Center), 2f);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Vector2 eventideEnd = NPC.Center + EventideLances_DirectionedBowOffset;
+
+                    for (int i = -3; i <= 3; i++)
+                    {
+                        if (i == 0)
+                            continue;
+
+                        float lanceFireOffsetAngle = i * 0.12f;
+                        float lanceSpeed = 22f - MathF.Abs(i) * 1.4f;
+                        Vector2 lanceVelocity = (EventideLances_BowDirection + lanceFireOffsetAngle).ToRotationVector2() * lanceSpeed;
+
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), eventideEnd, lanceVelocity, ModContent.ProjectileType<LightLance>(), LightLanceDamage, 0f, -1, 0f, Main.rand.NextFloat());
+                    }
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), eventideEnd, Vector2.Zero, ModContent.ProjectileType<PrismaticBurst>(), 0, 0f);
+
+                    NPC.velocity -= EventideLances_BowDirection.ToRotationVector2() * 140f;
+                    NPC.netUpdate = true;
+                }
+            }
+
+            if (AITimer >= EventideLances_BowGleamTime + 15)
+            {
+                NPC.velocity *= 0.6f;
+
+                LeftHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
+                RightHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
+                EventideLances_UsingBow = false;
+            }
+
+            if (AITimer >= 150)
+                AITimer = 0;
         }
 
         public void DoBehavior_EventideLances_DrawBowString(Vector2 drawPosition)
         {
-            if (CurrentState != EmpressAIType.EventideLances)
+            if (CurrentState != EmpressAIType.EventideLances || !EventideLances_UsingBow)
                 return;
 
             Vector2 eventidePosition = drawPosition + EventideLances_UndirectionedBowOffset;
@@ -58,9 +116,11 @@ namespace WoTE.Content.NPCs.EoL
             if (NPC.spriteDirection == -1)
                 angleOffset += MathHelper.Pi;
 
-            Vector2 eventideTop = eventidePosition - Vector2.UnitY.RotatedBy(NPC.rotation + angleOffset) * 37f;
-            Vector2 eventideBottom = eventidePosition + Vector2.UnitY.RotatedBy(NPC.rotation + angleOffset) * 37f;
+            Vector2 eventideTop = eventidePosition + new Vector2(-14f, -37f).RotatedBy(NPC.rotation + angleOffset);
+            Vector2 eventideBottom = eventidePosition + new Vector2(-14f, 37f).RotatedBy(NPC.rotation + angleOffset);
             Vector2 stringEnd = drawPosition + new Vector2(2f, -36f).RotatedBy(NPC.rotation);
+            if (RightHandFrame != EmpressHandFrame.UpwardGrip)
+                stringEnd = (eventideTop + eventideBottom) * 0.5f;
 
             Utils.DrawLine(Main.spriteBatch, eventideTop + Main.screenPosition, stringEnd + Main.screenPosition, Color.DeepSkyBlue, Color.Wheat, 2f);
             Utils.DrawLine(Main.spriteBatch, eventideBottom + Main.screenPosition, stringEnd + Main.screenPosition, Color.HotPink, Color.Wheat, 2f);
@@ -68,7 +128,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public void DoBehavior_EventideLances_DrawBow(Vector2 drawPosition)
         {
-            if (CurrentState != EmpressAIType.EventideLances)
+            if (CurrentState != EmpressAIType.EventideLances || !EventideLances_UsingBow)
                 return;
 
             float rotation = EventideLances_BowDirection * NPC.spriteDirection + NPC.rotation;
