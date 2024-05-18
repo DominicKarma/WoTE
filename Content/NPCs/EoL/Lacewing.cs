@@ -289,7 +289,7 @@ namespace WoTE.Content.NPCs.EoL
                 if (wrappedAITimer == redirectTime + dashDelay + 1 && Index == 0)
                     SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
 
-                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center) * 54f, 0.29f);
+                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center - Vector2.UnitY * 9f) * 54f, 0.29f);
                 NPC.defense = 9999;
                 idealTrailOpacity = 2f;
             }

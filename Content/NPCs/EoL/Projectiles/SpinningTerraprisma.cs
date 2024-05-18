@@ -116,7 +116,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             // Lock the spin center on the player at first.
             // This grip is loosened as the terraprismas reel back.
-            Vector2 spinCenter = Main.player[Myself.target].Center;
+            Vector2 spinCenter = Main.player[Myself.target].Center - Vector2.UnitY * 10f;
             SpinCenter = Vector2.Lerp(SpinCenter, spinCenter, Utilities.InverseLerp(empress.ConvergingTerraprismas_ReelBackTime, 0f, Time - empress.ConvergingTerraprismas_SpinTime));
 
             // Make the spin speed go from slow to super fast over the duration of the spin animation.

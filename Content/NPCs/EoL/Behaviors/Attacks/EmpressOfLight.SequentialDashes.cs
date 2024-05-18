@@ -150,7 +150,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             float dashInterpolant = Utilities.InverseLerp(0f, 6f, AITimer - SequentialDashes_RedirectTime);
             float targetDirectionErringInterpolant = Utilities.InverseLerp(0f, SequentialDashes_DashTime, AITimer - SequentialDashes_RedirectTime) * Utilities.InverseLerp(200f, 400f, NPC.Distance(Target.Center));
-            Vector2 targetDirectionErring = NPC.SafeDirectionTo(Target.Center) * targetDirectionErringInterpolant;
+            Vector2 targetDirectionErring = NPC.SafeDirectionTo(Target.Center - Vector2.UnitY * 9f) * targetDirectionErringInterpolant;
             Vector2 idealVelocity = (SequentialDashes_DashDirection.ToRotationVector2() + targetDirectionErring * 0.66f) * SequentialDashes_DashSpeed;
 
             NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, dashInterpolant * 0.6f);
