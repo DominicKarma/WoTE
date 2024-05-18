@@ -29,10 +29,11 @@ namespace WoTE.Content.NPCs.EoL
             new() { EmpressAIType.VanillaPrismaticBolts2, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
             new() { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
             new() { EmpressAIType.SpinSwirlRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
-            new() { EmpressAIType.SpinSwirlRainbows, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
+            new() { EmpressAIType.EventideLances, EmpressAIType.SpinSwirlRainbows, EmpressAIType.OrbitReleasedTerraprismas },
             new() { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst, EmpressAIType.VanillaPrismaticBolts2 },
             new() { EmpressAIType.PrismaticBoltSpin, EmpressAIType.OrbitReleasedTerraprismas, EmpressAIType.PrismaticBoltDashes },
             new() { EmpressAIType.LanceWallSupport },
+            new() { EmpressAIType.EventideLances },
         };
 
         [AutomatedMethodInvoke]
@@ -78,8 +79,6 @@ namespace WoTE.Content.NPCs.EoL
                 tries++;
             }
             while (!StateCycleIsValid(statesToAvoid, phaseCycle) && tries <= 50);
-
-            phaseCycle = [EmpressAIType.EventideLances];
 
             if (phaseCycle[0] == EmpressAIType.LanceWallSupport)
             {
