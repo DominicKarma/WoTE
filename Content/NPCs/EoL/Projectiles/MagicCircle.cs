@@ -153,7 +153,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             float idealDirection = EmpressOfLight.Myself.AngleTo(target.Center) + MathHelper.PiOver2;
             float aimAtPlayerInterpolant = MathHelper.SmoothStep(0f, 1f, Utilities.InverseLerp(0f, EmpressOfLight.PrismaticOverload_AimTowardsTargetTime, Time - EmpressOfLight.PrismaticOverload_AimTowardsTargetDelay));
             idealDirection = idealDirection.AngleLerp(0f, 1f - aimAtPlayerInterpolant);
-            AimDirection = AimDirection.AngleTowards(idealDirection, 0.0071f).AngleLerp(idealDirection, 0.0189f);
+            AimDirection = AimDirection.AngleTowards(idealDirection, 0.0037f).AngleLerp(idealDirection, 0.0141f);
 
             Quaternion forwardPerspective = Quaternion.Identity;
             Quaternion upwardPerspective = Quaternion.CreateFromRotationMatrix(Matrix.CreateRotationX(1.14f));
