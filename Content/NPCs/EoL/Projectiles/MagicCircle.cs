@@ -402,6 +402,8 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             DrawFromTarget(ringDrawOffset, Rotation, Color.White);
             DrawRing(Vector2.Zero, Rotation, Color.SkyBlue with { A = 0 });
 
+            Main.spriteBatch.ResetToDefault();
+
             return false;
         }
     }
