@@ -1,4 +1,5 @@
 ﻿using System;
+using Luminance.Common.DataStructures;
 using Luminance.Common.Easings;
 using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
@@ -88,7 +89,10 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_Phase2Transition()
         {
             if (AITimer == 1)
+            {
                 SoundEngine.PlaySound(SoundID.Item159);
+                IProjOwnedByBoss<EmpressOfLight>.KillAll();
+            }
 
             bool shootingLasers = AITimer >= Phase2Transition_EnergyChargeUpTime + Phase2Transition_ShootCycleDelay;
 
