@@ -21,12 +21,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' butterflies spend redirecting during her Butterfly Burst Dashes attack.
         /// </summary>
-        public static int ButterflyBurstDashes_RedirectTime => Utilities.SecondsToFrames(1.5f);
+        public static int ButterflyBurstDashes_RedirectTime => Utilities.SecondsToFrames(1.1f);
 
         /// <summary>
         /// How long the Empress' butterflies wait before dashing during her Butterfly Burst Dashes attack.
         /// </summary>
-        public static int ButterflyBurstDashes_DashDelay => Utilities.SecondsToFrames(0.12f);
+        public static int ButterflyBurstDashes_DashDelay => Utilities.SecondsToFrames(0.17f);
 
         /// <summary>
         /// How long the Empress' butterflies spend repositioning for the dash during her Butterfly Burst Dashes attack.
@@ -36,7 +36,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' butterflies spend dashing during her Butterfly Burst Dashes attack.
         /// </summary>
-        public static int ButterflyBurstDashes_DashTime => Utilities.SecondsToFrames(0.22f);
+        public static int ButterflyBurstDashes_DashTime => Utilities.SecondsToFrames(0.2f);
 
         /// <summary>
         /// How long the Empress' butterflies spend slowing down after a dash during her Butterfly Burst Dashes attack.
@@ -119,7 +119,7 @@ namespace WoTE.Content.NPCs.EoL
             int lacewingHealth = (int)MathF.Ceiling(NPC.life / (float)ButterflyBurstDashes_ButterflyCount);
             for (int i = 0; i < ButterflyBurstDashes_ButterflyCount; i++)
             {
-                float offsetAngle = Main.rand.NextFloatDirection() * 0.4f;
+                float offsetAngle = Main.rand.NextFloatDirection() * 0.31f;
                 if (i >= ButterflyBurstDashes_ButterflyCount / 2)
                     offsetAngle += MathHelper.Pi;
 
