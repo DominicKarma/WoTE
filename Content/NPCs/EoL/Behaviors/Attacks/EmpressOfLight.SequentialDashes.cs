@@ -86,9 +86,9 @@ namespace WoTE.Content.NPCs.EoL
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    for (int i = 0; i < 6; i++)
+                    for (int i = 0; i < 9; i++)
                     {
-                        Vector2 boltVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.TwoPi * i / 6f) * 1.3f;
+                        Vector2 boltVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.TwoPi * i / 9f) * 1.14f;
                         Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f, -1);
                     }
                 }
