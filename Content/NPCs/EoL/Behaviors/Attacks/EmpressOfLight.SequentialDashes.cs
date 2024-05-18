@@ -27,7 +27,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends redirecting during her Sequential Dashes attack.
         /// </summary>
-        public static int SequentialDashes_RedirectTime => Utilities.SecondsToFrames(0.59f);
+        public static int SequentialDashes_RedirectTime => Utilities.SecondsToFrames(0.63f);
 
         /// <summary>
         /// How long the Empress spends dashing during her Sequential Dashes attack.
@@ -108,7 +108,7 @@ namespace WoTE.Content.NPCs.EoL
             Vector2 hoverOffsetDirection = Target.SafeDirectionTo(NPC.Center);
             hoverOffsetDirection.Y = MathF.Abs(hoverOffsetDirection.Y) * -0.985f;
 
-            float backwardsWindUpOffset = Utilities.InverseLerp(-16f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 400f;
+            float backwardsWindUpOffset = Utilities.InverseLerp(-26f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 400f;
             Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(400f, 345f) - NPC.SafeDirectionTo(Target.Center) * backwardsWindUpOffset;
 
             NPC.SmoothFlyNear(hoverDestination, 0.17f, 0.85f);
