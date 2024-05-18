@@ -14,7 +14,7 @@
         VanillaPrismaticBolts,
         PrismaticBoltDashes,
         ButterflyBurstDashes,
-        OutwardRainbows,
+        SpinSwirlRainbows,
         ConvergingTerraprismas,
         TwirlingPetalSun,
         RadialStarBurst,

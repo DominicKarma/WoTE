@@ -15,8 +15,8 @@ namespace WoTE.Content.NPCs.EoL
         {
             new() { EmpressAIType.VanillaPrismaticBolts, EmpressAIType.ButterflyBurstDashes },
             new() { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
-            new() { EmpressAIType.OutwardRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
-            new() { EmpressAIType.OutwardRainbows, EmpressAIType.ButterflyBurstDashes },
+            new() { EmpressAIType.SpinSwirlRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
+            new() { EmpressAIType.SpinSwirlRainbows, EmpressAIType.ButterflyBurstDashes },
             new() { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst },
         };
 
@@ -28,8 +28,8 @@ namespace WoTE.Content.NPCs.EoL
             new() { EmpressAIType.VanillaPrismaticBolts, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
             new() { EmpressAIType.VanillaPrismaticBolts2, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
             new() { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.PrismaticBoltDashes },
-            new() { EmpressAIType.OutwardRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
-            new() { EmpressAIType.OutwardRainbows, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
+            new() { EmpressAIType.SpinSwirlRainbows, EmpressAIType.SequentialDashes, EmpressAIType.ConvergingTerraprismas },
+            new() { EmpressAIType.SpinSwirlRainbows, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
             new() { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst, EmpressAIType.VanillaPrismaticBolts2 },
             new() { EmpressAIType.PrismaticBoltSpin, EmpressAIType.OrbitReleasedTerraprismas, EmpressAIType.PrismaticBoltDashes },
             new() { EmpressAIType.LanceWallSupport },

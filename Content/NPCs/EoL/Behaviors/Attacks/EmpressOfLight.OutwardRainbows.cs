@@ -14,59 +14,59 @@ namespace WoTE.Content.NPCs.EoL
     public partial class EmpressOfLight : ModNPC
     {
         /// <summary>
-        /// Whether the Empress started her Outward Rainbows attack on the right side of the target.
+        /// Whether the Empress started her Spin Swirl Rainbows attack on the right side of the target.
         /// </summary>
-        public bool OutwardRainbows_StartedOnRightSideOfTarget
+        public bool SpinSwirlRainbows_StartedOnRightSideOfTarget
         {
             get => NPC.ai[0] == 1f;
             set => NPC.ai[0] = value.ToInt();
         }
 
         /// <summary>
-        /// The starting angle during the Empress' Outward Rainbows attack.
+        /// The starting angle during the Empress' Spin Swirl Rainbows attack.
         /// </summary>
-        public ref float OutwardRainbows_HoverOffsetStartingAngle => ref NPC.ai[1];
+        public ref float SpinSwirlRainbows_HoverOffsetStartingAngle => ref NPC.ai[1];
 
         /// <summary>
-        /// How long the Empress spends redirecting during her Outward Rainbows attack.
+        /// How long the Empress spends redirecting during her Spin Swirl Rainbows attack.
         /// </summary>
-        public int OutwardRainbows_RainbowShootDelay => Utilities.SecondsToFrames(ByPhase(0.9f, 0.78f));
+        public int SpinSwirlRainbows_RainbowShootDelay => Utilities.SecondsToFrames(ByPhase(0.9f, 0.78f));
 
         /// <summary>
-        /// How long the Empress spends releasing rainbows on her finger during her Outward Rainbows attack.
+        /// How long the Empress spends releasing rainbows on her finger during her Spin Swirl Rainbows attack.
         /// </summary>
-        public int OutwardRainbows_RainbowShootTime => Utilities.SecondsToFrames(ByPhase(2f, 2.3f));
+        public int SpinSwirlRainbows_RainbowShootTime => Utilities.SecondsToFrames(ByPhase(2f, 2.3f));
 
         /// <summary>
-        /// How long the Empress waits before choosing a new attack during her Outward Rainbows attack.
+        /// How long the Empress waits before choosing a new attack during her Spin Swirl Rainbows attack.
         /// </summary>
-        public static int OutwardRainbows_AttackTransitionDelay => Utilities.SecondsToFrames(0.75f);
+        public static int SpinSwirlRainbows_AttackTransitionDelay => Utilities.SecondsToFrames(0.75f);
 
         /// <summary>
-        /// How speed of rainbows summoned during the Empress' Outward Rainbows attack.
+        /// How speed of rainbows summoned during the Empress' Spin Swirl Rainbows attack.
         /// </summary>
-        public float OutwardRainbows_RainbowSpeed => ByPhase(3f, 5f);
+        public float SpinSwirlRainbows_RainbowSpeed => ByPhase(3f, 5f);
 
         [AutomatedMethodInvoke]
-        public void LoadStateTransitions_OutwardRainbows()
+        public void LoadStateTransitions_SpinSwirlRainbows()
         {
-            StateMachine.RegisterTransition(EmpressAIType.OutwardRainbows, null, false, () =>
+            StateMachine.RegisterTransition(EmpressAIType.SpinSwirlRainbows, null, false, () =>
             {
-                return AITimer >= OutwardRainbows_RainbowShootDelay + OutwardRainbows_RainbowShootTime + OutwardRainbows_AttackTransitionDelay;
+                return AITimer >= SpinSwirlRainbows_RainbowShootDelay + SpinSwirlRainbows_RainbowShootTime + SpinSwirlRainbows_AttackTransitionDelay;
             });
 
-            StateMachine.RegisterStateBehavior(EmpressAIType.OutwardRainbows, DoBehavior_OutwardRainbows);
+            StateMachine.RegisterStateBehavior(EmpressAIType.SpinSwirlRainbows, DoBehavior_SpinSwirlRainbows);
         }
 
         /// <summary>
-        /// Performs the Empress' Outward Rainbows attack.
+        /// Performs the Empress' Spin Swirl Rainbows attack.
         /// </summary>
-        public void DoBehavior_OutwardRainbows()
+        public void DoBehavior_SpinSwirlRainbows()
         {
             LeftHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
             RightHandFrame = EmpressHandFrame.PointingUp;
 
-            if (AITimer <= OutwardRainbows_RainbowShootDelay)
+            if (AITimer <= SpinSwirlRainbows_RainbowShootDelay)
             {
                 if (AITimer == 2)
                 {
@@ -74,18 +74,18 @@ namespace WoTE.Content.NPCs.EoL
                     NPC.oldPos = new Vector2[NPC.oldPos.Length];
                     NPC.oldRot = new float[NPC.oldRot.Length];
 
-                    OutwardRainbows_HoverOffsetStartingAngle = Main.rand.NextFloat(MathHelper.PiOver2);
-                    OutwardRainbows_StartedOnRightSideOfTarget = NPC.OnRightSideOf(Target.Center);
+                    SpinSwirlRainbows_HoverOffsetStartingAngle = Main.rand.NextFloat(MathHelper.PiOver2);
+                    SpinSwirlRainbows_StartedOnRightSideOfTarget = NPC.OnRightSideOf(Target.Center);
                     NPC.netUpdate = true;
                 }
 
-                float dashInterpolant = AITimer / (float)OutwardRainbows_RainbowShootDelay;
+                float dashInterpolant = AITimer / (float)SpinSwirlRainbows_RainbowShootDelay;
                 float spinInterpolant = EasingCurves.Quadratic.Evaluate(EasingType.InOut, dashInterpolant);
-                Vector2 hoverDestination = Target.Center + Vector2.UnitY.RotatedBy(MathHelper.TwoPi * OutwardRainbows_StartedOnRightSideOfTarget.ToDirectionInt() * spinInterpolant * 1.5f + OutwardRainbows_HoverOffsetStartingAngle) * 950f;
+                Vector2 hoverDestination = Target.Center + Vector2.UnitY.RotatedBy(MathHelper.TwoPi * SpinSwirlRainbows_StartedOnRightSideOfTarget.ToDirectionInt() * spinInterpolant * 1.5f + SpinSwirlRainbows_HoverOffsetStartingAngle) * 950f;
                 NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, (1f - dashInterpolant) * 0.15f + 0.06f, 0.67f, 30f);
                 DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, Utilities.InverseLerp(4f, 30f, NPC.velocity.Length()), 0.2f);
 
-                if (AITimer == OutwardRainbows_RainbowShootDelay)
+                if (AITimer == SpinSwirlRainbows_RainbowShootDelay)
                     SoundEngine.PlaySound(SoundID.Item163);
 
                 if (DashAfterimageInterpolant >= 0.4f)
@@ -100,9 +100,9 @@ namespace WoTE.Content.NPCs.EoL
                     NPC.velocity *= 0.98f;
 
                 Vector2 handPosition = NPC.Center + new Vector2(NPC.spriteDirection * 42f, -68f).RotatedBy(NPC.rotation);
-                if (Main.netMode != NetmodeID.MultiplayerClient && AITimer <= OutwardRainbows_RainbowShootTime)
+                if (Main.netMode != NetmodeID.MultiplayerClient && AITimer <= SpinSwirlRainbows_RainbowShootTime)
                 {
-                    Vector2 rainbowVelocity = (MathHelper.TwoPi * AITimer / 25f).ToRotationVector2() * OutwardRainbows_RainbowSpeed;
+                    Vector2 rainbowVelocity = (MathHelper.TwoPi * AITimer / 25f).ToRotationVector2() * SpinSwirlRainbows_RainbowSpeed;
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, rainbowVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), AcceleratingRainbowDamage, 0f, -1, AITimer / 20f % 1f);
                 }
             }
