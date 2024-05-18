@@ -101,7 +101,7 @@ namespace WoTE.Content.NPCs.EoL
 
             if (AITimer <= 120)
                 NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 270f, ZPosition * 0.1f, 1f - ZPosition * 0.15f);
-            else if (AITimer <= 180)
+            else if (AITimer <= Phase2Transition_EnergyChargeUpTime)
                 NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * 5f, 0.03f);
             NPC.rotation = MathHelper.Lerp(NPC.rotation, 0f, 0.3f);
 
