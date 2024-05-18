@@ -75,6 +75,11 @@ namespace WoTE.Content.NPCs.EoL
                     NPC.oldRot = new float[NPC.oldRot.Length];
 
                     SpinSwirlRainbows_HoverOffsetStartingAngle = Main.rand.NextFloat(MathHelper.PiOver2);
+
+                    // Ensure that the spin ends up on the same side of the target as the lance wall if it's in use.
+                    if (PerformingLanceWallSupport)
+                        SpinSwirlRainbows_HoverOffsetStartingAngle = MathHelper.PiOver2 * (LanceWallXPosition >= Target.Center.X).ToDirectionInt();
+
                     SpinSwirlRainbows_StartedOnRightSideOfTarget = NPC.OnRightSideOf(Target.Center);
                     NPC.netUpdate = true;
                 }
@@ -107,7 +112,8 @@ namespace WoTE.Content.NPCs.EoL
                 }
             }
 
-            if (AITimer == 1)
+            // The PerformingLanceWallSupport check is because she already performs a teleport at the end of that state, and as such this second one would be unnecessary.
+            if (AITimer == 1 && !PerformingLanceWallSupport)
             {
                 TeleportTo(Target.Center - Vector2.UnitX * Target.direction * 400f);
                 NPC.velocity = Vector2.Zero;

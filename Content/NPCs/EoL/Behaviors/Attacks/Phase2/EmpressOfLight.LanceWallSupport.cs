@@ -67,7 +67,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The set of all attack states that are acceptable when used in conjunction with lance wall support.
         /// </summary>
-        public static readonly EmpressAIType[] AcceptableAttacksForLanceWallSupport = [EmpressAIType.VanillaPrismaticBolts, EmpressAIType.VanillaPrismaticBolts2, EmpressAIType.ConvergingTerraprismas, EmpressAIType.TwirlingPetalSun];
+        public static readonly EmpressAIType[] AcceptableAttacksForLanceWallSupport = [EmpressAIType.VanillaPrismaticBolts, EmpressAIType.VanillaPrismaticBolts2, EmpressAIType.ConvergingTerraprismas, EmpressAIType.TwirlingPetalSun, EmpressAIType.SpinSwirlRainbows];
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_LanceWallSupport()
