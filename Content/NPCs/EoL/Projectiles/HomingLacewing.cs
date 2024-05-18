@@ -61,6 +61,10 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.rotation = MathHelper.Clamp(-0.51f, 0.51f, Projectile.velocity.X * 0.0172f);
             Projectile.frame = (int)Time / 6 % Main.projFrames[Type];
             Projectile.Opacity = Utilities.InverseLerp(0f, 20f, Time) * Utilities.InverseLerp(0f, 45f, Projectile.timeLeft);
+
+            if (Projectile.timeLeft <= 32)
+                Projectile.damage = 0;
+
             Time++;
         }
 
