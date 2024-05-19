@@ -19,12 +19,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long Terraprismas summoned by the Empress spend spinning around.
         /// </summary>
-        public int ConvergingTerraprismas_SpinTime => Utilities.SecondsToFrames(ByPhase(1.04f, 0.92f));
+        public int ConvergingTerraprismas_SpinTime => Utilities.SecondsToFrames(ByPhase(0.8f, 0.74f));
 
         /// <summary>
         /// How long Terraprismas summoned by the Empress spend reeling back in anticipation of a dash.
         /// </summary>
-        public int ConvergingTerraprismas_ReelBackTime => Utilities.SecondsToFrames(ByPhase(0.6f, 0.56f));
+        public int ConvergingTerraprismas_ReelBackTime => Utilities.SecondsToFrames(ByPhase(0.7f, 0.65f));
 
         /// <summary>
         /// How long the Empress waits after the Converging Terraprismas attack to choose a new attack to use.
@@ -36,7 +36,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of Terraprisma instances the Empress summons for her Converging Terraprismas attack.
         /// </summary>
-        public static int ConvergingTerraprismas_TerraprismaCount => 6;
+        public int ConvergingTerraprismas_TerraprismaCount => ByPhase(6, 8);
 
         /// <summary>
         /// How long Terraprismas summoned by the Empress take to fade in.
