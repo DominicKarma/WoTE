@@ -146,18 +146,26 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public Color PetalColorFunction(float completionRatio)
         {
+            if (Myself is null)
+                return Color.Transparent;
+
             float fadeStart = VanishInterpolant;
             float fadeEnd = 1f;
             float edgeFade = Utilities.InverseLerpBump(fadeStart - 0.1f, fadeStart, fadeEnd, fadeEnd + 0.1f, completionRatio);
-
             float hue = (Main.GlobalTimeWrappedHourly * 0.13f + MathF.Sin(DirectionOffsetAngle) * 0.08f).Modulo(1f);
-            Color baseColor = Main.hslToRgb(hue, 1f, 0.75f);
+            Color baseColor = Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.DazzlingPetal, hue);
             return Projectile.GetAlpha(baseColor) * Utilities.InverseLerp(1f, 0.54f, completionRatio) * edgeFade * (1f - VanishInterpolant);
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
+            if (Myself is null)
+                return;
+
+            Vector4[] petalFirePalette = Myself.As<EmpressOfLight>().Palette.Get(EmpressPaletteType.DazzlingPetal);
             ManagedShader trailShader = ShaderManager.GetShader("WoTE.DazzlingPetalShader");
+            trailShader.TrySetParameter("gradient", petalFirePalette);
+            trailShader.TrySetParameter("gradientCount", petalFirePalette.Length);
             trailShader.TrySetParameter("fireColorInterpolant", FlareInterpolant);
             trailShader.TrySetParameter("brightness", 1f + Utilities.InverseLerp(1000f, 600f, PetalLength) * 0.64f);
             trailShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);

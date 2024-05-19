@@ -11,6 +11,7 @@
         PrismaticBolt,
         StarBolt,
         RainbowArrow,
-        LacewingTrail
+        LacewingTrail,
+        DazzlingPetal
     }
 }

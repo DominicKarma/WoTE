@@ -4,6 +4,8 @@ sampler streakTexture : register(s2);
 float fireColorInterpolant;
 float globalTime;
 float brightness;
+float gradientCount;
+float4 gradient[20];
 matrix uWorldViewProjection;
 
 struct VertexShaderInput
@@ -32,6 +34,13 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
     return output;
 }
 
+float4 PaletteLerp(float interpolant)
+{
+    int startIndex = clamp(frac(interpolant) * gradientCount, 0, gradientCount - 1);
+    int endIndex = (startIndex + 1) % gradientCount;
+    return lerp(gradient[startIndex], gradient[endIndex], frac(interpolant * gradientCount));
+}
+
 float4 CalculatePetalColor(float2 coords, float4 baseColor)
 {
     float horizontalEdgeDistance = distance(coords.y, 0.5);
@@ -51,7 +60,7 @@ float4 CalculateFireColor(float2 coords)
     // It also depends on the length along the petal. Colors that are further out become more translucent.
     float glow = clamp(edgeFade / horizontalEdgeDistance * fireNoise * 0.4, 0, 5) * (1 - coords.x);
     
-    float4 fireColor = lerp(float4(0.4, 1.05, 1.95, 1), float4(0.94, 0.85, 0.45, 1), fireNoise) * glow;
+    float4 fireColor = PaletteLerp(fireNoise) * glow * 2;
     
     // Make the fire draw additively in the center, to ensure that layering problems do not appear where they intersect on the Empress.
     fireColor.a *= smoothstep(0.2, 0.4, coords.x);
