@@ -79,7 +79,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Rectangle frame = texture.Frame(1, totalFrames, 0, Projectile.frame);
 
             Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
-            Main.spriteBatch.Draw(bloom, drawPosition, null, Projectile.GetAlpha(Color.White) with { A = 0 }, 0f, bloom.Size() * 0.5f, 0.16f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, drawPosition, null, Projectile.GetAlpha(Color.White) with { A = 0 }, 0f, bloom.Size() * 0.5f, 0.32f, 0, 0f);
 
             DrawRainbowBack(texture, frame, drawPosition, direction);
             Main.EntitySpriteDraw(texture, drawPosition, frame, Projectile.GetAlpha(Color.White), Projectile.rotation, frame.Size() * 0.5f, Projectile.scale, direction);
