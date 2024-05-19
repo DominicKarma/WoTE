@@ -26,8 +26,8 @@ namespace WoTE.Content.NPCs.EoL
         public static List<List<EmpressAIType>> Phase2AttackCombos => new()
         {
             new() { EmpressAIType.VanillaPrismaticBolts, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
-            new() { EmpressAIType.VanillaPrismaticBolts2, EmpressAIType.ButterflyBurstDashes, EmpressAIType.OrbitReleasedTerraprismas },
-            new() { EmpressAIType.RadialStarBurst, EmpressAIType.TwirlingPetalSun, EmpressAIType.SequentialDashes },
+            new() { EmpressAIType.VanillaPrismaticBolts2, EmpressAIType.OrbitReleasedTerraprismas },
+            new() { EmpressAIType.SequentialDashes, EmpressAIType.TwirlingPetalSun },
             new() { EmpressAIType.SequentialDashes, EmpressAIType.SpinSwirlRainbows, EmpressAIType.ConvergingTerraprismas },
             new() { EmpressAIType.EventideLances, EmpressAIType.SpinSwirlRainbows, EmpressAIType.OrbitReleasedTerraprismas },
             new() { EmpressAIType.ConvergingTerraprismas, EmpressAIType.RadialStarBurst, EmpressAIType.VanillaPrismaticBolts2 },
@@ -83,7 +83,7 @@ namespace WoTE.Content.NPCs.EoL
                 phaseCycle = Main.rand.Next(Phase2 ? Phase2AttackCombos : Phase1AttackCombos);
                 tries++;
             }
-            while (!StateCycleIsValid(statesToAvoid, phaseCycle) && tries <= 50);
+            while (!StateCycleIsValid(statesToAvoid, phaseCycle) && tries <= 150);
 
             if (phaseCycle[0] == EmpressAIType.LanceWallSupport)
             {
