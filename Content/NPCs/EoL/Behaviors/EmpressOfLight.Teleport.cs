@@ -84,7 +84,7 @@ namespace WoTE.Content.NPCs.EoL
                 Vector2 lightSpawnPosition = spawnCenter + Main.rand.NextVector2Square(-NPC.width, NPC.width);
                 Dust light = Dust.NewDustPerfect(lightSpawnPosition, 261);
                 light.velocity = -Vector2.UnitY * Main.rand.NextFloat(4f);
-                light.color = Main.hslToRgb(Main.rand.NextFloat(), 0.9f, 0.75f);
+                light.color = Palette.MulticolorLerp(EmpressPaletteType.Phase2Dress, Main.rand.NextFloat());
                 light.noGravity = true;
             }
 

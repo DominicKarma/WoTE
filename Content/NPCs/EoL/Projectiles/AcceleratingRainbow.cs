@@ -15,11 +15,6 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
     public class AcceleratingRainbow : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<EmpressOfLight>
     {
         /// <summary>
-        /// The general color for the rainbow.
-        /// </summary>
-        public Color GeneralColor => Main.hslToRgb(HueInterpolant, 1f, 0.5f, 0) * Projectile.Opacity;
-
-        /// <summary>
         /// How long this rainbow has existed for, in frames.
         /// </summary>
         public ref float Time => ref Projectile.localAI[0];

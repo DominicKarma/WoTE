@@ -184,10 +184,13 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
+            if (Myself is null)
+                return false;
+
             Texture2D bloom = SpinningTerraprisma.BloomTexture.Value;
             Texture2D sword = TextureAssets.Projectile[Type].Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
-            Color swordColor = Main.hslToRgb(HueInterpolant, 1f, 0.5f, 0);
+            Color swordColor = Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.RainbowArrow, HueInterpolant) with { A = 0 };
             Vector2 scale = Vector2.One * Projectile.scale;
 
             Main.EntitySpriteDraw(bloom, drawPosition, null, Projectile.GetAlpha(swordColor) * Projectile.Opacity.Squared(), Projectile.rotation, bloom.Size() * 0.5f, scale, 0);
@@ -213,7 +216,11 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public Color TrailColorFunction(float completionRatio)
         {
-            return Projectile.GetAlpha(Main.hslToRgb(HueInterpolant, 1f, 0.5f)) * Utilities.InverseLerp(0f, 0.1f, completionRatio);
+            Color baseColor = Color.White;
+            if (Myself is not null)
+                baseColor = Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.RainbowArrow, HueInterpolant);
+
+            return Projectile.GetAlpha(baseColor) * Utilities.InverseLerp(0f, 0.1f, completionRatio);
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)

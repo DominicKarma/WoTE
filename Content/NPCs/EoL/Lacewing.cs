@@ -353,6 +353,9 @@ namespace WoTE.Content.NPCs.EoL
 
         public void DrawRainbowBack(Texture2D texture, Vector2 drawPosition, SpriteEffects direction)
         {
+            if (EmpressOfLight.Myself is null)
+                return;
+
             float offset = MathF.Sin(Main.GlobalTimeWrappedHourly * 2.4f + NPC.whoAmI * 3f) * 16f;
             if (offset < 4f)
                 offset = 4f;
@@ -366,7 +369,8 @@ namespace WoTE.Content.NPCs.EoL
 
             for (int i = 0; i < 6; i++)
             {
-                Color color = new Color(127 - NPC.alpha, 127 - NPC.alpha, 127 - NPC.alpha, 0).MultiplyRGBA(Main.hslToRgb((Main.GlobalTimeWrappedHourly + i / 6f) % 1f, 1f, 0.5f));
+                Color backglowColor = EmpressOfLight.Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.LacewingTrail, Main.GlobalTimeWrappedHourly + i / 6f);
+                Color color = new Color(127 - NPC.alpha, 127 - NPC.alpha, 127 - NPC.alpha, 0).MultiplyRGBA(backglowColor);
                 color = NPC.GetAlpha(color);
                 color.A = 0;
                 Vector2 drawOffset = (MathHelper.TwoPi * i / 6f + NPC.rotation).ToRotationVector2() * offset;

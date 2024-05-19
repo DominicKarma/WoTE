@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace WoTE.Content.NPCs.EoL
@@ -57,6 +58,24 @@ namespace WoTE.Content.NPCs.EoL
                 return palette;
 
             return [];
+        }
+
+        /// <summary>
+        /// Performs a multi-color lerp on a given palette.
+        /// </summary>
+        /// <param name="type">The type of palette to use.</param>
+        /// <param name="colorInterpolant">The color interpolant.</param>
+        public Color MulticolorLerp(EmpressPaletteType type, float colorInterpolant)
+        {
+            Vector4[] palette = Get(type);
+
+            colorInterpolant = colorInterpolant.Modulo(0.999f);
+
+            int gradientStartingIndex = (int)(colorInterpolant * palette.Length);
+            float currentColorInterpolant = colorInterpolant * palette.Length % 1f;
+            Color gradientSubdivisionA = new(palette[gradientStartingIndex]);
+            Color gradientSubdivisionB = new(palette[(gradientStartingIndex + 1) % palette.Length]);
+            return Color.Lerp(gradientSubdivisionA, gradientSubdivisionB, currentColorInterpolant);
         }
     }
 }

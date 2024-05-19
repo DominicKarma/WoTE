@@ -179,7 +179,7 @@ namespace WoTE.Content.NPCs.EoL
                     float pixelScale = Main.rand.NextFloat(1f, 5f);
                     Vector2 pixelSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 1400f, -Main.rand.NextFloat(800f, 1000f));
                     Vector2 pixelVelocity = Vector2.UnitY * Main.rand.NextFloat(12f, 85f) / pixelScale;
-                    Color pixelBloomColor = Utilities.MulticolorLerp(Main.rand.NextFloat(0.75f), Color.LightGoldenrodYellow, Color.Yellow, Color.Orange) * 0.6f;
+                    Color pixelBloomColor = Palette.MulticolorLerp(EmpressPaletteType.ButterflyAvatar, Main.rand.NextFloat()) * 0.6f;
 
                     BloomPixelParticle bloom = new(pixelSpawnPosition, pixelVelocity, Color.White, pixelBloomColor, Main.rand.Next(150, 210), Vector2.One * pixelScale);
                     bloom.Spawn();
@@ -189,7 +189,7 @@ namespace WoTE.Content.NPCs.EoL
                 {
                     int lacewingLifetime = Main.rand.Next(30, 56);
                     float lacewingScale = Main.rand.NextFloat(0.4f, 1.15f);
-                    Color lacewingColor = Color.Lerp(Color.Yellow, Color.LightGoldenrodYellow, Main.rand.NextFloat());
+                    Color lacewingColor = Palette.MulticolorLerp(EmpressPaletteType.ButterflyAvatar, Main.rand.NextFloat());
                     Vector2 lacewingSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 1400f, -Main.rand.NextFloat(800f, 1000f));
                     Vector2 lacewingVelocity = Vector2.UnitY * Main.rand.NextFloat(39f, 105f);
                     PrismaticLacewingParticle lacewing = new(lacewingSpawnPosition, lacewingVelocity, lacewingColor, lacewingLifetime, Vector2.One * lacewingScale);

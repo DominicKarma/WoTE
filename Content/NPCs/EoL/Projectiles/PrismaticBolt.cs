@@ -72,11 +72,11 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
-            if (Main.rand.NextBool() && Projectile.velocity.Length() >= 11f)
+            if (Main.rand.NextBool() && Projectile.velocity.Length() >= 11f && EmpressOfLight.Myself is not null)
             {
                 float sinusoidalAngle = CalculateSinusoidalOffset(0.4f) * 0.7f;
                 Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(sinusoidalAngle) * Main.rand.NextFloat(2.5f, 3.3f) + Main.rand.NextVector2Circular(1.6f, 1.6f);
-                Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.8f) * 0.8f;
+                Color particleColor = EmpressOfLight.Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, Main.rand.NextFloat()) * 0.8f;
                 BloomCircleParticle particle = new(Projectile.Center + Main.rand.NextVector2Circular(30f, 30f), particleVelocity, Vector2.One * 0.028f, Color.Wheat, particleColor, 60, 1.8f, 1.75f);
                 particle.Spawn();
             }
@@ -135,9 +135,13 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
+            if (EmpressOfLight.Myself is null)
+                return false;
+
             float hue = (Projectile.identity * 0.23f + Main.GlobalTimeWrappedHourly * 0.5f).Modulo(1f);
-            Color baseColor = Main.hslToRgb(hue, 1f, 0.85f);
-            baseColor.A = 0;
+            Color baseColor = EmpressOfLight.Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, hue);
+            float luminosity = Vector3.Dot(baseColor.ToVector3(), new Vector3(0.3f, 0.6f, 0.1f));
+            baseColor.A = (byte)Utils.Remap(luminosity, 0.1f, 0.4f, 255f, 0f);
 
             Texture2D glowTexture = TextureAssets.Extra[98].Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;

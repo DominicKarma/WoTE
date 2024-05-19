@@ -31,7 +31,18 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         /// <summary>
         /// The general color for the lance.
         /// </summary>
-        public Color GeneralColor => Main.hslToRgb((HueInterpolant - Time * 0.01f).Modulo(1f), 1f, 0.5f, 0) * Projectile.Opacity;
+        public Color GeneralColor
+        {
+            get
+            {
+                Color baseColor = Color.White;
+                if (EmpressOfLight.Myself is not null)
+                    baseColor = EmpressOfLight.Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.LacewingTrail, (HueInterpolant - Time * 0.01f).Modulo(1f));
+                baseColor.A = 0;
+
+                return baseColor * Projectile.Opacity;
+            }
+        }
 
         /// <summary>
         /// How long this lance has existed for, in frames.

@@ -79,14 +79,18 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
+            if (EmpressOfLight.Myself is null)
+                return false;
+
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
             Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
             DrawData burstDrawData = new(MiscTexturesRegistry.TurbulentNoise.Value, new Rectangle(0, 0, (int)screenSize.X, (int)screenSize.Y), Color.White * Projectile.Opacity);
 
+            Color shockwaveColor = EmpressOfLight.Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.LacewingTrail, MathF.Pow(1f - LifetimeRatio, 0.95f));
             var shockwaveShader = ShaderManager.GetShader("WoTE.ShockwaveShader");
-            shockwaveShader.TrySetParameter("shockwaveColor", Color.Lerp(Color.DeepSkyBlue, Color.HotPink, MathF.Pow(1f - LifetimeRatio, 0.95f)));
+            shockwaveShader.TrySetParameter("shockwaveColor", shockwaveColor);
             shockwaveShader.TrySetParameter("screenSize", screenSize);
             shockwaveShader.TrySetParameter("explosionDistance", Radius * Projectile.scale * 0.5f);
             shockwaveShader.TrySetParameter("projectilePosition", Projectile.Center - Main.screenPosition);

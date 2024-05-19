@@ -147,11 +147,14 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         /// </summary>
         public void HandlePostDashEffects()
         {
-            Color particleColor = Main.hslToRgb(Main.rand.NextFloat(), 1f, 0.7f) * 0.8f;
-            Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(3f, 7f) + Main.rand.NextVector2Circular(2f, 2f);
-            Vector2 particleSpawnPosition = Projectile.Center + Main.rand.NextVector2Circular(20f, 20f);
-            BloomCircleParticle particle = new(particleSpawnPosition, particleVelocity, Vector2.One * Main.rand.NextFloat(0.02f, 0.05f), Color.Wheat, particleColor, 40, 1.6f, 1.75f);
-            particle.Spawn();
+            if (Myself is not null)
+            {
+                Color particleColor = Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.RainbowArrow, HueInterpolant) * 0.8f;
+                Vector2 particleVelocity = -Projectile.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(3f, 7f) + Main.rand.NextVector2Circular(2f, 2f);
+                Vector2 particleSpawnPosition = Projectile.Center + Main.rand.NextVector2Circular(20f, 20f);
+                BloomCircleParticle particle = new(particleSpawnPosition, particleVelocity, Vector2.One * Main.rand.NextFloat(0.02f, 0.05f), Color.Wheat, particleColor, 40, 1.6f, 1.75f);
+                particle.Spawn();
+            }
 
             DashVisualsIntensity = 1f;
             Projectile.velocity += Projectile.velocity.SafeNormalize(Vector2.Zero) * 5f;
@@ -174,10 +177,13 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
+            if (Myself is null)
+                return false;
+
             Texture2D bloom = BloomTexture.Value;
             Texture2D sword = TextureAssets.Projectile[Type].Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
-            Color swordColor = Main.hslToRgb(HueInterpolant, 1f, 0.5f, 0);
+            Color swordColor = Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.RainbowArrow, HueInterpolant) with { A = 0 };
             Vector2 scale = Vector2.One * Projectile.scale;
 
             Main.EntitySpriteDraw(bloom, drawPosition, null, Projectile.GetAlpha(swordColor) * Projectile.Opacity.Squared(), Projectile.rotation, bloom.Size() * 0.5f, scale, 0);
@@ -203,7 +209,11 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public Color TrailColorFunction(float completionRatio)
         {
-            return Projectile.GetAlpha(Main.hslToRgb(HueInterpolant, 1f, 0.5f)) * Utilities.InverseLerp(0f, 0.1f, completionRatio);
+            Color baseColor = Color.White;
+            if (Myself is not null)
+                baseColor = Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.RainbowArrow, HueInterpolant);
+
+            return Projectile.GetAlpha(baseColor) * Utilities.InverseLerp(0f, 0.1f, completionRatio);
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
