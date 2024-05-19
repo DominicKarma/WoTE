@@ -21,7 +21,27 @@ namespace WoTE.Content.NPCs.EoL
             WithPalette(EmpressPaletteType.StarBolt, new Color(255, 147, 176), new(255, 162, 252), new(177, 48, 209), new(255, 79, 196), new(255, 72, 75), new(255, 156, 67), new(255, 216, 184)).
             WithPalette(EmpressPaletteType.RainbowArrow, Main.hslToRgb(0f, 1f, 0.5f), Main.hslToRgb(0.125f, 1f, 0.5f), Main.hslToRgb(0.25f, 1f, 0.5f), Main.hslToRgb(0.375f, 1f, 0.5f),
                                                          Main.hslToRgb(0.5f, 1f, 0.5f), Main.hslToRgb(0.625f, 1f, 0.5f), Main.hslToRgb(0.75f, 1f, 0.5f), Main.hslToRgb(0.75f, 1f, 0.5f), Main.hslToRgb(0.875f, 1f, 0.5f)).
-            WithPalette(EmpressPaletteType.LacewingTrail, new Color(189, 126, 255), new(255, 174, 240), new(255, 44, 196), new(148, 38, 187), new(10, 105, 187), new(109, 200, 252));
+            WithPalette(EmpressPaletteType.LacewingTrail, new Color(189, 126, 255), new(255, 174, 240), new(255, 44, 196), new(148, 38, 187), new(10, 105, 187), new(109, 200, 252)).
+            WithCloudColor(new(17, 172, 209, 128)).
+            WithMistColor(new(185, 170, 237, 128)).
+            WithMoonColors(new(200, 238, 235, 75), new(17, 172, 209, 0)).
+            WithBackgroundTint(Color.White);
+
+        /// <summary>
+        /// The Empress palette used if the player is named "Dominic".
+        /// </summary>
+        public static readonly EmpressPaletteSet DominicPaletteSet = RegisterNew(1, () => Main.LocalPlayer.name.Equals("Dominic", StringComparison.OrdinalIgnoreCase)).
+            WithPalette(EmpressPaletteType.ButterflyAvatar, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
+            WithPalette(EmpressPaletteType.Wings, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
+            WithPalette(EmpressPaletteType.Phase2Dress, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
+            WithPalette(EmpressPaletteType.PrismaticBolt, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
+            WithPalette(EmpressPaletteType.StarBolt, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
+            WithPalette(EmpressPaletteType.RainbowArrow, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
+            WithPalette(EmpressPaletteType.LacewingTrail, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
+            WithCloudColor(new(178, 118, 174, 128)).
+            WithMistColor(new(244, 39, 72, 128)).
+            WithMoonColors(new(247, 106, 113, 75), new(237, 168, 179, 0)).
+            WithBackgroundTint(Color.IndianRed);
 
         /// <summary>
         /// Registers a new palette set that the Empress can use.

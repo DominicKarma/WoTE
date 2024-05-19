@@ -19,6 +19,51 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// The color of mist in the background with this palette.
+        /// </summary>
+        public Color MistColor
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The color of clouds in the background with this palette.
+        /// </summary>
+        public Color CloudColor
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The color of moon in the background with this palette.
+        /// </summary>
+        public Color MoonColor
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The color of moon backglow in the background with this palette.
+        /// </summary>
+        public Color MoonBackglowColor
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The color that the overeall background is tinted with this palette.
+        /// </summary>
+        public Color BackgroundTint
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// The condition necessary for this palette to be used.
         /// </summary>
         public Func<bool> UsageCondition
@@ -45,6 +90,31 @@ namespace WoTE.Content.NPCs.EoL
         public EmpressPaletteSet WithPalette(EmpressPaletteType type, params Vector4[] palette)
         {
             palettes[type] = palette;
+            return this;
+        }
+
+        public EmpressPaletteSet WithCloudColor(Color cloudColor)
+        {
+            CloudColor = cloudColor;
+            return this;
+        }
+
+        public EmpressPaletteSet WithMistColor(Color mistColor)
+        {
+            MistColor = mistColor;
+            return this;
+        }
+
+        public EmpressPaletteSet WithMoonColors(Color moonColor, Color backglowColor)
+        {
+            MoonColor = moonColor;
+            MoonBackglowColor = backglowColor;
+            return this;
+        }
+
+        public EmpressPaletteSet WithBackgroundTint(Color backgroundTint)
+        {
+            BackgroundTint = backgroundTint;
             return this;
         }
 

@@ -50,6 +50,16 @@ namespace WoTE.Content.NPCs.EoL
             }
         }
 
+        private static Color mistColor;
+
+        private static Color cloudColor;
+
+        private static Color backgroundTint;
+
+        private static Color moonColor;
+
+        private static Color moonBackglowColor;
+
         /// <summary>
         /// The position of the moon in screen space.
         /// </summary>
@@ -79,6 +89,16 @@ namespace WoTE.Content.NPCs.EoL
             if (Main.dayTime)
                 return;
 
+            if (EmpressOfLight.Myself is not null)
+            {
+                EmpressPaletteSet palette = EmpressOfLight.Myself.As<EmpressOfLight>().Palette;
+                moonColor = palette.MoonColor;
+                moonBackglowColor = palette.MoonBackglowColor;
+                mistColor = palette.MistColor;
+                cloudColor = palette.CloudColor;
+                backgroundTint = palette.BackgroundTint;
+            }
+
             Matrix backgroundMatrix = Main.BackgroundViewMatrix.TransformationMatrix;
             Vector3 translationDirection = new(1f, Main.BackgroundViewMatrix.Effects.HasFlag(SpriteEffects.FlipVertically) ? -1f : 1f, 1f);
             backgroundMatrix.Translation -= Main.BackgroundViewMatrix.ZoomMatrix.Translation * translationDirection;
@@ -90,7 +110,7 @@ namespace WoTE.Content.NPCs.EoL
 
                 Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height + 200f);
                 Rectangle skyRectangle = new(0, 0, (int)screenSize.X, (int)screenSize.Y);
-                Main.spriteBatch.Draw(sky, skyRectangle, Color.White * Opacity * 0.4f);
+                Main.spriteBatch.Draw(sky, skyRectangle, backgroundTint * Opacity * 0.4f);
 
                 Texture2D moon = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/SpecificManagers/TheMoonFromInfernum").Value;
                 Vector2 moonDrawPosition = MoonScreenPosition;
@@ -98,9 +118,8 @@ namespace WoTE.Content.NPCs.EoL
                 Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
                 Main.spriteBatch.Draw(bloom, moonDrawPosition, null, Color.Silver with { A = 0 } * Opacity * 0.6f, 0f, bloom.Size() * 0.5f, 2f, 0, 0f);
                 Main.spriteBatch.Draw(bloom, moonDrawPosition, null, Color.Silver with { A = 0 } * Opacity * 0.31f, 0f, bloom.Size() * 0.5f, 3.3f, 0, 0f);
-                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, new Color(17, 172, 209, 0) * Opacity * 0.15f, 0f, bloom.Size() * 0.5f, 6f, 0, 0f);
-
-                Main.spriteBatch.Draw(moon, moonDrawPosition, null, new Color(200, 238, 235, 75) * Opacity, 0f, moon.Size() * 0.5f, 0.11f, 0, 0f);
+                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, moonBackglowColor * Opacity * 0.15f, 0f, bloom.Size() * 0.5f, 6f, 0, 0f);
+                Main.spriteBatch.Draw(moon, moonDrawPosition, null, moonColor * Opacity, 0f, moon.Size() * 0.5f, 0.11f, 0, 0f);
 
                 // Draw clouds.
                 Main.spriteBatch.End();
@@ -136,7 +155,7 @@ namespace WoTE.Content.NPCs.EoL
             Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
             Rectangle cloudsRectangle = new(0, 0, Main.screenWidth, (int)(screenSize.Y * 0.3f));
 
-            Main.spriteBatch.Draw(clouds, cloudsRectangle, new Color(17, 172, 209, 128) * Opacity);
+            Main.spriteBatch.Draw(clouds, cloudsRectangle, cloudColor * Opacity);
         }
 
         private static void DrawMist()
@@ -153,7 +172,7 @@ namespace WoTE.Content.NPCs.EoL
             mistShader.TrySetParameter("twinkleSpeed", 3f);
             mistShader.Apply();
 
-            Main.spriteBatch.Draw(clouds, mistRectangle, new Color(185, 170, 237, 128) * Opacity * 0.15f);
+            Main.spriteBatch.Draw(clouds, mistRectangle, mistColor * Opacity * 0.15f);
         }
 
         public override void Update(GameTime gameTime)
