@@ -116,8 +116,10 @@ namespace WoTE.Content.NPCs.EoL
                 Vector2 moonDrawPosition = MoonScreenPosition;
 
                 Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
-                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, Color.Silver with { A = 0 } * Opacity * 0.6f, 0f, bloom.Size() * 0.5f, 2f, 0, 0f);
-                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, Color.Silver with { A = 0 } * Opacity * 0.31f, 0f, bloom.Size() * 0.5f, 3.3f, 0, 0f);
+
+                Color weakBloomColor = Color.Lerp(moonColor, Color.White, 0.5f);
+                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, weakBloomColor with { A = 0 } * Opacity * 0.6f, 0f, bloom.Size() * 0.5f, 2f, 0, 0f);
+                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, weakBloomColor with { A = 0 } * Opacity * 0.31f, 0f, bloom.Size() * 0.5f, 3.3f, 0, 0f);
                 Main.spriteBatch.Draw(bloom, moonDrawPosition, null, moonBackglowColor * Opacity * 0.15f, 0f, bloom.Size() * 0.5f, 6f, 0, 0f);
                 Main.spriteBatch.Draw(moon, moonDrawPosition, null, moonColor * Opacity, 0f, moon.Size() * 0.5f, 0.11f, 0, 0f);
 
