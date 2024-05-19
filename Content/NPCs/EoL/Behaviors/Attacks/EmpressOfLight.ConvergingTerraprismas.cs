@@ -31,6 +31,8 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static int ConvergingTerraprismas_AttackTransitionDelay => Utilities.SecondsToFrames(0.4f);
 
+        // NOTE: Keep this an even number, to ensure that the attack is more sight-readable.
+        // Odd-numbered counts will result in cases where the ring can "backstab" the player without them immediately noticing.
         /// <summary>
         /// The amount of Terraprisma instances the Empress summons for her Converging Terraprismas attack.
         /// </summary>
