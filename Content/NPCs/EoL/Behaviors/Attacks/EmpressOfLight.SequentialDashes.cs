@@ -67,6 +67,9 @@ namespace WoTE.Content.NPCs.EoL
         {
             if (AITimer <= SequentialDashes_RedirectTime)
             {
+                if (AITimer == 1)
+                    TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(500f, 400f), (int)(DefaultTeleportDuration * 1.15f));
+
                 DoBehavior_SequentialDashes_Redirect();
 
                 if (AITimer == SequentialDashes_RedirectTime)
@@ -94,7 +97,6 @@ namespace WoTE.Content.NPCs.EoL
 
                 AITimer = 0;
                 SequentialDashes_DashCounter++;
-                TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(500f, 400f), (int)(DefaultTeleportDuration * 1.15f));
                 NPC.netUpdate = true;
             }
 
