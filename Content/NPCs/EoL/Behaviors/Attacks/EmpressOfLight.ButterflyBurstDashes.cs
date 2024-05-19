@@ -81,6 +81,9 @@ namespace WoTE.Content.NPCs.EoL
             LeftHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
             RightHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
 
+            if (AITimer == 1)
+                TeleportTo(Target.Center - Vector2.UnitY * 360f);
+
             if (AITimer == ButterflyBurstDashes_ButterflyTransitionDelay - Utilities.SecondsToFrames(0.3f))
                 SoundEngine.PlaySound(SoundID.Item165);
 
