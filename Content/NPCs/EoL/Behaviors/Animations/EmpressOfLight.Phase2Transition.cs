@@ -220,7 +220,7 @@ namespace WoTE.Content.NPCs.EoL
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 2 == 0)
             {
                 Vector2 starBurstVelocity = (MathHelper.TwoPi * AITimer / 23f).ToRotationVector2() * 3f;
-                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, starBurstVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), AcceleratingRainbowDamage, 0f);
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, starBurstVelocity, ModContent.ProjectileType<AcceleratingRainbow>(), AcceleratingRainbowDamage, 0f, -1, -0.12f);
             }
 
             NPC.velocity *= 0.95f;
