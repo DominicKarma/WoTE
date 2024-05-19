@@ -76,8 +76,8 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_OrbitReleasedTerraprismas_FlyNearTarget()
         {
             DashAfterimageInterpolant *= 0.9f;
-            NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.0055f);
-            NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 10f, 0.21f);
+            NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.0053f);
+            NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 9f, 0.17f);
 
             float slowdownRadius = Utilities.InverseLerp(0f, 42f, AITimer) * 400f;
             float initialFlySpeedInterpolant = Utilities.InverseLerpBump(0f, 30f, 30f, 40f, AITimer);
