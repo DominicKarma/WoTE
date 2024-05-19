@@ -1,5 +1,4 @@
-﻿using System;
-using Luminance.Common.StateMachines;
+﻿using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -95,7 +94,7 @@ namespace WoTE.Content.NPCs.EoL
 
                 AITimer = 0;
                 SequentialDashes_DashCounter++;
-                TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(500f, 500f), (int)(DefaultTeleportDuration * 1.15f));
+                TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(500f, 400f), (int)(DefaultTeleportDuration * 1.15f));
                 NPC.netUpdate = true;
             }
 
@@ -111,15 +110,9 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_SequentialDashes_Redirect()
         {
-            // Determine which direction the Empress should attempt to hover relative to the target.
-            // The abs(x) * -0.985 calculation serves two functions:
-            // 1. It ensures that the Empress always attempts to stay above the player, not below them.
-            // 2. It makes the vertical hover offset regress to a horizontal one.
-            Vector2 hoverOffsetDirection = Target.SafeDirectionTo(NPC.Center);
-            hoverOffsetDirection.Y = MathF.Abs(hoverOffsetDirection.Y) * -0.985f;
-
+            Vector2 hoverOffsetDirection = Target.SafeDirectionTo(NPC.Center) * new Vector2(1f, 0.995f);
             float backwardsWindUpOffset = Utilities.InverseLerp(-26f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 400f;
-            Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(400f, 345f) - NPC.SafeDirectionTo(Target.Center) * backwardsWindUpOffset;
+            Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(400f, 390f) - NPC.SafeDirectionTo(Target.Center) * backwardsWindUpOffset;
 
             NPC.SmoothFlyNear(hoverDestination, 0.17f, 0.85f);
         }
