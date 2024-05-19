@@ -50,7 +50,7 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_VanillaPrismaticBolts2_HoverAround()
         {
             float redirectSpeed = Utils.Remap(AITimer, 0f, 25f, 0.14f, 0.08f);
-            Vector2 hoverDestination = Target.Center + new Vector2(MathF.Cos(MathHelper.TwoPi * AITimer / 90f) * 360f, -250f);
+            Vector2 hoverDestination = Target.Center + new Vector2(MathF.Cos(MathHelper.TwoPi * AITimer / 90f) * 360f, -285f);
             NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, redirectSpeed, 1f - redirectSpeed * 1.2f, 50f);
             NPC.rotation = NPC.velocity.X * 0.01f;
 
