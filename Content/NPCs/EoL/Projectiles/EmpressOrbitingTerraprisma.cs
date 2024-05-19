@@ -120,7 +120,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.scale = Utilities.InverseLerp(0f, 8f, Time) / (ZPosition + 1f);
         }
 
-        public override bool? CanDamage() => Time >= 30f;
+        public override bool? CanDamage() => Time >= OrbitReleasedTerraprismas_TerraprismaSpinTime;
 
         /// <summary>
         /// Makes this sword spin around the Empress.
