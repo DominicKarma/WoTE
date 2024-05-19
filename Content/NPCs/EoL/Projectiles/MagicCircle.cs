@@ -130,10 +130,10 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 for (int i = 0; i < 6; i++)
                     ReleaseLanceForward();
 
-                if (Time % 90 == 89)
+                if (Time % 105 == 104)
                 {
-                    for (int i = 0; i < 6; i++)
-                        ReleaseLacewing((MathHelper.TwoPi * i / 6f).ToRotationVector2());
+                    for (int i = 0; i < 5; i++)
+                        ReleaseLacewing((MathHelper.TwoPi * i / 5f).ToRotationVector2());
                 }
             }
 
