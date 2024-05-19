@@ -24,18 +24,6 @@ namespace WoTE.Content.NPCs.EoL
             WithPalette(EmpressPaletteType.LacewingTrail, new Color(189, 126, 255), new(255, 174, 240), new(255, 44, 196), new(148, 38, 187), new(10, 105, 187), new(109, 200, 252));
 
         /// <summary>
-        /// The Empress palette used if the player is named "Dominic".
-        /// </summary>
-        public static readonly EmpressPaletteSet DominicPaletteSet = RegisterNew(1, () => Main.LocalPlayer.name.Equals("Dominic", StringComparison.OrdinalIgnoreCase)).
-            WithPalette(EmpressPaletteType.ButterflyAvatar, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
-            WithPalette(EmpressPaletteType.Wings, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
-            WithPalette(EmpressPaletteType.Phase2Dress, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
-            WithPalette(EmpressPaletteType.PrismaticBolt, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
-            WithPalette(EmpressPaletteType.StarBolt, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
-            WithPalette(EmpressPaletteType.RainbowArrow, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
-            WithPalette(EmpressPaletteType.LacewingTrail, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White);
-
-        /// <summary>
         /// Registers a new palette set that the Empress can use.
         /// </summary>
         /// <param name="priority">The priority of the palette.</param>
