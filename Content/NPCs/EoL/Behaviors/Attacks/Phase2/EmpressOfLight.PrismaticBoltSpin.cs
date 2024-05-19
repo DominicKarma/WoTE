@@ -24,6 +24,11 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends spinning during her Prismatic Bolt Spin attack.
         /// </summary>
+        public static int PrismaticBoltSpin_ShootDelay => Utilities.SecondsToFrames(0.6f);
+
+        /// <summary>
+        /// How long the Empress spends spinning during her Prismatic Bolt Spin attack.
+        /// </summary>
         public static int PrismaticBoltSpin_SpinTime => Utilities.SecondsToFrames(1f);
 
         /// <summary>
@@ -54,11 +59,13 @@ namespace WoTE.Content.NPCs.EoL
         {
             if (AITimer == 1)
             {
-                SoundEngine.PlaySound(SoundID.Item164, NPC.Center);
                 PrismaticBoltSpin_SpinDirection = NPC.OnRightSideOf(Target.Center).ToDirectionInt();
                 PrismaticBoltSpin_SpinAngle = NPC.AngleFrom(Target.Center) - MathHelper.PiOver2 * PrismaticBoltSpin_SpinDirection;
                 NPC.netUpdate = true;
             }
+
+            if (AITimer == PrismaticBoltSpin_ShootDelay)
+                SoundEngine.PlaySound(SoundID.Item164, NPC.Center);
 
             if (AITimer <= PrismaticBoltSpin_SpinTime)
                 DoBehavior_PrismaticBoltSpin_Spin();
@@ -88,7 +95,7 @@ namespace WoTE.Content.NPCs.EoL
             float spinSpeed = Utilities.InverseLerp(0f, 40f, AITimer) * MathHelper.TwoPi / 36f;
             PrismaticBoltSpin_SpinAngle += spinSpeed * PrismaticBoltSpin_SpinDirection;
 
-            bool canFire = AITimer >= 36 && Target.velocity.AngleBetween(Target.SafeDirectionTo(NPC.Center)) >= MathHelper.Pi / 11.5f;
+            bool canFire = AITimer >= PrismaticBoltSpin_ShootDelay && Target.velocity.AngleBetween(Target.SafeDirectionTo(NPC.Center)) >= MathHelper.Pi / 11.5f;
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 4 == 3 && canFire)
             {
                 Vector2 boltVelocity = NPC.velocity.SafeNormalize(Vector2.UnitY) * 10f;
