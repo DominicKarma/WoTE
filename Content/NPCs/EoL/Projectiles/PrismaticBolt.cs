@@ -140,7 +140,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             float hue = (Projectile.identity * 0.23f + Main.GlobalTimeWrappedHourly * 0.5f).Modulo(1f);
             Color baseColor = EmpressOfLight.Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, hue);
-            float luminosity = Vector3.Dot(baseColor.ToVector3(), new Vector3(0.3f, 0.6f, 0.1f));
+            float luminosity = Vector3.Dot(baseColor.ToVector3(), new Vector3(0.3f, 0.6f, 0.1f)) / 255f;
             baseColor.A = (byte)Utils.Remap(luminosity, 0.1f, 0.4f, 255f, 0f);
 
             Texture2D glowTexture = TextureAssets.Extra[98].Value;
