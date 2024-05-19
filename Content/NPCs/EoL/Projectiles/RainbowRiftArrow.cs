@@ -116,10 +116,13 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            var rainbowPalette = EmpressPalettes.RainbowPalette;
+            if (EmpressOfLight.Myself is null)
+                return;
+
+            Vector4[] rainbowArrowPalette = EmpressOfLight.Myself.As<EmpressOfLight>().Palette.Get(EmpressPaletteType.RainbowArrow);
             ManagedShader trailShader = ShaderManager.GetShader("WoTE.RainbowTrailShader");
-            trailShader.TrySetParameter("gradient", rainbowPalette);
-            trailShader.TrySetParameter("gradientCount", rainbowPalette.Length);
+            trailShader.TrySetParameter("gradient", rainbowArrowPalette);
+            trailShader.TrySetParameter("gradientCount", rainbowArrowPalette.Length);
             trailShader.TrySetParameter("localTime", -Main.GlobalTimeWrappedHourly * 1.5f + Projectile.identity * 0.51f);
             trailShader.TrySetParameter("hueOffset", HueInterpolant);
             trailShader.TrySetParameter("hueSpectrum", 1.3f);

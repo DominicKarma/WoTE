@@ -376,10 +376,14 @@ namespace WoTE.Content.NPCs.EoL
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
+            if (EmpressOfLight.Myself is null)
+                return;
+
+            Vector4[] lacewingTrailPalette = EmpressOfLight.Myself.As<EmpressOfLight>().Palette.Get(EmpressPaletteType.LacewingTrail);
             ManagedShader trailShader = ShaderManager.GetShader("WoTE.LacewingTrailShader");
             trailShader.TrySetParameter("localTime", Main.GlobalTimeWrappedHourly * 1.56f + NPC.whoAmI * 0.4f);
-            trailShader.TrySetParameter("gradient", EmpressPalettes.LacewingTrailPalette);
-            trailShader.TrySetParameter("gradientCount", EmpressPalettes.LacewingTrailPalette.Length);
+            trailShader.TrySetParameter("gradient", lacewingTrailPalette);
+            trailShader.TrySetParameter("gradientCount", lacewingTrailPalette.Length);
             trailShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
             trailShader.SetTexture(TextureAssets.Extra[ExtrasID.MagicMissileTrailShape], 2, SamplerState.LinearWrap);
             trailShader.Apply();

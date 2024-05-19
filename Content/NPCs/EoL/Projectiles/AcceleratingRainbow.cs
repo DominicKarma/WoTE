@@ -94,9 +94,13 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
+            if (EmpressOfLight.Myself is null)
+                return;
+
+            Vector4[] boltPalette = EmpressOfLight.Myself.As<EmpressOfLight>().Palette.Get(EmpressPaletteType.PrismaticBolt);
             ManagedShader trailShader = ShaderManager.GetShader("WoTE.RainbowTrailShader");
-            trailShader.TrySetParameter("gradient", EmpressPalettes.PrismaticBoltPalette);
-            trailShader.TrySetParameter("gradientCount", EmpressPalettes.PrismaticBoltPalette.Length);
+            trailShader.TrySetParameter("gradient", boltPalette);
+            trailShader.TrySetParameter("gradientCount", boltPalette.Length);
             trailShader.TrySetParameter("localTime", -Main.GlobalTimeWrappedHourly + Projectile.identity * 0.383f);
             trailShader.TrySetParameter("hueOffset", HueInterpolant);
             trailShader.TrySetParameter("hueSpectrum", 1f);

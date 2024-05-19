@@ -119,6 +119,15 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// The palette set that the Empress should use.
+        /// </summary>
+        public EmpressPaletteSet Palette
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The AI timer for the Empress.
         /// </summary>
         public ref int AITimer => ref StateMachine.CurrentState.Time;
@@ -293,6 +302,9 @@ namespace WoTE.Content.NPCs.EoL
             NPC.timeLeft = 7200;
 
             Myself = NPC;
+
+            // The OnSpawn hook can't be used for this because this NPC technically only appears as a result of the NPC.Transform method.
+            Palette ??= EmpressPalettes.Choose();
 
             HandleTargetSelection();
             PerformPreUpdateResets();

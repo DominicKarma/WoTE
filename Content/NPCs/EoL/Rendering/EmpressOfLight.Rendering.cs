@@ -46,6 +46,9 @@ namespace WoTE.Content.NPCs.EoL
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
+            if (Palette is null)
+                return false;
+
             if (ButterflyProjectionOpacity > 0f && ButterflyProjectionScale > 0f)
             {
                 spriteBatch.End();
@@ -91,11 +94,11 @@ namespace WoTE.Content.NPCs.EoL
                 blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 0.5f) / 11f;
 
             Matrix projection = Matrix.CreateOrthographicOffCenter(0f, Main.screenWidth, Main.screenHeight, 0f, -10f, 10f);
-
+            Vector4[] avatarPalette = Palette.Get(EmpressPaletteType.ButterflyAvatar);
             ManagedShader avatarShader = ShaderManager.GetShader("WoTE.EmpressButterflyAvatarShader");
             avatarShader.TrySetParameter("horizontalScale", flapScale);
-            avatarShader.TrySetParameter("gradientCount", EmpressPalettes.ButterflyAvatarPalette.Length);
-            avatarShader.TrySetParameter("gradient", EmpressPalettes.ButterflyAvatarPalette);
+            avatarShader.TrySetParameter("gradientCount", avatarPalette.Length);
+            avatarShader.TrySetParameter("gradient", avatarPalette);
             avatarShader.TrySetParameter("blurOffset", 0.003f);
             avatarShader.TrySetParameter("blurWeights", blurWeights);
             avatarShader.TrySetParameter("center", baseDrawPosition);
@@ -251,6 +254,9 @@ namespace WoTE.Content.NPCs.EoL
         /// <param name="drawPosition">The Empress' draw position in the render target.</param>
         public void DrawToTarget(Vector2 drawPosition)
         {
+            if (Palette is null)
+                return;
+
             Texture2D texture = TextureAssets.Npc[Type].Value;
 
             DrawBackglow(drawPosition);
@@ -287,7 +293,7 @@ namespace WoTE.Content.NPCs.EoL
         /// Draws the Empress' wings.
         /// </summary>
         /// <param name="drawPosition">The draw position of the wings.</param>
-        public static void DrawWings(Vector2 drawPosition)
+        public void DrawWings(Vector2 drawPosition)
         {
             Texture2D wingsTexture = TextureAssets.Extra[ExtrasID.HallowBossWingsBack].Value;
             Texture2D wingsColorShapeTexture = TextureAssets.Extra[ExtrasID.HallowBossWings].Value;
@@ -298,9 +304,10 @@ namespace WoTE.Content.NPCs.EoL
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 
+            Vector4[] wingsPalette = Palette.Get(EmpressPaletteType.Wings);
             ManagedShader gradientShader = ShaderManager.GetShader("WoTE.EmpressWingGradientShader");
-            gradientShader.TrySetParameter("gradient", EmpressPalettes.WingsPalette);
-            gradientShader.TrySetParameter("gradientCount", EmpressPalettes.WingsPalette.Length);
+            gradientShader.TrySetParameter("gradient", wingsPalette);
+            gradientShader.TrySetParameter("gradientCount", wingsPalette.Length);
             gradientShader.SetTexture(TextureAssets.Projectile[ModContent.ProjectileType<StarBolt>()], 1, SamplerState.PointWrap);
             gradientShader.Apply();
 
@@ -373,14 +380,15 @@ namespace WoTE.Content.NPCs.EoL
         /// Draws the Empress' glowing dress.
         /// </summary>
         /// <param name="drawPosition">The draw position of the dress.</param>
-        public static void DrawDress(Vector2 drawPosition)
+        public void DrawDress(Vector2 drawPosition)
         {
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 
+            Vector4[] dressPalette = Palette.Get(EmpressPaletteType.Phase2Dress);
             ManagedShader gradientShader = ShaderManager.GetShader("WoTE.EmpressDressShader");
-            gradientShader.TrySetParameter("gradient", EmpressPalettes.DressP2Palette);
-            gradientShader.TrySetParameter("gradientCount", EmpressPalettes.DressP2Palette.Length);
+            gradientShader.TrySetParameter("gradient", dressPalette);
+            gradientShader.TrySetParameter("gradientCount", dressPalette.Length);
             gradientShader.Apply();
 
             Texture2D dressTexture = TextureAssets.Extra[ExtrasID.HallowBossSkirt].Value;
