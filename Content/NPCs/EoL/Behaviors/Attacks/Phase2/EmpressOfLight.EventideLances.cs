@@ -83,6 +83,12 @@ namespace WoTE.Content.NPCs.EoL
             LeftHandFrame = EmpressHandFrame.FistedOutstretchedArm;
             RightHandFrame = EmpressHandFrame.UpwardGrip;
             EventideLances_UsingBow = true;
+            if (EventideLances_TeleportCounter >= EventideLances_TeleportCount)
+            {
+                LeftHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
+                RightHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
+                EventideLances_UsingBow = false;
+            }
 
             // Aim the bow and make it gleam at first.
             Vector2 eventideEnd = NPC.Center + EventideLances_DirectionedBowOffset;
