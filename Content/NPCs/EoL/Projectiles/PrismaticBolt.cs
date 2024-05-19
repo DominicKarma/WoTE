@@ -65,6 +65,11 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             {
                 float homingSharpnessInterpolant = Utils.Remap(Time, 15f, 85f, 0.0067f, 0.196f);
                 Vector2 idealVelocity = Projectile.SafeDirectionTo(Target.Center) * 34f;
+
+                // Stop homing if REALLY close to the target, to allow for style points.
+                if (Projectile.WithinRange(Target.Center, 95f))
+                    idealVelocity = Projectile.velocity;
+
                 Projectile.velocity = Vector2.SmoothStep(Projectile.velocity, idealVelocity, homingSharpnessInterpolant);
             }
             else if (Projectile.velocity.Length() <= 43.5f)

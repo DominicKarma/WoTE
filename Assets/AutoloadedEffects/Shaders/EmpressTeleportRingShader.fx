@@ -1,9 +1,18 @@
 sampler gradientTexture : register(s0);
 sampler erasureNoise : register(s1);
 
+bool invertDisappearanceDirection;
 float globalTime;
 float pulsationIntensity;
-bool invertDisappearanceDirection;
+float gradientCount;
+float4 gradient[20];
+
+float4 PaletteLerp(float interpolant)
+{
+    int startIndex = clamp(frac(interpolant) * gradientCount, 0, gradientCount - 1);
+    int endIndex = (startIndex + 1) % gradientCount;
+    return lerp(gradient[startIndex], gradient[endIndex], frac(interpolant * gradientCount));
+}
 
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
@@ -28,7 +37,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float opacity = smoothstep(0.074, 0, distance(sphereCoords.y, 0.5) + smoothstep(0.5, invertDisappearanceDirection ? 0.7 : 0.3, coords.y));
     float edgeCutoff = smoothstep(0.5, 0.48, distance(coords, 0.5));
     float hueInterpolant = sin(tex2D(erasureNoise, sphereCoords) * 3.141 + globalTime * 4) * 0.5 + 0.5;
-    float4 baseColor = tex2D(gradientTexture, float2(hueInterpolant, 0.5));
+    float4 baseColor = PaletteLerp(hueInterpolant);
     
     return sampleColor * (baseColor * opacity + smoothstep(0.6, 1, opacity * baseColor.a) * 0.75) * edgeCutoff;
 }

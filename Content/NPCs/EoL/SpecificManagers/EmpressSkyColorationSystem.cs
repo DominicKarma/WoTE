@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.Utilities;
+using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace WoTE.Content.NPCs.EoL
@@ -7,7 +9,11 @@ namespace WoTE.Content.NPCs.EoL
     {
         public override void ModifySunLightColor(ref Color tileColor, ref Color backgroundColor)
         {
-            backgroundColor = Color.Lerp(backgroundColor, Color.Silver, EmpressSky.Opacity * 0.15f);
+            float backgroundInterpolationIntensity = 0.2f;
+            if (Main.dayTime)
+                backgroundInterpolationIntensity += Utilities.InverseLerpBump(0f, 2700f, (float)Main.dayLength - 2700f, (float)Main.dayLength, (float)Main.time) * 0.3f;
+
+            backgroundColor = Color.Lerp(backgroundColor, EmpressSky.BackgroundTint, EmpressSky.Opacity * backgroundInterpolationIntensity);
             tileColor = Color.Lerp(tileColor, Color.Lavender, EmpressSky.Opacity * 0.25f);
         }
     }

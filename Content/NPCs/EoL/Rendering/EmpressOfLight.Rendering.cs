@@ -192,6 +192,7 @@ namespace WoTE.Content.NPCs.EoL
             if (cutoffY <= 0f || cutoffY >= 1f)
                 return;
 
+            Vector4[] teleportRingPalette = Palette.Get(EmpressPaletteType.PrismaticBolt);
             Texture2D gradient = TextureAssets.Extra[ExtrasID.HallowBossGradient].Value;
             float teleportRingOpacity = Utilities.InverseLerpBump(0f, 0.25f, 0.85f, 1f, cutoffY).Cubed();
             Vector2 teleportRingPosition = drawPosition + Vector2.UnitY * (cutoffY - 0.5f) * 570f;
@@ -199,6 +200,8 @@ namespace WoTE.Content.NPCs.EoL
             teleportRingShader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
             teleportRingShader.TrySetParameter("pulsationIntensity", 1f - cutoffY);
             teleportRingShader.TrySetParameter("invertDisappearanceDirection", invertDisappearanceDirection);
+            teleportRingShader.TrySetParameter("gradient", teleportRingPalette);
+            teleportRingShader.TrySetParameter("gradientCount", teleportRingPalette.Length);
             teleportRingShader.Apply();
 
             float ringGrowInterpolant = Utilities.InverseLerpBump(0f, 0.5f, 0.8f, 1f, cutoffY);

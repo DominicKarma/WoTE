@@ -54,11 +54,15 @@ namespace WoTE.Content.NPCs.EoL
 
         private static Color cloudColor;
 
-        private static Color backgroundTint;
-
         private static Color moonColor;
 
         private static Color moonBackglowColor;
+
+        public static Color BackgroundTint
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// The position of the moon in screen space.
@@ -86,9 +90,6 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
-            if (Main.dayTime)
-                return;
-
             if (EmpressOfLight.Myself is not null)
             {
                 EmpressPaletteSet palette = EmpressOfLight.Myself.As<EmpressOfLight>().Palette;
@@ -96,7 +97,7 @@ namespace WoTE.Content.NPCs.EoL
                 moonBackglowColor = palette.MoonBackglowColor;
                 mistColor = palette.MistColor;
                 cloudColor = palette.CloudColor;
-                backgroundTint = palette.BackgroundTint;
+                BackgroundTint = palette.BackgroundTint;
             }
 
             Matrix backgroundMatrix = Main.BackgroundViewMatrix.TransformationMatrix;
@@ -110,18 +111,21 @@ namespace WoTE.Content.NPCs.EoL
 
                 Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height + 200f);
                 Rectangle skyRectangle = new(0, 0, (int)screenSize.X, (int)screenSize.Y);
-                Main.spriteBatch.Draw(sky, skyRectangle, backgroundTint * Opacity * 0.4f);
+                Main.spriteBatch.Draw(sky, skyRectangle, BackgroundTint * Opacity);
 
-                Texture2D moon = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/SpecificManagers/TheMoonFromInfernum").Value;
-                Vector2 moonDrawPosition = MoonScreenPosition;
+                if (!Main.dayTime)
+                {
+                    Texture2D moon = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/SpecificManagers/TheMoonFromInfernum").Value;
+                    Vector2 moonDrawPosition = MoonScreenPosition;
 
-                Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
+                    Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
 
-                Color weakBloomColor = Color.Lerp(moonColor, Color.White, 0.5f);
-                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, weakBloomColor with { A = 0 } * Opacity * 0.6f, 0f, bloom.Size() * 0.5f, 2f, 0, 0f);
-                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, weakBloomColor with { A = 0 } * Opacity * 0.31f, 0f, bloom.Size() * 0.5f, 3.3f, 0, 0f);
-                Main.spriteBatch.Draw(bloom, moonDrawPosition, null, moonBackglowColor * Opacity * 0.15f, 0f, bloom.Size() * 0.5f, 6f, 0, 0f);
-                Main.spriteBatch.Draw(moon, moonDrawPosition, null, moonColor * Opacity, 0f, moon.Size() * 0.5f, 0.11f, 0, 0f);
+                    Color weakBloomColor = Color.Lerp(moonColor, Color.White, 0.5f);
+                    Main.spriteBatch.Draw(bloom, moonDrawPosition, null, weakBloomColor with { A = 0 } * Opacity * 0.6f, 0f, bloom.Size() * 0.5f, 2f, 0, 0f);
+                    Main.spriteBatch.Draw(bloom, moonDrawPosition, null, weakBloomColor with { A = 0 } * Opacity * 0.31f, 0f, bloom.Size() * 0.5f, 3.3f, 0, 0f);
+                    Main.spriteBatch.Draw(bloom, moonDrawPosition, null, moonBackglowColor * Opacity * 0.15f, 0f, bloom.Size() * 0.5f, 6f, 0, 0f);
+                    Main.spriteBatch.Draw(moon, moonDrawPosition, null, moonColor * Opacity, 0f, moon.Size() * 0.5f, 0.11f, 0, 0f);
+                }
 
                 // Draw clouds.
                 Main.spriteBatch.End();
@@ -188,7 +192,7 @@ namespace WoTE.Content.NPCs.EoL
             for (int i = 0; i < RainParticles.Length; i++)
                 RainParticles[i].Update();
 
-            if (skyActive && Main.LocalPlayer.Center.Y >= 3000f)
+            if (skyActive && Main.LocalPlayer.Center.Y >= 3000f && !Main.dayTime)
             {
                 for (int i = 0; i < 2; i++)
                 {

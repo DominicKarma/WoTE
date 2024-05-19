@@ -121,7 +121,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             // Draw bloom underneath the dagger. This is strongest when the blade itself has not yet fully faded in.
             float bloomOpacity = MathHelper.Lerp(0.75f, 0.51f, AppearInterpolant) * Projectile.Opacity;
 
-            Color c1 = GeneralColor.HueShift(0.2f);
+            Color c1 = GeneralColor.HueShift(0.05f);
             Color c2 = Color.White * 0.51f;
             c1.A = 0;
             c2.A = 0;
