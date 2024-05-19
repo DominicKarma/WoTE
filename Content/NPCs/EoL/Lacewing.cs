@@ -109,7 +109,7 @@ namespace WoTE.Content.NPCs.EoL
             set;
         }
 
-        public static int AITimer => EmpressOfLight.Myself.As<EmpressOfLight>().AITimer;
+        public static int AITimer => EmpressOfLight.Myself.As<EmpressOfLight>().AITimer - EmpressOfLight.ButterflyBurstDashes_ButterflyTransitionDelay;
 
         /// <summary>
         /// The frame of this Lacewing.
@@ -216,14 +216,13 @@ namespace WoTE.Content.NPCs.EoL
             // Reset damage.
             NPC.damage = NPC.defDamage;
 
-            int redirectTime = EmpressOfLight.ButterflyBurstDashes_RedirectTime;
+            int redirectTime = EmpressOfLight.Myself.As<EmpressOfLight>().ButterflyBurstDashes_RedirectTime;
             int dashRepositionTime = EmpressOfLight.ButterflyBurstDashes_DashRepositionTime;
             int dashDelay = EmpressOfLight.ButterflyBurstDashes_DashDelay;
             int dashTime = EmpressOfLight.ButterflyBurstDashes_DashTime;
             int slowdownTime = EmpressOfLight.ButterflyBurstDashes_DashSlowdownTime;
             int attackCycleTime = redirectTime + dashRepositionTime + dashDelay + dashTime + slowdownTime;
-            int wrappedAITimer = AITimer % attackCycleTime;
-            bool doneDashing = AITimer >= attackCycleTime * EmpressOfLight.ButterflyBurstDashes_DashCount || EmpressOfLight.Myself.As<EmpressOfLight>().BeatSyncedBolts_CanDanceToBeat;
+            bool doneDashing = EmpressOfLight.Myself.As<EmpressOfLight>().ButterflyBurstDashes_DashCounter >= EmpressOfLight.ButterflyBurstDashes_DashCount;
             float idealTrailOpacity = 1f;
 
             if (doneDashing)
@@ -238,22 +237,19 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.damage = 0;
                 idealTrailOpacity = 2f;
             }
-            else if (wrappedAITimer <= redirectTime)
+            else if (AITimer <= redirectTime)
             {
-                float flySpeedInterpolant = MathHelper.Lerp(0.35f, 0.04f, Utilities.Convert01To010(wrappedAITimer / (float)redirectTime));
-                flySpeedInterpolant *= Utilities.InverseLerp(0f, 9f, wrappedAITimer);
-
-                // Get into position you fucking idiot.
-                flySpeedInterpolant = MathHelper.Lerp(flySpeedInterpolant, 0.6f, Utilities.InverseLerp(20f, 0f, AITimer));
+                float flySpeedInterpolant = MathHelper.Lerp(0.35f, 0.04f, Utilities.Convert01To010(AITimer / (float)redirectTime));
+                flySpeedInterpolant *= Utilities.InverseLerp(0f, 9f, AITimer);
 
                 // Store the player's direction at the start of the butterfly's dash.
-                if (wrappedAITimer <= 1)
+                if (AITimer <= 2)
                 {
                     PlayerDirectionAtStartOfDash = target.velocity.SafeNormalize((PlayerDirectionAtStartOfDash + MathHelper.PiOver4).ToRotationVector2()).ToRotation();
 
                     // Ensure that the first dash is consistent, at a horizontal angle.
                     // This is done to give the player an easier chance at initially reacting to the attack.
-                    if (AITimer <= 5)
+                    if (EmpressOfLight.Myself.As<EmpressOfLight>().ButterflyBurstDashes_DashCounter <= 0f)
                         PlayerDirectionAtStartOfDash = 0f;
                 }
 
@@ -268,7 +264,7 @@ namespace WoTE.Content.NPCs.EoL
 
                 Vector2 hoverDestination = target.Center + hoverOffset;
 
-                float swerveOffsetDistance = MathF.Sin(NPC.Distance(hoverDestination) * 0.024f + NPC.whoAmI * 4f + wrappedAITimer * 0.012f) * 120f;
+                float swerveOffsetDistance = MathF.Sin(NPC.Distance(hoverDestination) * 0.024f + NPC.whoAmI * 4f + AITimer * 0.012f) * 120f;
                 Vector2 swerveOffset = NPC.SafeDirectionTo(hoverDestination).RotatedBy(MathHelper.PiOver2) * swerveOffsetDistance;
                 hoverDestination += swerveOffset;
 
@@ -277,16 +273,16 @@ namespace WoTE.Content.NPCs.EoL
 
                 NPC.damage = 0;
             }
-            else if (wrappedAITimer <= redirectTime + dashDelay)
+            else if (AITimer <= redirectTime + dashDelay)
             {
                 NPC.velocity *= 0.9f;
                 NPC.defense = 9999;
             }
 
-            else if (wrappedAITimer <= redirectTime + dashDelay + dashRepositionTime)
+            else if (AITimer <= redirectTime + dashDelay + dashRepositionTime)
             {
                 // Make the first lacewing play dash sounds.
-                if (wrappedAITimer == redirectTime + dashDelay + 1 && Index == 0)
+                if (AITimer == redirectTime + dashDelay + 1 && Index == 0)
                     SoundEngine.PlaySound(SoundID.Item163 with { MaxInstances = 0 });
 
                 NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center - Vector2.UnitY * 9f) * 54f, 0.29f);
@@ -294,7 +290,7 @@ namespace WoTE.Content.NPCs.EoL
                 idealTrailOpacity = 2f;
             }
 
-            else if (wrappedAITimer <= redirectTime + dashDelay + dashRepositionTime + dashTime)
+            else if (AITimer <= redirectTime + dashDelay + dashRepositionTime + dashTime)
             {
                 NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 3.5f;
                 NPC.defense = 9999;

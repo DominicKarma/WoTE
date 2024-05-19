@@ -14,6 +14,11 @@ namespace WoTE.Content.NPCs.EoL
     public partial class EmpressOfLight : ModNPC
     {
         /// <summary>
+        /// The amount of dashes the Empress has performed so far during her Butterfly Burst Dashes attack.
+        /// </summary>
+        public ref float ButterflyBurstDashes_DashCounter => ref NPC.ai[0];
+
+        /// <summary>
         /// How long the Empress waits before exploding into butterflies during her Butterfly Burst Dashes attack.
         /// </summary>
         public static int ButterflyBurstDashes_ButterflyTransitionDelay => Utilities.SecondsToFrames(0.5f);
@@ -21,7 +26,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' butterflies spend redirecting during her Butterfly Burst Dashes attack.
         /// </summary>
-        public static int ButterflyBurstDashes_RedirectTime => Utilities.SecondsToFrames(1.1f);
+        public int ButterflyBurstDashes_RedirectTime => Utilities.SecondsToFrames(ButterflyBurstDashes_DashCounter <= 0f ? 1.45f : 1.1f);
 
         /// <summary>
         /// How long the Empress' butterflies wait before dashing during her Butterfly Burst Dashes attack.
@@ -58,7 +63,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.RegisterTransition(EmpressAIType.ButterflyBurstDashes, null, false, () =>
             {
-                return AITimer >= ButterflyBurstDashes_ButterflyTransitionDelay + 5 && !NPC.AnyNPCs(ModContent.NPCType<Lacewing>());
+                return AITimer >= 5 && !NPC.AnyNPCs(ModContent.NPCType<Lacewing>()) && ButterflyBurstDashes_DashCounter >= ButterflyBurstDashes_DashCount;
             }, () =>
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -79,13 +84,18 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer == ButterflyBurstDashes_ButterflyTransitionDelay - Utilities.SecondsToFrames(0.3f))
                 SoundEngine.PlaySound(SoundID.Item165);
 
+            int redirectTime = ButterflyBurstDashes_RedirectTime;
+            int dashRepositionTime = ButterflyBurstDashes_DashRepositionTime;
+            int dashDelay = ButterflyBurstDashes_DashDelay;
+            int dashTime = ButterflyBurstDashes_DashTime;
+            int slowdownTime = ButterflyBurstDashes_DashSlowdownTime;
+            int attackCycleTime = redirectTime + dashRepositionTime + dashDelay + dashTime + slowdownTime;
             if (AITimer >= ButterflyBurstDashes_ButterflyTransitionDelay)
             {
                 if (AITimer == ButterflyBurstDashes_ButterflyTransitionDelay)
                     DoBehavior_ButterflyBurstDashes_SummonLacewings();
 
-                int attackCycleTime = ButterflyBurstDashes_RedirectTime + ButterflyBurstDashes_DashDelay + ButterflyBurstDashes_DashRepositionTime + ButterflyBurstDashes_DashTime + ButterflyBurstDashes_DashSlowdownTime;
-                bool doneDashing = AITimer >= attackCycleTime * ButterflyBurstDashes_DashCount;
+                bool doneDashing = ButterflyBurstDashes_DashCounter >= SequentialDashes_DashCount;
                 int lacewingCount = NPC.CountNPCS(ModContent.NPCType<Lacewing>());
                 if (lacewingCount >= 1 && !doneDashing)
                     DoBehavior_ButterflyBurstDashes_InheritHP();
@@ -99,6 +109,13 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.hide = NPC.Opacity <= 0f;
                 NPC.dontTakeDamage = true;
                 NPC.ShowNameOnHover = false;
+            }
+
+            if (AITimer >= ButterflyBurstDashes_ButterflyTransitionDelay + attackCycleTime)
+            {
+                ButterflyBurstDashes_DashCounter++;
+                AITimer = ButterflyBurstDashes_ButterflyTransitionDelay + 1;
+                NPC.netUpdate = true;
             }
 
             NPC.velocity *= 0.9f;
