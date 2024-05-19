@@ -7,7 +7,6 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -96,11 +95,12 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
             ManagedShader trailShader = ShaderManager.GetShader("WoTE.RainbowTrailShader");
-            trailShader.SetTexture(TextureAssets.Extra[ExtrasID.HallowBossGradient], 1, SamplerState.LinearWrap);
-            trailShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 2, SamplerState.LinearWrap);
+            trailShader.TrySetParameter("gradient", EmpressPalettes.PrismaticBoltPalette);
+            trailShader.TrySetParameter("gradientCount", EmpressPalettes.PrismaticBoltPalette.Length);
             trailShader.TrySetParameter("localTime", -Main.GlobalTimeWrappedHourly + Projectile.identity * 0.383f);
             trailShader.TrySetParameter("hueOffset", HueInterpolant);
             trailShader.TrySetParameter("hueSpectrum", 1f);
+            trailShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 2, SamplerState.LinearWrap);
             trailShader.Apply();
 
             PrimitiveSettings settings = new(RainbowWidthFunction, RainbowColorFunction, _ => Projectile.Size * 0.5f + Projectile.velocity.SafeNormalize(Vector2.Zero) * 26f, Pixelate: true, Shader: trailShader);

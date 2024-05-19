@@ -4,6 +4,8 @@ sampler noiseTexture : register(s2);
 float localTime;
 float hueOffset;
 float hueSpectrum;
+float gradientCount;
+float4 gradient[20];
 matrix uWorldViewProjection;
 
 struct VertexShaderInput
@@ -37,6 +39,13 @@ float QuadraticBump(float x)
     return x * (4 - x * 4);
 }
 
+float4 PaletteLerp(float interpolant)
+{
+    int startIndex = clamp(frac(interpolant) * gradientCount, 0, gradientCount - 1);
+    int endIndex = (startIndex + 1) % gradientCount;
+    return lerp(gradient[startIndex], gradient[endIndex], frac(interpolant * gradientCount));
+}
+
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float2 coords = input.TextureCoordinates;
@@ -56,7 +65,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     // Calculate a hue and opacity value, combining everything together.
     float hue = (tex2D(noiseTexture, coords * 0.6 + float2(localTime * 2.5, 0)) * 0.2 + glow * 0.2 + coords.x * 0.08) * hueSpectrum + hueOffset;
     float opacity = smoothstep(0.5, 0.4, horizontalEdgeDistance);
-    return tex2D(rainbowTexture, float2(hue, 0)) * glow * opacity + pow(glow, 4) * opacity * 0.4;
+    return PaletteLerp(hue) * glow * opacity + pow(glow, 4) * opacity * 0.4;
 }
 
 technique Technique1

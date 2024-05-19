@@ -378,9 +378,10 @@ namespace WoTE.Content.NPCs.EoL
         {
             ManagedShader trailShader = ShaderManager.GetShader("WoTE.LacewingTrailShader");
             trailShader.TrySetParameter("localTime", Main.GlobalTimeWrappedHourly * 1.56f + NPC.whoAmI * 0.4f);
+            trailShader.TrySetParameter("gradient", EmpressPalettes.LacewingTrailPalette);
+            trailShader.TrySetParameter("gradientCount", EmpressPalettes.LacewingTrailPalette.Length);
             trailShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
             trailShader.SetTexture(TextureAssets.Extra[ExtrasID.MagicMissileTrailShape], 2, SamplerState.LinearWrap);
-            trailShader.SetTexture(TextureAssets.Extra[ExtrasID.QueenSlimeGradient], 3, SamplerState.LinearWrap);
             trailShader.Apply();
 
             float perpendicularOffset = Utils.Remap(NPC.velocity.Length(), 4f, 20f, 12f, 40f) * Utilities.InverseLerp(60f, 15f, NPC.velocity.Length());

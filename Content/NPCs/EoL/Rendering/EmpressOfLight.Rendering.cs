@@ -94,14 +94,8 @@ namespace WoTE.Content.NPCs.EoL
 
             ManagedShader avatarShader = ShaderManager.GetShader("WoTE.EmpressButterflyAvatarShader");
             avatarShader.TrySetParameter("horizontalScale", flapScale);
-            avatarShader.TrySetParameter("gradientCount", 4f);
-            avatarShader.TrySetParameter("gradient", new Vector4[]
-            {
-                Color.White.ToVector4(),
-                Color.Wheat.ToVector4(),
-                Color.LightGoldenrodYellow.ToVector4(),
-                Color.White.ToVector4(),
-            });
+            avatarShader.TrySetParameter("gradientCount", EmpressPalettes.ButterflyAvatarPalette.Length);
+            avatarShader.TrySetParameter("gradient", EmpressPalettes.ButterflyAvatarPalette);
             avatarShader.TrySetParameter("blurOffset", 0.003f);
             avatarShader.TrySetParameter("blurWeights", blurWeights);
             avatarShader.TrySetParameter("center", baseDrawPosition);
@@ -305,14 +299,8 @@ namespace WoTE.Content.NPCs.EoL
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 
             ManagedShader gradientShader = ShaderManager.GetShader("WoTE.EmpressWingGradientShader");
-            gradientShader.TrySetParameter("gradient", new Vector4[]
-            {
-                Color.HotPink.ToVector4(),
-                Color.White.ToVector4(),
-                Color.Aqua.ToVector4(),
-                new Color(240, 243, 184).ToVector4(),
-            });
-            gradientShader.TrySetParameter("gradientCount", 4f);
+            gradientShader.TrySetParameter("gradient", EmpressPalettes.WingsPalette);
+            gradientShader.TrySetParameter("gradientCount", EmpressPalettes.WingsPalette.Length);
             gradientShader.SetTexture(TextureAssets.Projectile[ModContent.ProjectileType<StarBolt>()], 1, SamplerState.PointWrap);
             gradientShader.Apply();
 
@@ -390,19 +378,9 @@ namespace WoTE.Content.NPCs.EoL
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 
-            float hueShift = -Utilities.Sin01(MathHelper.Pi * Main.GlobalTimeWrappedHourly) * 0.12f;
             ManagedShader gradientShader = ShaderManager.GetShader("WoTE.EmpressDressShader");
-            gradientShader.TrySetParameter("gradient", new Vector4[]
-            {
-                new Color(74, 18, 46).HueShift(hueShift).ToVector4(),
-                new Color(124, 38, 96).HueShift(hueShift * 1.15f).ToVector4(),
-                new Color(188, 88, 172).HueShift(hueShift * 1.3f).ToVector4(),
-                new Color(255, 150, 255).HueShift(hueShift * 1.45f).ToVector4(),
-                new Color(255, 228, 224).HueShift(hueShift * 1.6f).ToVector4(),
-                new Color(255, 79, 139).HueShift(hueShift * 1.75f).ToVector4(),
-                new Color(255, 79, 139).HueShift(hueShift * 2.2f).ToVector4(),
-            });
-            gradientShader.TrySetParameter("gradientCount", 7f);
+            gradientShader.TrySetParameter("gradient", EmpressPalettes.DressP2Palette);
+            gradientShader.TrySetParameter("gradientCount", EmpressPalettes.DressP2Palette.Length);
             gradientShader.Apply();
 
             Texture2D dressTexture = TextureAssets.Extra[ExtrasID.HallowBossSkirt].Value;

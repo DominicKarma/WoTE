@@ -3,6 +3,8 @@ sampler trailTexture : register(s2);
 sampler colorGradientTexture : register(s3);
 
 float localTime;
+float gradientCount;
+float4 gradient[20];
 matrix uWorldViewProjection;
 
 struct VertexShaderInput
@@ -31,9 +33,11 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
     return output;
 }
 
-float QuadraticBump(float x)
+float4 PaletteLerp(float interpolant)
 {
-    return x * (4 - x * 4);
+    int startIndex = clamp(frac(interpolant) * gradientCount, 0, gradientCount - 1);
+    int endIndex = (startIndex + 1) % gradientCount;
+    return lerp(gradient[startIndex], gradient[endIndex], frac(interpolant * gradientCount));
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
@@ -52,8 +56,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     
     // Calculate colors.
     float trailHue = coords.x * 0.7 - localTime * 0.45;
-    float4 trailColor = tex2D(colorGradientTexture, float2(trailHue, 0)) * opacity * trailTextureBrightness * lerp(1, 2, coords.x);
-    float4 rainbowColor = tex2D(colorGradientTexture, coords + float2(trailTextureBrightness * 0.5 + coords.x * 0.4 - localTime * 1.5, 0)) * glow;
+    float4 trailColor = PaletteLerp(trailHue) * opacity * trailTextureBrightness * lerp(1, 2, coords.x);
+    float4 rainbowColor = PaletteLerp(coords.x + trailTextureBrightness * 0.5 + coords.x * 0.4 - localTime * 1.5) * glow;
     
     // Combine colors.
     return saturate(lerp(rainbowColor, trailColor, smoothstep(0, 0.5, coords.x))) * pow(1 - coords.x, 2) * input.Color.a;

@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Content.Particles.Metaballs;
@@ -31,6 +30,8 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         /// The hue interpolant of this rainbow.
         /// </summary>
         public ref float HueInterpolant => ref Projectile.ai[0];
+
+        public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
         public override void SetStaticDefaults()
         {
@@ -115,12 +116,14 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
+            var rainbowPalette = EmpressPalettes.RainbowPalette;
             ManagedShader trailShader = ShaderManager.GetShader("WoTE.RainbowTrailShader");
-            trailShader.SetTexture(TextureAssets.Projectile[Type], 1, SamplerState.LinearWrap);
-            trailShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 2, SamplerState.LinearWrap);
+            trailShader.TrySetParameter("gradient", rainbowPalette);
+            trailShader.TrySetParameter("gradientCount", rainbowPalette.Length);
             trailShader.TrySetParameter("localTime", -Main.GlobalTimeWrappedHourly * 1.5f + Projectile.identity * 0.51f);
             trailShader.TrySetParameter("hueOffset", HueInterpolant);
             trailShader.TrySetParameter("hueSpectrum", 1.3f);
+            trailShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 2, SamplerState.LinearWrap);
             trailShader.Apply();
 
             PrimitiveSettings settings = new(RainbowWidthFunction, RainbowColorFunction, _ => Projectile.Size * 0.5f + Projectile.velocity.SafeNormalize(Vector2.Zero) * 14f, Pixelate: true, Shader: trailShader);

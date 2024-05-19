@@ -106,10 +106,11 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
             ManagedShader trailShader = ShaderManager.GetShader("WoTE.PrismaticBoltShader");
+            trailShader.TrySetParameter("gradient", EmpressPalettes.PrismaticBoltPalette);
+            trailShader.TrySetParameter("gradientCount", EmpressPalettes.PrismaticBoltPalette.Length);
             trailShader.TrySetParameter("localTime", Main.GlobalTimeWrappedHourly + Projectile.identity * 1.8f);
             trailShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
             trailShader.SetTexture(TextureAssets.Extra[ExtrasID.FlameLashTrailShape], 2, SamplerState.LinearWrap);
-            trailShader.SetTexture(TextureAssets.Extra[ExtrasID.HallowBossGradient], 3, SamplerState.LinearWrap);
             trailShader.Apply();
 
             float perpendicularOffset = Utils.Remap(Projectile.velocity.Length(), 4f, 20f, 23f, 90f);
