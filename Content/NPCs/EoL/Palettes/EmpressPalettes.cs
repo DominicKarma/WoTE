@@ -31,7 +31,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The Empress palette used if the player is named "Lynel". This name check does not care about casing.
         /// </summary>
-        public static readonly EmpressPaletteSet LynelPaletteSet = RegisterNew(1, () => Main.LocalPlayer.name.Equals("Dominic", StringComparison.OrdinalIgnoreCase)).
+        public static readonly EmpressPaletteSet LynelPaletteSet = RegisterNew(1, () => Main.LocalPlayer.name.Equals("Lynel", StringComparison.OrdinalIgnoreCase)).
             WithPalette(EmpressPaletteType.ButterflyAvatar, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
             WithPalette(EmpressPaletteType.Wings, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
             WithPalette(EmpressPaletteType.Phase2Dress, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
