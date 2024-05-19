@@ -360,7 +360,7 @@ namespace WoTE.Content.NPCs.EoL
                 ButterflyProjectionOpacity = 0f;
             }
 
-            if (PerformingLanceWallSupport && !AcceptableAttacksForLanceWallSupport.Contains(CurrentState))
+            if (PerformingLanceWallSupport && !AcceptableAttacksForLanceWallSupport.Contains(CurrentState) && CurrentState != EmpressAIType.Teleport)
             {
                 PerformingLanceWallSupport = false;
                 NPC.netUpdate = true;
