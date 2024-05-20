@@ -72,7 +72,7 @@ namespace WoTE.Content.NPCs.EoL
             List<EmpressAIType> phaseCycle;
 
             int tries = 0;
-            var statesToAvoid = PreviousStatesReversed.Take(ByPhase(3, 4)).ToList();
+            var statesToAvoid = PreviousStatesReversed.Take(ByPhase(2, 4)).ToList();
             if (statesToAvoid.Contains(EmpressAIType.VanillaPrismaticBolts))
                 statesToAvoid.Add(EmpressAIType.VanillaPrismaticBolts2);
             else if (statesToAvoid.Contains(EmpressAIType.VanillaPrismaticBolts2))
