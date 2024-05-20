@@ -16,7 +16,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// Whether the butterfly dashes attack should be avoided completely if possible, due to the Prismatic Overload's timing to the music coming up.
         /// </summary>
-        public bool PrismaticOverload_ShouldntDoButterflyDashes => MusicTimer / (float)PrismaticOverload_HighBeatStartTime >= 0.75f && MusicTimer / (float)PrismaticOverload_HighBeatStartTime <= 1.01f;
+        public bool PrismaticOverload_ShouldntDoButterflyDashes => MusicTimer / (float)PrismaticOverload_HighBeatStartTime >= 0.898f && MusicTimer / (float)PrismaticOverload_HighBeatStartTime <= 1.01f;
 
         /// <summary>
         /// Whether the music is at a point where the Empress can start her Prismatic Overload attack.
