@@ -27,7 +27,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends redirecting during her Sequential Dashes attack.
         /// </summary>
-        public static int SequentialDashes_RedirectTime => Utilities.SecondsToFrames(Main.dayTime ? 0.44f : 0.63f);
+        public static int SequentialDashes_RedirectTime => Utilities.SecondsToFrames(Main.dayTime ? 0.39f : 0.63f);
 
         /// <summary>
         /// How long the Empress spends dashing during her Sequential Dashes attack.
@@ -47,7 +47,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of star bursts that the Empress should perform release her Sequential Dashes attack after a dash concludes. 
         /// </summary>
-        public int SequentialDashes_StarBurstReleaseCount => ByPhase(9, 12);
+        public int SequentialDashes_StarBurstReleaseCount => ByPhase(9, 12) + Main.dayTime.ToInt() * 8;
 
         /// <summary>
         /// The speed of dashes performed by the Empress during her Sequential Dashes attack.
