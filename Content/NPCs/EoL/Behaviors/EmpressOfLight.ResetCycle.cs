@@ -94,12 +94,17 @@ namespace WoTE.Content.NPCs.EoL
             return phaseCycle;
         }
 
+        /// <summary>
+        /// Whether a given cycle choice is valid or not.
+        /// </summary>
+        /// <param name="statesToAvoid">The set of states that should be avoided.</param>
+        /// <param name="chosenCycle">The randomly chosen cycle to evaluate.</param>
         public bool StateCycleIsValid(IEnumerable<EmpressAIType> statesToAvoid, List<EmpressAIType> chosenCycle)
         {
             if (PrismaticOverload_ShouldntDoButterflyDashes && chosenCycle.Contains(EmpressAIType.ButterflyBurstDashes))
                 return false;
 
-            if (statesToAvoid.Any(chosenCycle.Contains))
+            if (statesToAvoid.Take(3).Any(chosenCycle.Contains))
                 return false;
 
             return true;
