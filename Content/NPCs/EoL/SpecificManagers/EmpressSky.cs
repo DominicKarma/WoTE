@@ -67,7 +67,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// Whether rain effects should be created or not.
         /// </summary>
-        public static bool ShouldRain => !Main.dayTime;
+        public static bool ShouldRain => !Main.dayTime && !Main.gameMenu;
 
         /// <summary>
         /// The position of the moon in screen space.
@@ -95,15 +95,15 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
+            EmpressPaletteSet palette = Main.dayTime ? EmpressPalettes.DaytimePaletteSet : EmpressPalettes.Default;
             if (EmpressOfLight.Myself is not null)
-            {
-                EmpressPaletteSet palette = EmpressOfLight.Myself.As<EmpressOfLight>().Palette;
-                moonColor = palette.MoonColor;
-                moonBackglowColor = palette.MoonBackglowColor;
-                mistColor = palette.MistColor;
-                cloudColor = palette.CloudColor;
-                BackgroundTint = palette.BackgroundTint;
-            }
+                palette = EmpressOfLight.Myself.As<EmpressOfLight>().Palette;
+
+            moonColor = palette.MoonColor;
+            moonBackglowColor = palette.MoonBackglowColor;
+            mistColor = palette.MistColor;
+            cloudColor = palette.CloudColor;
+            BackgroundTint = palette.BackgroundTint;
 
             Matrix backgroundMatrix = Main.BackgroundViewMatrix.TransformationMatrix;
             Vector3 translationDirection = new(1f, Main.BackgroundViewMatrix.Effects.HasFlag(SpriteEffects.FlipVertically) ? -1f : 1f, 1f);
@@ -153,6 +153,9 @@ namespace WoTE.Content.NPCs.EoL
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, backgroundMatrix);
             }
+
+            if (Main.gameMenu)
+                DrawCustomRain();
         }
 
         private static void DrawClouds()
@@ -175,11 +178,18 @@ namespace WoTE.Content.NPCs.EoL
             ManagedShader mistShader = ShaderManager.GetShader("WoTE.MistBackgroundShader");
             Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height + 200f);
             Rectangle mistRectangle = new(0, (int)(screenSize.Y * 0.25f), Main.screenWidth, (int)(screenSize.Y * 0.7f));
+
+            if (Main.gameMenu)
+            {
+                mistRectangle.Y -= 600;
+                mistRectangle.Height += 600;
+            }
+
             mistShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.PointWrap);
             mistShader.SetTexture(TextureAssets.Extra[ExtrasID.QueenSlimeGradient], 2, SamplerState.LinearWrap);
             mistShader.TrySetParameter("dewAppearanceCutoffThreshold", 0.99f);
             mistShader.TrySetParameter("baseTextureSize", mistRectangle.Size() * 0.5f);
-            mistShader.TrySetParameter("worldOffset", Main.screenPosition / clouds.Size() * 0.05f);
+            mistShader.TrySetParameter("worldOffset", (Main.gameMenu ? new Vector2(0f, 3200f) : Main.screenPosition) / clouds.Size() * 0.05f);
             mistShader.TrySetParameter("twinkleSpeed", 3f);
             mistShader.Apply();
 
@@ -199,14 +209,15 @@ namespace WoTE.Content.NPCs.EoL
             for (int i = 0; i < RainParticles.Length; i++)
                 RainParticles[i].Update();
 
+            float coverage = Main.gameMenu ? 2750f : 1300f;
             if (skyActive && Main.LocalPlayer.Center.Y >= 3000f && ShouldRain)
             {
                 for (int i = 0; i < 2; i++)
                 {
                     float rainScaleInterpolant = Main.rand.NextFloat();
                     float rainScale = MathHelper.Lerp(0.6f, 1.4f, rainScaleInterpolant);
-                    Vector2 rainVelocity = Vector2.UnitY.RotatedBy(0.15f) * MathHelper.Lerp(34f, 60f, rainScale);
-                    Vector2 rainSpawnPosition = Main.LocalPlayer.Center + new Vector2(Main.rand.NextFloatDirection() * 1300f, -1050f);
+                    Vector2 rainVelocity = Vector2.UnitY.RotatedBy(0.15f) * MathHelper.Lerp(34f, 60f, rainScale) * (Main.gameMenu ? 0.45f : 1f);
+                    Vector2 rainSpawnPosition = (Main.gameMenu ? Vector2.Zero : Main.LocalPlayer.Center) + new Vector2(Main.rand.NextFloatDirection() * coverage, -1050f);
                     RainParticle.SpawnNew(rainSpawnPosition, rainVelocity, rainScale);
                 }
             }
@@ -221,21 +232,24 @@ namespace WoTE.Content.NPCs.EoL
 
         private void DrawCustomRain(On_Main.orig_DrawRain orig, Main self)
         {
-            if (Opacity > 0f)
-            {
-                Texture2D rain = TextureAssets.Rain.Value;
-                for (int i = 0; i < RainParticles.Length; i++)
-                {
-                    Rectangle frame = new(i % 3 * 4, 0, 2, i % 3 * 10 + 20);
-                    if (!RainParticles[i].Active)
-                        continue;
-
-                    var drawPosition = RainParticles[i].Position - Main.screenPosition;
-                    Main.spriteBatch.Draw(rain, drawPosition, frame, Color.Wheat * Opacity * 0.2f, RainParticles[i].Velocity.ToRotation() + MathHelper.PiOver2, frame.Size() * 0.5f, RainParticles[i].Scale, 0, 0f);
-                }
-            }
+            if (Opacity > 0f && !Main.gameMenu)
+                DrawCustomRain();
 
             orig(self);
+        }
+
+        public static void DrawCustomRain()
+        {
+            Texture2D rain = TextureAssets.Rain.Value;
+            for (int i = 0; i < RainParticles.Length; i++)
+            {
+                Rectangle frame = new(i % 3 * 4, 0, 2, i % 3 * 10 + 20);
+                if (!RainParticles[i].Active)
+                    continue;
+
+                var drawPosition = RainParticles[i].Position - (Main.gameMenu ? Vector2.Zero : Main.screenPosition);
+                Main.spriteBatch.Draw(rain, drawPosition, frame, Color.Wheat * Opacity * 0.2f, RainParticles[i].Velocity.ToRotation() + MathHelper.PiOver2, frame.Size() * 0.5f, RainParticles[i].Scale, 0, 0f);
+            }
         }
 
         public override void Deactivate(params object[] args) => skyActive = false;

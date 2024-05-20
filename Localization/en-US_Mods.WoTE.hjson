@@ -44,3 +44,8 @@ Dialogue: {
 	BaseIntroduction: Blessed one... Let us dance beneath the silver moonglow this night.
 	AngryIntroduction: THOU GRACELESS KNAVE!
 }
+
+MenuThemes: {
+	GloriousDawnMainMenu.DisplayName: Glorious Dawn
+	GlimmerdewBlessedMoonlightMainMenu.DisplayName: Glimmerdew-Blessed Moonlight
+}
