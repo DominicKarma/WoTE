@@ -292,7 +292,8 @@ namespace WoTE.Content.NPCs.EoL
 
             else if (AITimer <= redirectTime + dashDelay + dashRepositionTime + dashTime)
             {
-                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * 3.5f;
+                // TODO -- Make this acceleration variable a property in the Empress' code.
+                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * (Main.dayTime ? 5.3f : 3.5f);
                 NPC.defense = 9999;
             }
             else
