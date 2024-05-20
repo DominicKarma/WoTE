@@ -21,7 +21,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// Whether the music is at a point where the Empress can start her Prismatic Overload attack.
         /// </summary>
-        public bool PrismaticOverload_CanDanceToBeat => MathHelper.Distance(MusicTimer - PrismaticOverload_RotateUpwardDelay, PrismaticOverload_HighBeatStartTime) <= 3f;
+        public bool PrismaticOverload_CanDanceToBeat => MathHelper.Distance(MusicTimer + PrismaticOverload_RotateUpwardDelay, PrismaticOverload_HighBeatStartTime) <= 3f;
 
         /// <summary>
         /// The spin angle of the magic circle during the Empress' Prismatic Overload attack.
