@@ -162,7 +162,7 @@ namespace WoTE.Content.NPCs.EoL
                 float opacity = Utilities.InverseLerp(NPC.oldPos.Length, 1f, i) * DashAfterimageInterpolant * 0.8f;
                 Vector2 drawPosition = Vector2.Lerp(NPC.oldPos[i] + NPC.Size * 0.5f, NPC.Center, 0f) - screenPos;
                 Color afterimageColor = Palette.MulticolorLerp(EmpressPaletteType.RainbowArrow, (i + 5f) / 10f - Main.GlobalTimeWrappedHourly * 0.2f) * opacity;
-                DrawInstance(drawPosition, afterimageColor, OldZPositions[i], NPC.oldRot[i], 0f, false);
+                DrawInstance(drawPosition, afterimageColor with { A = 0 }, OldZPositions[i], NPC.oldRot[i], 0f, false);
             }
 
             for (int i = 0; i < 25; i++)
