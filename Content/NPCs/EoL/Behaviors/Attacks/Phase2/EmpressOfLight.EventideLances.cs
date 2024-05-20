@@ -147,10 +147,11 @@ namespace WoTE.Content.NPCs.EoL
         {
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
+            float omnidirectionalBias = Main.dayTime ? 0.1f : 0.6f;
             float hoverSpeedInterpolant = Utilities.InverseLerpBump(0f, 4f, EventideLances_BowGleamTime, EventideLances_BowGleamTime + 8f, AITimer);
             Vector2 horizontalHoverOffset = new(NPC.OnRightSideOf(Target).ToDirectionInt() * (Main.dayTime ? 615f : 510f), -100f);
             Vector2 omnidirectionalHoverOffset = Target.SafeDirectionTo(NPC.Center) * (Main.dayTime ? 656f : 550f);
-            Vector2 hoverDestination = Target.Center + Vector2.Lerp(horizontalHoverOffset, omnidirectionalHoverOffset, 0.6f);
+            Vector2 hoverDestination = Target.Center + Vector2.Lerp(horizontalHoverOffset, omnidirectionalHoverOffset, omnidirectionalBias);
             NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, hoverSpeedInterpolant * 0.55f, 1f - hoverSpeedInterpolant * 0.3f, 120f);
             NPC.velocity *= MathHelper.Lerp(0.7f, 1f, Utilities.InverseLerp(0f, 15f, AITimer - EventideLances_BowGleamTime));
 
