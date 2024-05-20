@@ -60,6 +60,8 @@ namespace WoTE.Content.NPCs.EoL
 
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == 1)
             {
+                // NOTE: Yes, having the angles be 100% consistent all the time rather than at random or aimed at the target is intentional.
+                // The alternative was far too unpredictable and difficult for the player to sightread to work all that well.
                 int terraprismaCount = OrbitReleasedTerraprismas_TerraprismaCount;
                 for (int i = 0; i < terraprismaCount; i++)
                 {
