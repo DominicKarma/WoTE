@@ -51,7 +51,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' bow should wait after the bows gleam animation before firing during her Eventide Lances attack.
         /// </summary>
-        public static int EventideLances_ShootDelay => Utilities.SecondsToFrames(Main.dayTime ? 0.13f : 0.25f);
+        public static int EventideLances_ShootDelay => Utilities.SecondsToFrames(Main.dayTime ? 0.12f : 0.25f);
 
         /// <summary>
         /// How long the Empress' rainbow rift arrows should last before disappearing.
@@ -109,6 +109,10 @@ namespace WoTE.Content.NPCs.EoL
                 RightHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
                 EventideLances_UsingBow = false;
             }
+
+            bool waitingForBeat = AITimer <= 1 && MusicTimer % BeatSyncedBolts_ShootRate != 23 && Main.dayTime && MusicTimer >= 1 && EventideLances_TeleportCounter <= 0f;
+            if (waitingForBeat)
+                AITimer = 0;
 
             // Aim the bow and make it gleam at first.
             float bowAimInterpolant = Utilities.InverseLerp(0f, -7f, AITimer - EventideLances_BowGleamTime);
