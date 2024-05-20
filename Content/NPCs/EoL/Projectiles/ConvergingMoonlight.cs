@@ -38,7 +38,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 96;
+            ProjectileID.Sets.TrailCacheLength[Type] = 40;
             ProjectileID.Sets.DrawScreenCheckFluff[Type] = 2000;
         }
 
@@ -52,7 +52,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             Projectile.hostile = true;
             Projectile.hide = true;
             Projectile.timeLeft = Lifetime + 45;
-            RelatveOldPositions = new Vector2[Lifetime];
+            RelatveOldPositions = new Vector2[40];
 
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
