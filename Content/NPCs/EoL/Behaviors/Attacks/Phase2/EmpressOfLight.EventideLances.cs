@@ -79,6 +79,18 @@ namespace WoTE.Content.NPCs.EoL
         public static float EventideLances_MaxLanceSpeed => 18.6f;
 
         /// <summary>
+        /// The hover offset of the Empress during her Eventide Lances attack.
+        /// </summary>
+        public static float EventideLances_HoverOffset => Main.dayTime ? 615f : 510f;
+
+        // NOTE -- With how intense the timings of the daytime variant of this attack are, it's best to have it be more consistent with a stronger horizontal bias.
+        // Be careful when changing this.
+        /// <summary>
+        /// How much the Empress prefers being horizontally offset relative to the target during her Eventide Lances attack. A value 0 equates to being fully omnidirectional, a value of 1 equates to being fully to the side of the target.
+        /// </summary>
+        public static float EventideLances_HorizontalHoverBias => Main.dayTime ? 0.85f : 0.4f;
+
+        /// <summary>
         /// The amount of teleports the Empress should perform during her Eventide Lances attack before transitioning to a different attack.
         /// </summary>
         public static int EventideLances_TeleportCount => Main.dayTime ? 6 : 4;
@@ -147,11 +159,10 @@ namespace WoTE.Content.NPCs.EoL
         {
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
-            float omnidirectionalBias = Main.dayTime ? 0.1f : 0.6f;
             float hoverSpeedInterpolant = Utilities.InverseLerpBump(0f, 4f, EventideLances_BowGleamTime, EventideLances_BowGleamTime + 8f, AITimer);
-            Vector2 horizontalHoverOffset = new(NPC.OnRightSideOf(Target).ToDirectionInt() * (Main.dayTime ? 615f : 510f), -100f);
-            Vector2 omnidirectionalHoverOffset = Target.SafeDirectionTo(NPC.Center) * (Main.dayTime ? 656f : 550f);
-            Vector2 hoverDestination = Target.Center + Vector2.Lerp(horizontalHoverOffset, omnidirectionalHoverOffset, omnidirectionalBias);
+            Vector2 horizontalHoverOffset = new Vector2(NPC.OnRightSideOf(Target).ToDirectionInt(), -0.196f) * EventideLances_HoverOffset;
+            Vector2 omnidirectionalHoverOffset = Target.SafeDirectionTo(NPC.Center) * horizontalHoverOffset.Length();
+            Vector2 hoverDestination = Target.Center + Vector2.Lerp(omnidirectionalHoverOffset, horizontalHoverOffset, EventideLances_HorizontalHoverBias);
             NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, hoverSpeedInterpolant * 0.55f, 1f - hoverSpeedInterpolant * 0.3f, 120f);
             NPC.velocity *= MathHelper.Lerp(0.7f, 1f, Utilities.InverseLerp(0f, 15f, AITimer - EventideLances_BowGleamTime));
 
