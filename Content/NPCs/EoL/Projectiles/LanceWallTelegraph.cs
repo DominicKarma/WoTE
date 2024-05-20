@@ -57,7 +57,10 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public Color TelegraphColorFunction(float completionRatio)
         {
-            return Projectile.GetAlpha(Color.HotPink);
+            if (EmpressOfLight.Myself is null)
+                return Color.Transparent;
+
+            return Projectile.GetAlpha(EmpressOfLight.Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, 0.33f));
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
