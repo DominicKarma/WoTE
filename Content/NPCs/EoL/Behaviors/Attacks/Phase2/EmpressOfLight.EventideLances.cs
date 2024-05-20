@@ -111,9 +111,13 @@ namespace WoTE.Content.NPCs.EoL
             }
 
             // Aim the bow and make it gleam at first.
+            float bowAimInterpolant = Utilities.InverseLerp(0f, -7f, AITimer - EventideLances_BowGleamTime);
             Vector2 eventideEnd = NPC.Center + EventideLances_DirectionedBowOffset;
-            if (AITimer <= EventideLances_BowGleamTime)
-                EventideLances_BowDirection = eventideEnd.AngleTo(Target.Center);
+            if (bowAimInterpolant > 0f)
+            {
+                float idealDirection = eventideEnd.AngleTo(Target.Center);
+                EventideLances_BowDirection = EventideLances_BowDirection.AngleLerp(idealDirection, bowAimInterpolant * 0.42f).AngleTowards(idealDirection, bowAimInterpolant * 0.32f);
+            }
             EventideLances_BowGlimmerInterpolant = Utilities.InverseLerp(0f, EventideLances_BowGleamTime, AITimer);
 
             if (AITimer >= EventideLances_BowGleamTime + EventideLances_ShootDelay)
