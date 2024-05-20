@@ -93,16 +93,19 @@ namespace WoTE.Content.NPCs.EoL
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    for (int i = 0; i < SequentialDashes_StarBurstReleaseCount; i++)
+                    AITimer = 0;
+                    SequentialDashes_DashCounter++;
+                    NPC.netUpdate = true;
+
+                    if (SequentialDashes_DashCounter < SequentialDashes_DashCount)
                     {
-                        Vector2 boltVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.TwoPi * i / SequentialDashes_StarBurstReleaseCount) * 1.14f;
-                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f, -1);
+                        for (int i = 0; i < SequentialDashes_StarBurstReleaseCount; i++)
+                        {
+                            Vector2 boltVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.TwoPi * i / SequentialDashes_StarBurstReleaseCount) * 1.14f;
+                            Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f, -1);
+                        }
                     }
                 }
-
-                AITimer = 0;
-                SequentialDashes_DashCounter++;
-                NPC.netUpdate = true;
             }
 
             LeftHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
