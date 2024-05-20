@@ -32,6 +32,11 @@ namespace WoTE.Content.NPCs.EoL
         public static int PrismaticBoltSpin_SpinTime => Utilities.SecondsToFrames(1f);
 
         /// <summary>
+        /// The rate at which the Empress releases prismatic bolts during her Prismatic Bolt Spin attack.
+        /// </summary>
+        public static int PrismaticBoltSpin_BoltReleaseRate => Utilities.SecondsToFrames(Main.dayTime ? 0.05f : 0.067f);
+
+        /// <summary>
         /// How long the Empress waits after her Prismatic Bolt Spin attack to transition to a different attack.
         /// </summary>
         public static int PrismaticBoltSpin_AttackTransitionDelay => Utilities.SecondsToFrames(2.3f);
@@ -96,7 +101,7 @@ namespace WoTE.Content.NPCs.EoL
             PrismaticBoltSpin_SpinAngle += spinSpeed * PrismaticBoltSpin_SpinDirection;
 
             bool canFire = AITimer >= PrismaticBoltSpin_ShootDelay && Target.velocity.AngleBetween(Target.SafeDirectionTo(NPC.Center)) >= MathHelper.Pi / 11.5f;
-            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 4 == 3 && canFire)
+            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % PrismaticBoltSpin_BoltReleaseRate == 0 && canFire)
             {
                 Vector2 boltVelocity = NPC.velocity.SafeNormalize(Vector2.UnitY) * 10f;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target, AITimer / 45f % 1f);
