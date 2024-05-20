@@ -27,12 +27,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends redirecting during her Sequential Dashes attack.
         /// </summary>
-        public static int SequentialDashes_RedirectTime => Utilities.SecondsToFrames(0.63f);
+        public static int SequentialDashes_RedirectTime => Utilities.SecondsToFrames(Main.dayTime ? 0.44f : 0.63f);
 
         /// <summary>
         /// How long the Empress spends dashing during her Sequential Dashes attack.
         /// </summary>
-        public static int SequentialDashes_DashTime => Utilities.SecondsToFrames(0.42f);
+        public static int SequentialDashes_DashTime => Utilities.SecondsToFrames(Main.dayTime ? 0.34f : 0.42f);
 
         /// <summary>
         /// How long the Empress spends slowing down during her Sequential Dashes attack, after her dash.
@@ -47,7 +47,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The speed of dashes performed by the Empress during her Sequential Dashes attack.
         /// </summary>
-        public float SequentialDashes_DashSpeed => ByPhase(69f, 78f);
+        public float SequentialDashes_DashSpeed => ByPhase(69f, 78f) + Main.dayTime.ToInt() * 23.5f;
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_SequentialDashes()
@@ -113,7 +113,7 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_SequentialDashes_Redirect()
         {
             Vector2 hoverOffsetDirection = Target.SafeDirectionTo(NPC.Center) * new Vector2(1f, 0.995f);
-            float backwardsWindUpOffset = Utilities.InverseLerp(-26f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 400f;
+            float backwardsWindUpOffset = Utilities.InverseLerp(-26f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 540f;
             Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(400f, 390f) - NPC.SafeDirectionTo(Target.Center) * backwardsWindUpOffset;
 
             NPC.SmoothFlyNear(hoverDestination, 0.17f, 0.85f);
