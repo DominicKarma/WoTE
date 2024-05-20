@@ -16,12 +16,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress spends redirecting during her Radial Star Burst attack.
         /// </summary>
-        public static int RadialStarBurst_RedirectTime => Utilities.SecondsToFrames(0.583f);
+        public static int RadialStarBurst_RedirectTime => Utilities.SecondsToFrames(Main.dayTime ? 0.413f : 0.583f);
 
         /// <summary>
         /// How long the Empress waits before releasing star bursts during her Radial Star Burst attack.
         /// </summary>
-        public static int RadialStarBurst_BurstDelay => Utilities.SecondsToFrames(0.5f);
+        public static int RadialStarBurst_BurstDelay => Utilities.SecondsToFrames(Main.dayTime ? 0.41f : 0.5f);
 
         /// <summary>
         /// How long the Empress waits after firing star bursts to either fire another one or choose a new attack during her Radial Star Burst attack.
