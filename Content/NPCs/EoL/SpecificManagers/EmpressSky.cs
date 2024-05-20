@@ -192,7 +192,9 @@ namespace WoTE.Content.NPCs.EoL
             if (Opacity >= 0.5f)
                 SkyManager.Instance["Ambience"].Deactivate();
 
-            Opacity = Utilities.Saturate(Opacity + skyActive.ToDirectionInt() * 0.015f);
+            bool underground = Main.screenPosition.Y >= Main.worldSurface * 16f;
+            bool fadeIn = skyActive && !underground;
+            Opacity = Utilities.Saturate(Opacity + fadeIn.ToDirectionInt() * 0.015f);
 
             for (int i = 0; i < RainParticles.Length; i++)
                 RainParticles[i].Update();
