@@ -51,6 +51,24 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// Whether the Empress has performed various frame-one effects yet or not.
+        /// </summary>
+        public bool PerformedFrameOneEffects
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Whether the Empress was initially summoned at night or not.
+        /// </summary>
+        public bool SummonedAtNight
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The Empress' Z position.
         /// </summary>
         public float ZPosition
@@ -275,7 +293,14 @@ namespace WoTE.Content.NPCs.EoL
             writer.Write(ZPosition);
             writer.Write(Phase);
             writer.Write(LanceWallXPosition);
-            writer.Write((byte)PerformingLanceWallSupport.ToInt());
+
+            BitsByte flags = new()
+            {
+                [0] = SummonedAtNight,
+                [1] = PerformingLanceWallSupport,
+                [2] = PerformedFrameOneEffects
+            };
+            writer.Write(flags);
 
             WritePreviousStates(writer);
             WriteStateMachineStack(writer);
@@ -287,7 +312,11 @@ namespace WoTE.Content.NPCs.EoL
             ZPosition = reader.ReadSingle();
             Phase = reader.ReadInt32();
             LanceWallXPosition = reader.ReadSingle();
-            PerformingLanceWallSupport = reader.ReadByte() != 0;
+
+            BitsByte flags = reader.ReadByte();
+            SummonedAtNight = flags[0];
+            PerformingLanceWallSupport = flags[1];
+            PerformedFrameOneEffects = flags[2];
 
             ReadPreviousStates(reader);
             ReadStateMachineStack(reader);
@@ -304,7 +333,12 @@ namespace WoTE.Content.NPCs.EoL
             Myself = NPC;
 
             // The OnSpawn hook can't be used for this because this NPC technically only appears as a result of the NPC.Transform method.
-            Palette ??= EmpressPalettes.Choose();
+            if (!PerformedFrameOneEffects)
+            {
+                PerformFrameOneEffects();
+                PerformedFrameOneEffects = true;
+                NPC.netUpdate = true;
+            }
 
             HandleTargetSelection();
             PerformPreUpdateResets();
@@ -312,6 +346,7 @@ namespace WoTE.Content.NPCs.EoL
 
             StateMachine.PerformBehaviors();
             StateMachine.PerformStateTransitionCheck();
+
             PerformPostAttackSanityChecks();
             UpdateZPositionCache();
 
@@ -340,11 +375,20 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// Performs special effects on the first frame of the Empress' existence, such as deciding whether the fight was started during night time or not.
+        /// </summary>
+        public void PerformFrameOneEffects()
+        {
+            Palette = EmpressPalettes.Choose();
+            SummonedAtNight = !Main.dayTime;
+        }
+
+        /// <summary>
         /// Handles target selection code for the Empress, along with instructing her to leave if no valid target could be found.
         /// </summary>
         public void HandleTargetSelection()
         {
-            NoTargetCouldBeFound = false;
+            ShouldLeave = false;
 
             // Pick a target if the current one is invalid.
             if (Target.dead || !Target.active)
@@ -355,7 +399,11 @@ namespace WoTE.Content.NPCs.EoL
 
             // Hey bozo the player's gone. Leave.
             if (Target.dead || !Target.active)
-                NoTargetCouldBeFound = true;
+                ShouldLeave = true;
+
+            bool nightTime = !Main.dayTime;
+            if (SummonedAtNight != nightTime)
+                ShouldLeave = true;
         }
 
         /// <summary>
@@ -388,6 +436,8 @@ namespace WoTE.Content.NPCs.EoL
             Main.moonPhase = 4;
             if (!Main.dayTime)
                 Main.time = MathHelper.Lerp((float)Main.time, 16200f, 0.1f);
+            else
+                Main.time = MathHelper.Lerp((float)Main.time, 27020f, 0.1f);
 
             // The ambient sounds of these things absolutely kill the mood of the fight.
             // Kill them.
@@ -437,6 +487,8 @@ namespace WoTE.Content.NPCs.EoL
                 float groundDistanceInterpolant = Utilities.InverseLerp(500f, 1774f, distanceFromGround);
                 float groundDistanceVolumeFactor = MathHelper.Lerp(1f, 0.4f, groundDistanceInterpolant);
                 sound.Volume = DrizzleVolume * groundDistanceVolumeFactor;
+                if (!EmpressSky.ShouldRain)
+                    sound.Volume = 0f;
             });
         }
 

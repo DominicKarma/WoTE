@@ -65,6 +65,11 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// Whether rain effects should be created or not.
+        /// </summary>
+        public static bool ShouldRain => !Main.dayTime;
+
+        /// <summary>
         /// The position of the moon in screen space.
         /// </summary>
         public static Vector2 MoonScreenPosition => Main.ScreenSize.ToVector2() * new Vector2(0.5f, 0.115f);
@@ -192,7 +197,7 @@ namespace WoTE.Content.NPCs.EoL
             for (int i = 0; i < RainParticles.Length; i++)
                 RainParticles[i].Update();
 
-            if (skyActive && Main.LocalPlayer.Center.Y >= 3000f && !Main.dayTime)
+            if (skyActive && Main.LocalPlayer.Center.Y >= 3000f && ShouldRain)
             {
                 for (int i = 0; i < 2; i++)
                 {

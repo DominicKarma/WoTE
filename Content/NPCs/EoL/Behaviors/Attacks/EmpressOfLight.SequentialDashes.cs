@@ -129,7 +129,6 @@ namespace WoTE.Content.NPCs.EoL
             NPC.oldRot = new float[NPC.oldRot.Length];
             NPC.oldPos = new Vector2[NPC.oldPos.Length];
 
-            // TODO -- Probably replace this with something better sometime later?
             SoundEngine.PlaySound(SoundID.Item160 with { MaxInstances = 0 });
 
             SequentialDashes_DashDirection = NPC.AngleTo(Target.Center);

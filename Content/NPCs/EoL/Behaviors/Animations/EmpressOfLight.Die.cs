@@ -1,5 +1,6 @@
 ﻿using Luminance.Common.StateMachines;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -35,9 +36,14 @@ namespace WoTE.Content.NPCs.EoL
 
             if (AITimer >= 4)
             {
-                // TODO -- Change state to account for the Terraprisma condition.
                 NPC.Transform(NPCID.HallowBoss);
                 NPC.life = 0;
+                NPC.Center = new Vector2(NPC.Center.X, Target.Center.Y - 300f);
+
+                // This enforces the Terraprisma drop condition.
+                if (!SummonedAtNight && Main.dayTime)
+                    NPC.ai[3] = 3f;
+
                 NPC.NPCLoot();
                 NPC.active = false;
             }

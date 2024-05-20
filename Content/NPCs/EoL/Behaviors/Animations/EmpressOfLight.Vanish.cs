@@ -7,13 +7,9 @@ namespace WoTE.Content.NPCs.EoL
     public partial class EmpressOfLight : ModNPC
     {
         /// <summary>
-        /// Whether the Empress was unable to find a valid target after searching for one or not.
+        /// Whether the Empress should leave, such as due to the target dying or due to time changing.
         /// </summary>
-        /// 
-        /// <remarks>
-        /// This is used when determining whether she should go away or not.
-        /// </remarks>
-        public bool NoTargetCouldBeFound
+        public bool ShouldLeave
         {
             get;
             set;
@@ -24,7 +20,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.ApplyToAllStatesExcept(state =>
             {
-                StateMachine.RegisterTransition(state, EmpressAIType.Vanish, false, () => NoTargetCouldBeFound && CurrentState != EmpressAIType.Teleport);
+                StateMachine.RegisterTransition(state, EmpressAIType.Vanish, false, () => ShouldLeave && CurrentState != EmpressAIType.Teleport);
             }, EmpressAIType.Vanish, EmpressAIType.Die);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Vanish, DoBehavior_Vanish);
