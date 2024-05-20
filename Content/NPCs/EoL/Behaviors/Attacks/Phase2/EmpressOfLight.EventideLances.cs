@@ -46,7 +46,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' bow should spend performing its gleam animation during her Eventide Lances attack.
         /// </summary>
-        public int EventideLances_BowGleamTime => Utilities.SecondsToFrames((EventideLances_TeleportCounter <= 0f ? 1.2f : 0.5f) - Main.dayTime.ToInt() * 0.198f);
+        public int EventideLances_BowGleamTime => Utilities.SecondsToFrames((EventideLances_TeleportCounter <= 0f ? 1.35f : 0.5f) - Main.dayTime.ToInt() * 0.167f);
 
         /// <summary>
         /// How long the Empress' bow should wait after the bows gleam animation before firing during her Eventide Lances attack.
@@ -120,8 +120,8 @@ namespace WoTE.Content.NPCs.EoL
             NPC.rotation = NPC.velocity.X * 0.0035f;
 
             float hoverSpeedInterpolant = Utilities.InverseLerpBump(0f, 4f, EventideLances_BowGleamTime, EventideLances_BowGleamTime + 8f, AITimer);
-            Vector2 horizontalHoverOffset = new Vector2(NPC.OnRightSideOf(Target).ToDirectionInt() * 510f, -100f);
-            Vector2 omnidirectionalHoverOffset = Target.SafeDirectionTo(NPC.Center) * 550f;
+            Vector2 horizontalHoverOffset = new(NPC.OnRightSideOf(Target).ToDirectionInt() * (Main.dayTime ? 615f : 510f), -100f);
+            Vector2 omnidirectionalHoverOffset = Target.SafeDirectionTo(NPC.Center) * (Main.dayTime ? 656f : 550f);
             Vector2 hoverDestination = Target.Center + Vector2.Lerp(horizontalHoverOffset, omnidirectionalHoverOffset, 0.6f);
             NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, hoverSpeedInterpolant * 0.55f, 1f - hoverSpeedInterpolant * 0.3f, 120f);
             NPC.velocity *= MathHelper.Lerp(0.7f, 1f, Utilities.InverseLerp(0f, 15f, AITimer - EventideLances_BowGleamTime));
