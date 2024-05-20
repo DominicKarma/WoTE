@@ -29,23 +29,6 @@ namespace WoTE.Content.NPCs.EoL
             WithBackgroundTint(Color.White * 0.4f);
 
         /// <summary>
-        /// The Empress palette used if the player is named "Lynel". This name check does not care about casing.
-        /// </summary>
-        public static readonly EmpressPaletteSet LynelPaletteSet = RegisterNew(2, () => Main.LocalPlayer.name.Equals("Lynel", StringComparison.OrdinalIgnoreCase)).
-            WithPalette(EmpressPaletteType.ButterflyAvatar, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
-            WithPalette(EmpressPaletteType.Wings, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
-            WithPalette(EmpressPaletteType.Phase2Dress, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
-            WithPalette(EmpressPaletteType.PrismaticBolt, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
-            WithPalette(EmpressPaletteType.StarBolt, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
-            WithPalette(EmpressPaletteType.RainbowArrow, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
-            WithPalette(EmpressPaletteType.LacewingTrail, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
-            WithPalette(EmpressPaletteType.DazzlingPetal, new Color(255, 47, 11), new(255, 12, 102)).
-            WithCloudColor(new(255, 74, 11, 165)).
-            WithMistColor(new(244, 39, 72, 128)).
-            WithMoonColors(new(255, 39, 4, 148), new(237, 168, 179, 0)).
-            WithBackgroundTint(new Color(255, 40, 2) * 0.4f);
-
-        /// <summary>
         /// The Empress palette used during the daytime.
         /// </summary>
         public static readonly EmpressPaletteSet DaytimePaletteSet = RegisterNew(1, () => Main.dayTime).
@@ -61,6 +44,40 @@ namespace WoTE.Content.NPCs.EoL
             WithMistColor(new(197, 25, 22, 190)).
             WithMoonColors(Color.Transparent, Color.Transparent).
             WithBackgroundTint(new Color(213, 24, 25) * 0.75f);
+
+        /// <summary>
+        /// The Empress palette used during the eclipse.
+        /// </summary>
+        public static readonly EmpressPaletteSet EclipsePaletteSet = RegisterNew(2, () => Main.dayTime && Main.eclipse).
+            WithPalette(EmpressPaletteType.ButterflyAvatar, new Color(7, 1, 0), new(158, 39, 0), new(188, 67, 0), new(255, 228, 83)).
+            WithPalette(EmpressPaletteType.Wings, new Color(7, 1, 0), new(158, 39, 0), new(188, 67, 0), new(255, 228, 83)).
+            WithPalette(EmpressPaletteType.Phase2Dress, new Color(7, 1, 0), new(158, 39, 0), new(188, 67, 0), new(255, 228, 83)).
+            WithPalette(EmpressPaletteType.PrismaticBolt, new Color(7, 1, 0), new(158, 39, 0), new(188, 67, 0), new(255, 228, 83)).
+            WithPalette(EmpressPaletteType.StarBolt, new Color(7, 1, 0), new(158, 39, 0), new(188, 67, 0), new(255, 228, 83)).
+            WithPalette(EmpressPaletteType.RainbowArrow, new Color(7, 1, 0), new(158, 39, 0), new(188, 67, 0), new(255, 228, 83)).
+            WithPalette(EmpressPaletteType.LacewingTrail, new Color(7, 1, 0), new(158, 39, 0), new(188, 67, 0), new(255, 228, 83)).
+            WithPalette(EmpressPaletteType.DazzlingPetal, new Color(7, 1, 0), new(158, 39, 0), new(188, 67, 0), new(255, 228, 83)).
+            WithCloudColor(Color.Transparent).
+            WithMistColor(Color.Transparent).
+            WithMoonColors(Color.Transparent, Color.Transparent).
+            WithBackgroundTint(Color.Transparent);
+
+        /// <summary>
+        /// The Empress palette used if the player is named "Lynel". This name check does not care about casing.
+        /// </summary>
+        public static readonly EmpressPaletteSet LynelPaletteSet = RegisterNew(5, () => Main.LocalPlayer.name.Equals("Lynel", StringComparison.OrdinalIgnoreCase)).
+            WithPalette(EmpressPaletteType.ButterflyAvatar, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
+            WithPalette(EmpressPaletteType.Wings, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
+            WithPalette(EmpressPaletteType.Phase2Dress, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
+            WithPalette(EmpressPaletteType.PrismaticBolt, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
+            WithPalette(EmpressPaletteType.StarBolt, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
+            WithPalette(EmpressPaletteType.RainbowArrow, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
+            WithPalette(EmpressPaletteType.LacewingTrail, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
+            WithPalette(EmpressPaletteType.DazzlingPetal, new Color(255, 47, 11), new(255, 12, 102)).
+            WithCloudColor(new(255, 74, 11, 165)).
+            WithMistColor(new(244, 39, 72, 128)).
+            WithMoonColors(new(255, 39, 4, 148), new(237, 168, 179, 0)).
+            WithBackgroundTint(new Color(255, 40, 2) * 0.4f);
 
         /// <summary>
         /// Registers a new palette set that the Empress can use.

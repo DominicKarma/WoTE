@@ -13,7 +13,8 @@ namespace WoTE.Content.NPCs.EoL
             if (Main.dayTime)
                 backgroundInterpolationIntensity += Utilities.InverseLerpBump(0f, 2700f, (float)Main.dayLength - 2700f, (float)Main.dayLength, (float)Main.time) * 0.3f;
 
-            backgroundColor = Color.Lerp(backgroundColor, EmpressSky.BackgroundTint, EmpressSky.Opacity * backgroundInterpolationIntensity);
+            if (EmpressSky.BackgroundTint != Color.Transparent)
+                backgroundColor = Color.Lerp(backgroundColor, EmpressSky.BackgroundTint, EmpressSky.Opacity * backgroundInterpolationIntensity);
             tileColor = Color.Lerp(tileColor, Color.Lavender, EmpressSky.Opacity * 0.25f);
         }
     }
