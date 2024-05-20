@@ -91,23 +91,29 @@ namespace WoTE.Content.NPCs.EoL
             }
 
             if (AITimer == TwirlingPetalSun_PetalSummonDelay + TwirlingPetalSun_TwirlTime + TwirlingPetalSun_FlareTransformTime + TwirlingPetalSun_FlareRetractTime + TwirlingPetalSun_BurstTime)
-            {
-                SoundEngine.PlaySound(SoundID.Item74);
-
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    for (int i = 0; i < TwirlingPetalSun_PrismaticBoltCount; i++)
-                    {
-                        Vector2 boltVelocity = (MathHelper.TwoPi * i / TwirlingPetalSun_PrismaticBoltCount).ToRotationVector2() * 12f + Main.rand.NextVector2Circular(3.5f, 3.5f);
-                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target);
-                    }
-                }
-            }
+                DoBehavior_TwirlingPetalSun_ReleasePrismaticBolts();
 
             float flySpeed = PerformingLanceWallSupport ? 6f : 2f;
             float hoverInterpolant = PerformingLanceWallSupport ? 0.023f : 0.013f;
             NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, hoverInterpolant);
             NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * flySpeed, 0.035f);
+        }
+
+        /// <summary>
+        /// Releases prismatic bolts during the Empress' Empress' Twirling Petal Sun attack.
+        /// </summary>
+        public void DoBehavior_TwirlingPetalSun_ReleasePrismaticBolts()
+        {
+            SoundEngine.PlaySound(SoundID.Item74);
+
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                for (int i = 0; i < TwirlingPetalSun_PrismaticBoltCount; i++)
+                {
+                    Vector2 boltVelocity = (MathHelper.TwoPi * i / TwirlingPetalSun_PrismaticBoltCount).ToRotationVector2() * 12f + Main.rand.NextVector2Circular(3.5f, 3.5f);
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target);
+                }
+            }
         }
     }
 }
