@@ -39,7 +39,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of time the Empress should wait after the twirling petals burst to choose a new attack.
         /// </summary>
-        public int TwirlingPetalSun_AttackTransitionDelay => Utilities.SecondsToFrames(ByPhase(1.85f, 1f));
+        public int TwirlingPetalSun_AttackTransitionDelay => Utilities.SecondsToFrames(ByPhase(1.76f, 1f) - Main.dayTime.ToInt() * 0.35f);
 
         /// <summary>
         /// The amount of petals the Empress summons during the Twirling Petal Sun attack.
