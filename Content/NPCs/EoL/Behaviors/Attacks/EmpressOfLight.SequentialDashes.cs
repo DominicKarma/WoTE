@@ -45,6 +45,11 @@ namespace WoTE.Content.NPCs.EoL
         public static int SequentialDashes_DashCount => 3;
 
         /// <summary>
+        /// The amount of star bursts that the Empress should perform release her Sequential Dashes attack after a dash concludes. 
+        /// </summary>
+        public int SequentialDashes_StarBurstReleaseCount => ByPhase(9, 12);
+
+        /// <summary>
         /// The speed of dashes performed by the Empress during her Sequential Dashes attack.
         /// </summary>
         public float SequentialDashes_DashSpeed => ByPhase(69f, 78f) + Main.dayTime.ToInt() * 23.5f;
@@ -88,9 +93,9 @@ namespace WoTE.Content.NPCs.EoL
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    for (int i = 0; i < 9; i++)
+                    for (int i = 0; i < SequentialDashes_StarBurstReleaseCount; i++)
                     {
-                        Vector2 boltVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.TwoPi * i / 9f) * 1.14f;
+                        Vector2 boltVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.TwoPi * i / SequentialDashes_StarBurstReleaseCount) * 1.14f;
                         Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, boltVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f, -1);
                     }
                 }
