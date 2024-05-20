@@ -96,7 +96,7 @@ namespace WoTE.Content.NPCs.EoL
 
             bool shootingLasers = AITimer >= Phase2Transition_EnergyChargeUpTime + Phase2Transition_ShootCycleDelay;
 
-            float maxZPosition = MathHelper.Lerp(5f, 1.1f, Utilities.Sin01(MathHelper.TwoPi * AITimer / 60f).Cubed());
+            float maxZPosition = MathHelper.Lerp(1.4f, 0.6f, Utilities.Sin01(MathHelper.TwoPi * AITimer / 60f).Cubed());
             ZPosition = EasingCurves.Cubic.Evaluate(EasingType.InOut, Utilities.InverseLerp(0f, 60f, AITimer)) * maxZPosition;
 
             if (AITimer <= 120)
@@ -106,9 +106,9 @@ namespace WoTE.Content.NPCs.EoL
             NPC.rotation = MathHelper.Lerp(NPC.rotation, 0f, 0.3f);
 
             float appearanceInterpolant = Utilities.InverseLerpBump(0f, 0.4f, 0.7f, 0.75f, AITimer / (float)Phase2Transition_EnergyChargeUpTime).Squared();
-            if (Main.netMode != NetmodeID.MultiplayerClient && ZPosition >= 2f && AITimer % 3 == 0 && appearanceInterpolant >= 0.5f)
+            if (Main.netMode != NetmodeID.MultiplayerClient && ZPosition >= 0.6f && AITimer % 2 == 0 && appearanceInterpolant >= 0.5f)
             {
-                Vector2 moonlightPosition = NPC.Center + (MathHelper.TwoPi * AITimer / 30f).ToRotationVector2() * Main.rand.NextFloat(1200f, 1300f) * new Vector2(1f, 0.6f);
+                Vector2 moonlightPosition = NPC.Center - Vector2.UnitX.RotatedByRandom(MathHelper.PiOver2) * new Vector2(1100f, 1200f) * Main.rand.NextFromList(-1f, 1f);
                 Vector2 moonlightVelocity = moonlightPosition.SafeDirectionTo(NPC.Center).RotatedBy(MathHelper.PiOver2) * 32f;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), moonlightPosition, moonlightVelocity, ModContent.ProjectileType<ConvergingMoonlight>(), 0, 0f);
             }

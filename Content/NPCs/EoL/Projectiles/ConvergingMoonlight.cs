@@ -44,14 +44,14 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override void SetDefaults()
         {
-            Projectile.width = Main.rand?.Next(84, 120) ?? 120;
+            Projectile.width = Main.rand?.Next(36, 100) ?? 100;
             Projectile.height = Projectile.width;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
             Projectile.hide = true;
-            Projectile.timeLeft = Lifetime + 70;
+            Projectile.timeLeft = Lifetime + 45;
             RelatveOldPositions = new Vector2[Lifetime];
 
             CooldownSlot = ImmunityCooldownID.Bosses;
@@ -67,20 +67,24 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             if (Start == Vector2.Zero)
                 Start = Projectile.Center;
-            Vector2 end = EmpressOfLight.Myself.Center;
 
-            float proximityInterpolant = Utilities.InverseLerp(70f, 200f, Projectile.Distance(end));
-            float sine = MathF.Sin(MathHelper.Pi * Utilities.InverseLerp(0f, Lifetime + 4f, Time));
-            float spinInterpolant = MathF.Pow(Utilities.InverseLerp(0f, Lifetime, Time), 0.7f);
-            Projectile.Center = Vector2.Lerp(Start, end, spinInterpolant) + (end - Start).SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * sine * MathF.Sqrt(proximityInterpolant) * 400f;
-            Projectile.Opacity = Utilities.InverseLerp(0f, 36f, Time);
+            float spinInterpolant = MathF.Pow(Utilities.InverseLerp(0f, Lifetime, Time), 1.3f);
+
+            Vector2 end = EmpressOfLight.Myself.Center - Vector2.UnitY;
+            Vector2 linearOffset = end - Start;
+            Vector2 rotatedOffset = linearOffset.RotatedBy(MathHelper.PiOver2 * (1f - spinInterpolant.Squared()));
+
+            Projectile.Center = Start + rotatedOffset * spinInterpolant;
             Projectile.velocity *= 0.5f;
-            if (Time >= Lifetime)
-                Projectile.scale *= 0.98f;
+            Projectile.Opacity = Utilities.InverseLerp(0f, 36f, Time) * Utilities.InverseLerp(45f, 10f, Time - Lifetime);
 
             for (int i = RelatveOldPositions.Length - 1; i >= 1; i--)
-                RelatveOldPositions[i] = RelatveOldPositions[i - 1];
-            RelatveOldPositions[0] = Projectile.Center - EmpressOfLight.Myself.Center;
+            {
+                Vector2 offset = RelatveOldPositions[i - 1].SafeDirectionTo(RelatveOldPositions[i]);
+                RelatveOldPositions[i] = RelatveOldPositions[i - 1] + offset * 12f;
+            }
+            if (Time <= Lifetime)
+                RelatveOldPositions[0] = Projectile.Center - EmpressOfLight.Myself.Center;
 
             Time++;
         }
@@ -95,8 +99,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public Color MoonlightColorFunction(float completionRatio)
         {
-            float endPointFade = Utilities.InverseLerpBump(0.05f, 0.3f, 0.7f, 0.95f, completionRatio);
-            return new Color(182, 170, 255, 0) * endPointFade * 0.6f;
+            return new Color(182, 170, 255) * Utilities.InverseLerpBump(0f, 0.4f, 0.1f, 0.9f, completionRatio) * Projectile.Opacity * Utilities.Convert01To010(completionRatio);
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
@@ -109,7 +112,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             trailShader.Apply();
 
             PrimitiveSettings settings = new(MoonlightWidthFunction, MoonlightColorFunction, _ => EmpressOfLight.Myself.Center, Pixelate: true, Shader: trailShader);
-            PrimitiveRenderer.RenderTrail(RelatveOldPositions, settings, 105);
+            PrimitiveRenderer.RenderTrail(RelatveOldPositions, settings, 35);
         }
     }
 }
