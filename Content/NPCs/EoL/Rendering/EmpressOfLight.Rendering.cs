@@ -161,7 +161,7 @@ namespace WoTE.Content.NPCs.EoL
             {
                 float opacity = Utilities.InverseLerp(NPC.oldPos.Length, 1f, i) * DashAfterimageInterpolant * 0.8f;
                 Vector2 drawPosition = Vector2.Lerp(NPC.oldPos[i] + NPC.Size * 0.5f, NPC.Center, 0f) - screenPos;
-                Color afterimageColor = Palette.MulticolorLerp(EmpressPaletteType.Phase2Dress, (i + 5f) / 10f - Main.GlobalTimeWrappedHourly * 0.2f) * opacity;
+                Color afterimageColor = Palette.MulticolorLerp(EmpressPaletteType.RainbowArrow, (i + 5f) / 10f - Main.GlobalTimeWrappedHourly * 0.2f) * opacity;
                 DrawInstance(drawPosition, afterimageColor, OldZPositions[i], NPC.oldRot[i], 0f, false);
             }
 
@@ -175,7 +175,7 @@ namespace WoTE.Content.NPCs.EoL
                 Vector2 illusionDrawPosition = NPC.Center - screenPos - NPC.velocity * i * 0.23f;
                 Vector3 illusionOffset = Vector3.Transform(Vector3.Forward, transformX * transformY * transformZ) * illusionInterpolant * 150f;
                 illusionDrawPosition += NPC.scale / (ZPosition + 1f) * new Vector2(illusionOffset.X, illusionOffset.Y);
-                Color illusionColor = Palette.MulticolorLerp(EmpressPaletteType.Phase2Dress, (i + 5f) / 10f) * illusionInterpolant;
+                Color illusionColor = Palette.MulticolorLerp(EmpressPaletteType.RainbowArrow, (i + 5f) / 10f) * illusionInterpolant;
 
                 DrawInstance(illusionDrawPosition, illusionColor with { A = 0 }, ZPosition, NPC.rotation, 0f, false);
             }
