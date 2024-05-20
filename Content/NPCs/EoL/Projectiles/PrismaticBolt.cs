@@ -55,6 +55,14 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override void AI()
         {
+            float maxSpeed = 43.5f;
+            float maxHomeSpeed = 34f;
+            if (Main.dayTime)
+            {
+                maxSpeed = 55f;
+                maxHomeSpeed = 41f;
+            }
+
             if (Time <= 60)
             {
                 float swerveInterpolant = MathF.Cos(Projectile.identity / 7f % 1f + Projectile.Center.X / 320f + Projectile.Center.Y / 160f);
@@ -64,15 +72,15 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
             if (Time <= 90)
             {
                 float homingSharpnessInterpolant = Utils.Remap(Time, 15f, 85f, 0.0067f, 0.196f);
-                Vector2 idealVelocity = Projectile.SafeDirectionTo(Target.Center) * 34f;
+                Vector2 idealVelocity = Projectile.SafeDirectionTo(Target.Center) * maxHomeSpeed;
 
                 // Stop homing if REALLY close to the target, to allow for style points.
-                if (Projectile.WithinRange(Target.Center, 95f))
+                if (Projectile.WithinRange(Target.Center, 145f))
                     idealVelocity = Projectile.velocity;
 
                 Projectile.velocity = Vector2.SmoothStep(Projectile.velocity, idealVelocity, homingSharpnessInterpolant);
             }
-            else if (Projectile.velocity.Length() <= 43.5f)
+            else if (Projectile.velocity.Length() <= maxSpeed)
                 Projectile.velocity *= 1.028f;
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
