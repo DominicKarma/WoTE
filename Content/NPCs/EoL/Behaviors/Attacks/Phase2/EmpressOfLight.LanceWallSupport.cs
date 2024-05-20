@@ -57,7 +57,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The horizontal move speed interpolant of the Empress' lance wall.
         /// </summary>
-        public static float LanceWallSupport_HorizontalMoveSpeedInterpolant => 0.025f;
+        public static float LanceWallSupport_HorizontalMoveSpeedInterpolant => Main.dayTime ? 0.0385f : 0.025f;
 
         /// <summary>
         /// The horizontal width of the Empress' lance wall.
