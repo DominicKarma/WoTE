@@ -19,7 +19,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of time the Terraprismas spin during the Empress' Orbit Released Terraprismas attack.
         /// </summary>
-        public static int OrbitReleasedTerraprismas_TerraprismaSpinTime => Utilities.SecondsToFrames(1.7f);
+        public static int OrbitReleasedTerraprismas_TerraprismaSpinTime => Utilities.SecondsToFrames(Main.dayTime ? 0.96f : 1.7f);
 
         /// <summary>
         /// The amount of Terraprisma instances the Empress summons for her Orbit Released Terraprismas attack.

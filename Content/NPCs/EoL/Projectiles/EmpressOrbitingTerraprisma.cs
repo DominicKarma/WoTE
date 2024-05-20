@@ -132,7 +132,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             // Make the spin speed go from slow to super fast over the duration of the spin animation.
             float spinCompletion = Time / OrbitReleasedTerraprismas_TerraprismaSpinTime;
-            float spinSpeed = Utilities.InverseLerp(0f, 60f, Time).Squared() * Utilities.InverseLerp(0.85f, 0.7f, spinCompletion) * MathHelper.TwoPi / 56f;
+            float spinSpeed = Utilities.InverseLerp(0f, Main.dayTime ? 30f : 60f, Time).Squared() * Utilities.InverseLerp(0.85f, 0.7f, spinCompletion) * MathHelper.TwoPi / 56f;
 
             // This ensures that the spin starts out at a moderate speed, rather than at no speed at all. This makes the attack look a bit more interesting at the start.
             spinSpeed += Utilities.InverseLerp(OrbitReleasedTerraprismas_TerraprismaSpinTime * 0.5f, 0f, Time) * MathHelper.TwoPi / 45f;
