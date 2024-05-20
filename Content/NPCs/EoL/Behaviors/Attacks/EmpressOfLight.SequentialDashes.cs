@@ -118,7 +118,7 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_SequentialDashes_Redirect()
         {
             Vector2 hoverOffsetDirection = Target.SafeDirectionTo(NPC.Center) * new Vector2(1f, 0.995f);
-            float backwardsWindUpOffset = Utilities.InverseLerp(-26f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 540f;
+            float backwardsWindUpOffset = Utilities.InverseLerp(-26f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 670f;
             Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(400f, 390f) - NPC.SafeDirectionTo(Target.Center) * backwardsWindUpOffset;
 
             NPC.SmoothFlyNear(hoverDestination, 0.17f, 0.85f);
