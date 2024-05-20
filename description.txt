@@ -1,1 +1,7 @@
-Modify this file with a description of your mod.
+Just another mod that reworks the Empress of Light.
+
+Credits to the following individuals for helping (whether directly or indirectly) in the creation of the mod:
+
+Programming: Dominic Karma
+Music: Phyrnna
+Testing and Quality Assurance: Blast, LGL, Lynel, SomeSnakeOilSalesman
