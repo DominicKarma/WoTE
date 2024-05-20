@@ -29,6 +29,21 @@ namespace WoTE.Content.NPCs.EoL
         public static int RadialStarBurst_AttackRestartDelay => Utilities.SecondsToFrames(0.75f);
 
         /// <summary>
+        /// The amount of star burst projectiles released during the Empress' Radial Star Burst attack.
+        /// </summary>
+        public static int RadialStarBurst_StarBurstCount => 18;
+
+        /// <summary>
+        /// The amount of radially oriented prismatic bolt projectiles released during the Empress' Radial Star Burst attack.
+        /// </summary>
+        public static int RadialStarBurst_RadialPrismaticBurstCount => 9;
+
+        /// <summary>
+        /// The amount of randomly oriented prismatic bolt projectiles released during the Empress' Radial Star Burst attack.
+        /// </summary>
+        public static int RadialStarBurst_RandomlySpacedPrismaticBurstCount => 7;
+
+        /// <summary>
         /// The amount of bursts the Empress performs during her Radial Star Burst attack before choosing a new attack.
         /// </summary>
         public static int RadialStarBurst_BurstCount => 2;
@@ -147,21 +162,21 @@ namespace WoTE.Content.NPCs.EoL
                 return;
 
             float shootOffsetAngle = NPC.AngleTo(Target.Center);
-            for (int i = 0; i < 18; i++)
+            for (int i = 0; i < RadialStarBurst_StarBurstCount; i++)
             {
-                float shootAngle = MathHelper.TwoPi * i / 18f + shootOffsetAngle;
+                float shootAngle = MathHelper.TwoPi * i / RadialStarBurst_StarBurstCount + shootOffsetAngle;
                 Vector2 shootVelocity = shootAngle.ToRotationVector2() * 0.3f;
 
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<StarBolt>(), StarBurstDamage, 0f);
             }
 
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < RadialStarBurst_RadialPrismaticBurstCount; i++)
             {
-                Vector2 shootVelocity = (MathHelper.TwoPi * i / 9f).ToRotationVector2() * 6.4f;
+                Vector2 shootVelocity = (MathHelper.TwoPi * i / RadialStarBurst_RadialPrismaticBurstCount).ToRotationVector2() * 6.4f;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target);
             }
 
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < RadialStarBurst_RandomlySpacedPrismaticBurstCount; i++)
             {
                 Vector2 shootVelocity = -NPC.SafeDirectionTo(Target.Center).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(1f, 1.7f);
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, shootVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target);
