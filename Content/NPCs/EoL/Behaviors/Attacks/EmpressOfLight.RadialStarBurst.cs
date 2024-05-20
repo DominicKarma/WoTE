@@ -64,12 +64,13 @@ namespace WoTE.Content.NPCs.EoL
             int boomDelay = RadialStarBurst_BurstDelay;
             int attackRestartDelay = RadialStarBurst_AttackRestartDelay;
             int wrappedTimer = AITimer % (redirectTime + boomDelay + attackRestartDelay);
+
             if (wrappedTimer <= redirectTime)
                 DoBehavior_RadialStarBurst_Redirect(wrappedTimer);
             else
             {
                 float idealVerticalSpeed = Utilities.InverseLerpBump(0f, 0.6f, 0.8f, 1f, (wrappedTimer - redirectTime) / (float)boomDelay).Squared() * -20f;
-                NPC.velocity.X *= 0.5f;
+                NPC.velocity.X *= 0.85f;
                 NPC.velocity.Y = MathHelper.Lerp(NPC.velocity.Y, idealVerticalSpeed, 0.33f);
                 DashAfterimageInterpolant *= 0.95f;
             }
@@ -114,17 +115,17 @@ namespace WoTE.Content.NPCs.EoL
                 return;
             }
 
-            float flySpeedInterpolant = 1f - wrappedTimer / (float)redirectTime;
+            float flySpeedInterpolant = wrappedTimer / (float)redirectTime;
             Vector2 hoverDestination = Target.Center + new Vector2(RadialStarBurst_HorizontalHoverDirection * 400f, 100f - Utilities.Convert01To010(wrappedTimer / (float)redirectTime) * 150f);
-            NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.2f);
-            NPC.velocity += NPC.SafeDirectionTo(hoverDestination) * flySpeedInterpolant * 40f;
+            NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, flySpeedInterpolant * 0.3f);
+            NPC.velocity += NPC.SafeDirectionTo(hoverDestination) * flySpeedInterpolant * 50f;
 
             DashAfterimageInterpolant = 1f;
 
             if (swapTeleportHappened && NPC.OnRightSideOf(Target.Center).ToDirectionInt() == RadialStarBurst_HorizontalHoverDirection)
                 RadialStarBurst_HorizontalHoverDirection *= -1f;
 
-            if (NPC.velocity.AngleBetween(NPC.SafeDirectionTo(hoverDestination)) >= MathHelper.PiOver2)
+            if (NPC.velocity.AngleBetween(NPC.SafeDirectionTo(hoverDestination)) >= MathHelper.PiOver2 && NPC.velocity.Length() >= 3f)
             {
                 AITimer += redirectTime - wrappedTimer + 1;
                 NPC.velocity *= 0.25f;
