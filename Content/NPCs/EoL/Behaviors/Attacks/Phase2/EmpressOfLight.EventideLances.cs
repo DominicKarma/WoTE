@@ -258,9 +258,13 @@ namespace WoTE.Content.NPCs.EoL
             float flareRotation = MathHelper.SmoothStep(0f, MathHelper.TwoPi, MathF.Pow(EventideLances_BowGlimmerInterpolant, 0.2f)) + MathHelper.PiOver4;
             Vector2 flarePosition = drawPosition + EventideLances_UndirectionedBowOffset + Vector2.UnitX.RotatedBy(NPC.rotation) * -18f;
 
-            Main.spriteBatch.Draw(bloom, flarePosition, null, Color.Cyan with { A = 0 } * flareOpacity * 0.3f, 0f, bloom.Size() * 0.5f, flareScale * 1.9f, 0, 0f);
-            Main.spriteBatch.Draw(bloom, flarePosition, null, Color.Wheat with { A = 0 } * flareOpacity * 0.54f, 0f, bloom.Size() * 0.5f, flareScale, 0, 0f);
-            Main.spriteBatch.Draw(flare, flarePosition, null, Color.LightCyan with { A = 0 } * flareOpacity, flareRotation, flare.Size() * 0.5f, flareScale, 0, 0f);
+            Color flareColorA = Palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, 0f);
+            Color flareColorB = Palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, 0.33f) * 1.6f;
+            Color flareColorC = Palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, 0.66f);
+
+            Main.spriteBatch.Draw(bloom, flarePosition, null, flareColorA with { A = 0 } * flareOpacity * 0.3f, 0f, bloom.Size() * 0.5f, flareScale * 1.9f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, flarePosition, null, flareColorB with { A = 0 } * flareOpacity * 0.54f, 0f, bloom.Size() * 0.5f, flareScale, 0, 0f);
+            Main.spriteBatch.Draw(flare, flarePosition, null, flareColorC with { A = 0 } * flareOpacity, flareRotation, flare.Size() * 0.5f, flareScale, 0, 0f);
         }
     }
 }
