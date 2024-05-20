@@ -25,7 +25,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress waits before choosing a new attack after all bolts have been shot in her RadialStarBurst attack.
         /// </summary>
-        public int VanillaPrismaticBolts_AttackTransitionDelay => Utilities.SecondsToFrames(ByPhase(2f, 1.67f));
+        public int VanillaPrismaticBolts_AttackTransitionDelay => Utilities.SecondsToFrames(ByPhase(2f, 1.67f) - Main.dayTime.ToInt() * 0.8f);
 
         /// <summary>
         /// How rate at which bolts are summoned by the Empress during her RadialStarBurst attack.
