@@ -59,6 +59,26 @@ namespace WoTE.Content.NPCs.EoL
         public static int EventideLances_RiftArrowLifetime => Utilities.SecondsToFrames(0.5f);
 
         /// <summary>
+        /// The amount of lances the Empress should shoot during her Eventide Lances attack when firing.
+        /// </summary>
+        public static int EventideLances_LancesOnEachSide => 5;
+
+        /// <summary>
+        /// The spacing of lances shot by the Empress during her Eventide Lances attack.
+        /// </summary>
+        public static float EventideLances_LanceSpacing => MathHelper.ToRadians(16.7f);
+
+        /// <summary>
+        /// The minimum speed of lances shot by the Empress during her Eventide Lances attack.
+        /// </summary>
+        public static float EventideLances_MinLanceSpeed => 9f;
+
+        /// <summary>
+        /// The maximum speed of lances shot by the Empress during her Eventide Lances attack.
+        /// </summary>
+        public static float EventideLances_MaxLanceSpeed => 18.6f;
+
+        /// <summary>
         /// The amount of teleports the Empress should perform during her Eventide Lances attack before transitioning to a different attack.
         /// </summary>
         public static int EventideLances_TeleportCount => Main.dayTime ? 6 : 4;
@@ -157,7 +177,7 @@ namespace WoTE.Content.NPCs.EoL
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                for (int i = -5; i <= 5; i++)
+                for (int i = -EventideLances_LancesOnEachSide; i <= EventideLances_LancesOnEachSide; i++)
                 {
                     if (i == 0)
                     {
@@ -166,8 +186,10 @@ namespace WoTE.Content.NPCs.EoL
                         continue;
                     }
 
-                    float lanceFireOffsetAngle = i * 0.29f;
-                    float lanceSpeed = 21f - MathF.Abs(i) * 2.4f;
+                    // The i - 1f and EventideLances_LancesOnEachSide - 1f parts exist to account for the fact that the 0th iteration in the loop will not fire a typical lance, thus ensuring
+                    // that the interpolation is correct starting at 1, rather than never actually starting at the EventideLances_MaxLanceSpeed value.
+                    float lanceFireOffsetAngle = i * EventideLances_LanceSpacing;
+                    float lanceSpeed = MathHelper.Lerp(EventideLances_MaxLanceSpeed, EventideLances_MinLanceSpeed, MathF.Abs(i - 1f) / (EventideLances_LancesOnEachSide - 1f));
                     Vector2 lanceVelocity = (EventideLances_BowDirection + lanceFireOffsetAngle).ToRotationVector2() * lanceSpeed;
 
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), eventideEnd, lanceVelocity, ModContent.ProjectileType<LightLance>(), LightLanceDamage, 0f, -1, 0f, Main.rand.NextFloat());
