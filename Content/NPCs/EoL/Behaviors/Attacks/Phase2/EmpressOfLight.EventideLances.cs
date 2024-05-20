@@ -46,12 +46,12 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long the Empress' bow should spend performing its gleam animation during her Eventide Lances attack.
         /// </summary>
-        public int EventideLances_BowGleamTime => Utilities.SecondsToFrames(EventideLances_TeleportCounter <= 0f ? 1.2f : 0.5f);
+        public int EventideLances_BowGleamTime => Utilities.SecondsToFrames((EventideLances_TeleportCounter <= 0f ? 1.2f : 0.5f) - Main.dayTime.ToInt() * 0.198f);
 
         /// <summary>
         /// How long the Empress' bow should wait after the bows gleam animation before firing during her Eventide Lances attack.
         /// </summary>
-        public static int EventideLances_ShootDelay => Utilities.SecondsToFrames(0.25f);
+        public static int EventideLances_ShootDelay => Utilities.SecondsToFrames(Main.dayTime ? 0.13f : 0.25f);
 
         /// <summary>
         /// How long the Empress' rainbow rift arrows should last before disappearing.
@@ -61,7 +61,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of teleports the Empress should perform during her Eventide Lances attack before transitioning to a different attack.
         /// </summary>
-        public static int EventideLances_TeleportCount => 4;
+        public static int EventideLances_TeleportCount => Main.dayTime ? 6 : 4;
 
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_EventideLances()
@@ -142,6 +142,7 @@ namespace WoTE.Content.NPCs.EoL
             EventideLances_UsingBow = false;
 
             NPC.Opacity = Utilities.InverseLerp(8f, 0f, AITimer - EventideLances_BowGleamTime - EventideLances_ShootDelay);
+            NPC.dontTakeDamage = true;
         }
 
         /// <summary>
