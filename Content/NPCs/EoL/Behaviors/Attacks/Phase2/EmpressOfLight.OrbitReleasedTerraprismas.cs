@@ -61,11 +61,12 @@ namespace WoTE.Content.NPCs.EoL
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == 1)
             {
                 int terraprismaCount = OrbitReleasedTerraprismas_TerraprismaCount;
-                float spinAngleOffset = 0f;
                 for (int i = 0; i < terraprismaCount; i++)
                 {
                     int fireDelay = i;
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<EmpressOrbitingTerraprisma>(), TerraprismaDamage, 0f, -1, i / (float)terraprismaCount, MathHelper.TwoPi * i / terraprismaCount + spinAngleOffset, fireDelay);
+                    float completionRatio = i / (float)terraprismaCount;
+                    float terraprismaAngle = MathHelper.TwoPi * completionRatio;
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<EmpressOrbitingTerraprisma>(), TerraprismaDamage, 0f, -1, completionRatio, terraprismaAngle, fireDelay);
                 }
             }
         }
