@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ModLoader;
 using WoTE.Content.Particles.Metaballs;
 
-namespace WoTM.Core.Graphics.EffectManagers
+namespace WoTE.Core.Graphics.EffectManagers
 {
     [Autoload(Side = ModSide.Client)]
     public class DistortionMetaballSystem : ModSystem
