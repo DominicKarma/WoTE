@@ -260,8 +260,8 @@ namespace WoTE.Content.NPCs.EoL
         /// <param name="drawPosition">The draw position of the wings.</param>
         public void DrawWings(Vector2 drawPosition)
         {
-            Texture2D wingsTexture = TextureAssets.Extra[ExtrasID.HallowBossWingsBack].Value;
-            Texture2D wingsColorShapeTexture = TextureAssets.Extra[ExtrasID.HallowBossWings].Value;
+            Texture2D wingsTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressWings").Value;
+            Texture2D wingsColorShapeTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressWingsGreyscale").Value;
             Rectangle wingsFrame = wingsTexture.Frame(1, 11, 0, (int)(Main.GlobalTimeWrappedHourly * 15f) % 11);
 
             Main.EntitySpriteDraw(wingsTexture, drawPosition, wingsFrame, Color.White, 0f, wingsFrame.Size() * 0.5f, 2f, 0);
@@ -269,11 +269,17 @@ namespace WoTE.Content.NPCs.EoL
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 
+            float timeOffset = Main.GlobalTimeWrappedHourly;
+            if (Palette == EmpressPalettes.DaytimePaletteSet)
+                timeOffset = 0.6f;
+            if (Palette == EmpressPalettes.LynelPaletteSet)
+                timeOffset = 0.4f;
+
             Vector4[] wingsPalette = Palette.Get(EmpressPaletteType.Wings);
             ManagedShader gradientShader = ShaderManager.GetShader("WoTE.EmpressWingGradientShader");
             gradientShader.TrySetParameter("gradient", wingsPalette);
             gradientShader.TrySetParameter("gradientCount", wingsPalette.Length);
-            gradientShader.TrySetParameter("timeOffset", Palette == EmpressPalettes.Default ? Main.GlobalTimeWrappedHourly : 0.4f);
+            gradientShader.TrySetParameter("timeOffset", timeOffset);
             gradientShader.SetTexture(TextureAssets.Projectile[ModContent.ProjectileType<StarBolt>()], 1, SamplerState.PointWrap);
             gradientShader.Apply();
 
