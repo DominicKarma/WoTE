@@ -64,7 +64,7 @@ namespace WoTE.Content.NPCs.EoL
 
         /// <summary>
         /// The Empress palette used if the player is named "Lynel". This name check does not care about casing.
-        /// This palette is also used during blood moon.
+        /// This palette is also used during blood moons.
         /// </summary>
         public static readonly EmpressPaletteSet BloodMoonPaletteSet = RegisterNew(5, () => Main.LocalPlayer.name.Equals("Lynel", StringComparison.OrdinalIgnoreCase) || Main.bloodMoon).
             WithPalette(EmpressPaletteType.ButterflyAvatar, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
