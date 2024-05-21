@@ -257,7 +257,7 @@ namespace WoTE.Content.NPCs.EoL
 
             Vector2 eventideTop = eventidePosition + new Vector2(-14f, -37f).RotatedBy(NPC.rotation + angleOffset);
             Vector2 eventideBottom = eventidePosition + new Vector2(-14f, 37f).RotatedBy(NPC.rotation + angleOffset);
-            Vector2 stringEnd = drawPosition + new Vector2(2f, -22f).RotatedBy(NPC.rotation);
+            Vector2 stringEnd = drawPosition + new Vector2(16f, -22f).RotatedBy(NPC.rotation);
             if (RightHandFrame != EmpressHandFrame.UpwardGrip)
                 stringEnd = (eventideTop + eventideBottom) * 0.5f;
 
