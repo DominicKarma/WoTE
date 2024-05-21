@@ -323,14 +323,22 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         /// </summary>
         public void DrawToTarget()
         {
+            if (EmpressOfLight.Myself is null)
+                return;
+
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 
+            EmpressPaletteSet palette = EmpressOfLight.Myself.As<EmpressOfLight>().Palette;
             float innerAngleOffset = Projectile.rotation;
             float appearInterpolantA = Utilities.InverseLerp(0f, 0.45f, AppearanceInterpolant).Squared();
             float appearInterpolantB = Utilities.InverseLerp(0.45f, 0.8f, AppearanceInterpolant);
             float appearInterpolantC = Utilities.InverseLerp(0.6f, 1f, AppearanceInterpolant);
+            Color colorA = palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, 0f);
+            Color colorB = palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, 0.25f);
+            Color colorC = palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, 0.5f);
+            Color colorD = palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, 0.75f);
 
-            DrawMagicCircle(Color.SkyBlue, Vector2.Zero, appearInterpolantA, innerAngleOffset + MathHelper.PiOver2, Projectile.scale, 5, 3);
+            DrawMagicCircle(colorA, Vector2.Zero, appearInterpolantA, innerAngleOffset + MathHelper.PiOver2, Projectile.scale, 5, 3);
 
             for (int i = 0; i < 5; i++)
             {
@@ -338,9 +346,9 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 DrawMagicCircle(Color.White, drawOffset, appearInterpolantC, -drawOffset.ToRotation(), Projectile.scale * 0.14f, 3, 6);
             }
 
-            DrawMagicCircle(Color.HotPink, Vector2.Zero, appearInterpolantB, innerAngleOffset * -2f, Projectile.scale * 0.5f, 6);
-            DrawMagicCircle(Color.LightGoldenrodYellow, Vector2.Zero, appearInterpolantB, innerAngleOffset * 0.5f, Projectile.scale * 0.5f, 5);
-            DrawMagicCircle(Color.Pink, Vector2.Zero, appearInterpolantB, -MathHelper.PiOver2, Projectile.scale * 0.5f, 3);
+            DrawMagicCircle(colorB, Vector2.Zero, appearInterpolantB, innerAngleOffset * -2f, Projectile.scale * 0.5f, 6);
+            DrawMagicCircle(colorC, Vector2.Zero, appearInterpolantB, innerAngleOffset * 0.5f, Projectile.scale * 0.5f, 5);
+            DrawMagicCircle(colorD, Vector2.Zero, appearInterpolantB, -MathHelper.PiOver2, Projectile.scale * 0.5f, 3);
             DrawLacewingAtCenterOfRing(appearInterpolantC.Squared());
 
             Main.spriteBatch.End();
@@ -396,11 +404,14 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
+            if (EmpressOfLight.Myself is null)
+                return false;
+
             Vector2 ringDrawOffset = Vector2.Transform(UnrotatedCircleTarget.Size() * new Vector2(-0.5f, 0.5f), Rotation);
 
             DrawBackglowCylinder(Vector2.Zero, Rotation, Color.SkyBlue with { A = 0 } * Utilities.InverseLerp(0.25f, 0.8f, AppearanceInterpolant));
             DrawFromTarget(ringDrawOffset, Rotation, Color.White);
-            DrawRing(Vector2.Zero, Rotation, Color.SkyBlue with { A = 0 });
+            DrawRing(Vector2.Zero, Rotation, EmpressOfLight.Myself.As<EmpressOfLight>().Palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, 0.11f) with { A = 0 });
 
             Main.spriteBatch.ResetToDefault();
 
