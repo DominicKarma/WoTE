@@ -158,7 +158,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
             // Accelerate after redirecting.
             else
-                Projectile.velocity *= 1.024f;
+                Projectile.velocity *= 1.018f;
 
             ZPosition = MathHelper.Lerp(ZPosition, 0f, 0.08f);
             DashVisualsIntensity = MathHelper.Lerp(DashVisualsIntensity, 1f, 0.1f);
