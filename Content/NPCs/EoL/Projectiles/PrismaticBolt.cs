@@ -75,7 +75,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 Vector2 idealVelocity = Projectile.SafeDirectionTo(Target.Center) * maxHomeSpeed;
 
                 // Stop homing if REALLY close to the target, to allow for style points.
-                if (Projectile.WithinRange(Target.Center, 145f))
+                if (Projectile.WithinRange(Target.Center, 175f))
                     idealVelocity = Projectile.velocity;
 
                 Projectile.velocity = Vector2.SmoothStep(Projectile.velocity, idealVelocity, homingSharpnessInterpolant);
