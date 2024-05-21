@@ -277,7 +277,7 @@ namespace WoTE.Content.NPCs.EoL
             float timeOffset = Main.GlobalTimeWrappedHourly;
             if (Palette == EmpressPalettes.DaytimePaletteSet)
                 timeOffset = 0.6f;
-            if (Palette == EmpressPalettes.LynelPaletteSet)
+            if (Palette == EmpressPalettes.BloodMoonPaletteSet)
                 timeOffset = 0.4f;
 
             Vector4[] wingsPalette = Palette.Get(EmpressPaletteType.Wings);
