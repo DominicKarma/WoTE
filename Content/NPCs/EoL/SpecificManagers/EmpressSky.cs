@@ -223,14 +223,12 @@ namespace WoTE.Content.NPCs.EoL
             }
         }
 
-        #region Boilerplate
-
         public override void OnLoad()
         {
-            On_Main.DrawRain += DrawCustomRain;
+            On_Main.DrawRain += DrawCustomRainWrapper;
         }
 
-        private void DrawCustomRain(On_Main.orig_DrawRain orig, Main self)
+        private void DrawCustomRainWrapper(On_Main.orig_DrawRain orig, Main self)
         {
             if (Opacity > 0f && !Main.gameMenu)
                 DrawCustomRain();
@@ -251,6 +249,8 @@ namespace WoTE.Content.NPCs.EoL
                 Main.spriteBatch.Draw(rain, drawPosition, frame, Color.Wheat * Opacity * 0.2f, RainParticles[i].Velocity.ToRotation() + MathHelper.PiOver2, frame.Size() * 0.5f, RainParticles[i].Scale, 0, 0f);
             }
         }
+
+        #region Boilerplate
 
         public override void Deactivate(params object[] args) => skyActive = false;
 
