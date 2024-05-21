@@ -222,13 +222,17 @@ namespace WoTE.Content.NPCs.EoL
             if (Palette is null)
                 return;
 
-            Texture2D texture = TextureAssets.Npc[Type].Value;
+            Texture2D texture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressBody").Value;
+            Texture2D eyes = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressEyes").Value;
 
             DrawBackglow(drawPosition);
             DrawWings(drawPosition);
             if (Phase2)
                 DrawTentacles(drawPosition);
-            Main.EntitySpriteDraw(texture, drawPosition, NPC.frame, Color.White, 0f, NPC.frame.Size() * 0.5f, 1f, 0);
+
+            Main.EntitySpriteDraw(texture, drawPosition, null, Color.White, 0f, texture.Size() * 0.5f, 1f, 0);
+            Main.EntitySpriteDraw(eyes, drawPosition, null, Color.Magenta, 0f, eyes.Size() * 0.5f, 1f, 0);
+
             if (Phase2 || Palette != EmpressPalettes.Default)
                 DrawDress(drawPosition);
 
@@ -331,21 +335,8 @@ namespace WoTE.Content.NPCs.EoL
         /// <param name="handFrame">The selected hand frame rectangle.</param>
         public static void GetHandDrawData(int frameY, out Texture2D handTexture, out Rectangle handFrame)
         {
-            // In order to minimize conflicts with texture packs, vanilla frames are sampled by default from the vanilla texture.
-            // This way, vanilla textures may preserve their texture pack changes.
-            // However, in cases where this is not possible due to custom poses, the custom texture is used.
-            bool mustUseCustomTexture = frameY >= 7;
-
-            if (mustUseCustomTexture)
-            {
-                handTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/Arm").Value;
-                handFrame = handTexture.Frame(1, 8, 0, frameY);
-            }
-            else
-            {
-                handTexture = TextureAssets.Extra[ExtrasID.HallowBossArmsLeft].Value;
-                handFrame = handTexture.Frame(1, 7, 0, frameY);
-            }
+            handTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/Arm").Value;
+            handFrame = handTexture.Frame(1, 8, 0, frameY);
         }
 
         /// <summary>
@@ -358,12 +349,13 @@ namespace WoTE.Content.NPCs.EoL
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 
             Vector4[] dressPalette = Palette.Get(EmpressPaletteType.Phase2Dress);
+            Texture2D dressTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressDressGlow").Value;
             ManagedShader gradientShader = ShaderManager.GetShader("WoTE.EmpressDressShader");
             gradientShader.TrySetParameter("gradient", dressPalette);
             gradientShader.TrySetParameter("gradientCount", dressPalette.Length);
+            gradientShader.TrySetParameter("baseTextureSize", dressTexture.Size());
             gradientShader.Apply();
 
-            Texture2D dressTexture = TextureAssets.Extra[ExtrasID.HallowBossSkirt].Value;
             Main.EntitySpriteDraw(dressTexture, drawPosition, null, Color.White, 0f, dressTexture.Size() * 0.5f, 1f, 0);
 
             Main.spriteBatch.End();

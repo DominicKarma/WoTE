@@ -15,9 +15,9 @@ namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
-        public Vector2 EventideLances_UndirectionedBowOffset => new Vector2(-72f, -14f).RotatedBy(NPC.rotation);
+        public Vector2 EventideLances_UndirectionedBowOffset => new Vector2(-50f, -14f).RotatedBy(NPC.rotation);
 
-        public Vector2 EventideLances_DirectionedBowOffset => new Vector2(NPC.spriteDirection * -72f, -14f).RotatedBy(NPC.rotation);
+        public Vector2 EventideLances_DirectionedBowOffset => new Vector2(NPC.spriteDirection * -50f, -14f).RotatedBy(NPC.rotation);
 
         /// <summary>
         /// Whether the Empress is visibly using her bow during her Eventide Lances attack.
@@ -257,7 +257,7 @@ namespace WoTE.Content.NPCs.EoL
 
             Vector2 eventideTop = eventidePosition + new Vector2(-14f, -37f).RotatedBy(NPC.rotation + angleOffset);
             Vector2 eventideBottom = eventidePosition + new Vector2(-14f, 37f).RotatedBy(NPC.rotation + angleOffset);
-            Vector2 stringEnd = drawPosition + new Vector2(2f, -36f).RotatedBy(NPC.rotation);
+            Vector2 stringEnd = drawPosition + new Vector2(2f, -22f).RotatedBy(NPC.rotation);
             if (RightHandFrame != EmpressHandFrame.UpwardGrip)
                 stringEnd = (eventideTop + eventideBottom) * 0.5f;
 
