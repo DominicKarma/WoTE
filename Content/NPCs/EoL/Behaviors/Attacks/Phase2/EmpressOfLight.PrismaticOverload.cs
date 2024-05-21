@@ -31,22 +31,22 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// How long it takes for the magic circle to appear during the Empress' Prismatic Overload attack.
         /// </summary>
-        public static int PrismaticOverload_MagicCircleAppearTime => Utilities.SecondsToFrames(1.75f);
+        public static int PrismaticOverload_MagicCircleAppearTime => Utilities.SecondsToFrames(1.4f);
 
         /// <summary>
         /// How long it takes for the magic circle to appear during the Empress' Prismatic Overload attack.
         /// </summary>
-        public static int PrismaticOverload_RotateUpwardDelay => Utilities.SecondsToFrames(0.75f);
+        public static int PrismaticOverload_RotateUpwardDelay => Utilities.SecondsToFrames(0.6f);
 
         /// <summary>
         /// How long it takes for the magic circle to begin aiming aim towards the player during the Empress' Prismatic Overload attack.
         /// </summary>
-        public static int PrismaticOverload_AimTowardsTargetDelay => Utilities.SecondsToFrames(1.25f);
+        public static int PrismaticOverload_AimTowardsTargetDelay => Utilities.SecondsToFrames(1f);
 
         /// <summary>
         /// How long it takes for the magic circle to correct its aim towards the player during the Empress' Prismatic Overload attack.
         /// </summary>
-        public static int PrismaticOverload_AimTowardsTargetTime => Utilities.SecondsToFrames(1.167f);
+        public static int PrismaticOverload_AimTowardsTargetTime => Utilities.SecondsToFrames(1f);
 
         /// <summary>
         /// How long it takes for the magic circle to prepare for firing during the Empress' Prismatic Overload attack.
