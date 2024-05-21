@@ -250,12 +250,13 @@ namespace WoTE.Content.NPCs.EoL
             backglowOpacity = MathHelper.Lerp(backglowOpacity, 0.03f, Utilities.InverseLerp(0.3f, 0.9f, ZPosition));
 
             float backglowScale = 1f - Utilities.InverseLerpBump(0f, 0.5f, 0.6f, 1f, TeleportCompletionRatio);
-            Color rainbow = Main.hslToRgb(Main.GlobalTimeWrappedHourly * 0.5f % 1f, 1f, 0.5f, 0);
+            Color rainbow = Palette.MulticolorLerp(EmpressPaletteType.Wings, Main.GlobalTimeWrappedHourly * 0.5f) with { A = 0 };
+            Color baseGlow = Palette.MulticolorLerp(EmpressPaletteType.Wings, 0.7f) with { A = 0 };
             Texture2D backglow = MiscTexturesRegistry.BloomCircleSmall.Value;
-            Main.EntitySpriteDraw(backglow, drawPosition, null, Color.Wheat with { A = 0 } * backglowOpacity * 0.25f, 0f, backglow.Size() * 0.5f, backglowScale * 4.1f, 0);
-            Main.EntitySpriteDraw(backglow, drawPosition, null, Color.Wheat with { A = 0 } * backglowOpacity * 0.67f, 0f, backglow.Size() * 0.5f, backglowScale * 2.85f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, baseGlow * backglowOpacity * 0.25f, 0f, backglow.Size() * 0.5f, backglowScale * 4.1f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, baseGlow * backglowOpacity * 0.67f, 0f, backglow.Size() * 0.5f, backglowScale * 2.85f, 0);
             Main.EntitySpriteDraw(backglow, drawPosition, null, rainbow * backglowOpacity * 0.7f, 0f, backglow.Size() * 0.5f, backglowScale * 1.5f, 0);
-            Main.EntitySpriteDraw(backglow, drawPosition, null, Color.Wheat with { A = 0 } * backglowOpacity, 0f, backglow.Size() * 0.5f, backglowScale * 0.8f, 0);
+            Main.EntitySpriteDraw(backglow, drawPosition, null, baseGlow * backglowOpacity, 0f, backglow.Size() * 0.5f, backglowScale * 0.8f, 0);
         }
 
         /// <summary>
