@@ -1,0 +1,51 @@
+NPCs: {
+	EmpressOfLight.DisplayName: Impératrice de la Lumière
+	Lacewing.DisplayName: Chrysope
+}
+
+Projectiles: {
+	PrismaticBolt.DisplayName: Projectile Prismatique
+	LightLance.DisplayName: Lance de lumière
+	AcceleratingLightLance.DisplayName: Lance de lumière
+	AcceleratingRainbow.DisplayName: Arc-en-ciel
+	SpinningTerraprisma.DisplayName: Terraprisma
+	DazzlingPetal.DisplayName: Pétale Éblouissant
+	StarBolt.DisplayName: Étoile Filante
+	PrismaticBurst.DisplayName: Éclats Prismatiques
+	DazzlingTornado.DisplayName: Tornade Éblouissante
+	EmpressOrbitingTerraprisma.DisplayName: Terraprisma
+	ConvergingMoonlight.DisplayName: Clair de lune émergeant
+	DazzlingDeathray.DisplayName: Rayon de la mort éblouissant
+	MagicCircle.DisplayName: Cercle magique
+	HomingLacewing.DisplayName: Chrysope
+	LanceWallTelegraph.DisplayName: Mur de lances télégraphes
+	RainbowRiftArrow.DisplayName: Flèche Fendeuse d'Arc-en-ciel
+}
+
+Configs: {
+	WoTEConfig: {
+		DisplayName: Configuration (côté client)
+
+		PhotosensitivityMode: {
+			Label: Mode photosensibilité
+      Tooltip: Est-ce que certains effets visuels relativement rapide ou intense devraient être atténués pour des raisons de photosensibilité ?
+		}
+	}
+}
+
+Buffs: {
+	GracedWings: {
+		DisplayName: Ailes Bénites
+		Description: L'impératrice de la lumière vous laisse danser avec elle
+	}
+}
+
+Dialogue: {
+	BaseIntroduction: Bienheureux... Laisse nous danser sous la lueur de la lune argentée cette nuit.
+	AngryIntroduction: CHEVALIER SANS GRÂCE!
+}
+
+MenuThemes: {
+	GloriousDawnMainMenu.DisplayName: Aube Glorieuse
+	GlimmerdewBlessedMoonlightMainMenu.DisplayName: Clair de lune bénit par l'éclat de rosée
+}
