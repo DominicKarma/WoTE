@@ -215,7 +215,7 @@ namespace WoTE.Content.NPCs.EoL
         public static int DazzlingDeathrayDamage => ApplyDamageModifiers(Main.expertMode ? 210 : 190);
 
         /// <summary>
-        /// The standard volume that the drizzle sound play at.
+        /// The standard volume that the drizzle sound plays at.
         /// </summary>
         public static float StandardDrizzleVolume => 0.2f;
 
