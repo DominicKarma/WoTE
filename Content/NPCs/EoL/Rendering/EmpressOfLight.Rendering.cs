@@ -349,12 +349,17 @@ namespace WoTE.Content.NPCs.EoL
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 
+            float scrollTime = Main.GlobalTimeWrappedHourly;
+            if (Palette == EmpressPalettes.BloodMoonPaletteSet)
+                scrollTime = 0.32f;
+
             Vector4[] dressPalette = Palette.Get(EmpressPaletteType.Phase2Dress);
             Texture2D dressTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressDressGlow").Value;
             ManagedShader gradientShader = ShaderManager.GetShader("WoTE.EmpressDressShader");
             gradientShader.TrySetParameter("gradient", dressPalette);
             gradientShader.TrySetParameter("gradientCount", dressPalette.Length);
             gradientShader.TrySetParameter("baseTextureSize", dressTexture.Size());
+            gradientShader.TrySetParameter("scrollTime", scrollTime);
             gradientShader.Apply();
 
             Main.EntitySpriteDraw(dressTexture, drawPosition, null, Color.White, 0f, dressTexture.Size() * 0.5f, 1f, 0);
