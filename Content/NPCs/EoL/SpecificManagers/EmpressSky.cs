@@ -95,6 +95,9 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
+            if (ModContent.GetInstance<WoTE>()?.Assets?.IsDisposed ?? true)
+                return;
+
             EmpressPaletteSet palette = Main.dayTime ? EmpressPalettes.DaytimePaletteSet : EmpressPalettes.Default;
             if (EmpressOfLight.Myself is not null)
                 palette = EmpressOfLight.Myself.As<EmpressOfLight>().Palette;
