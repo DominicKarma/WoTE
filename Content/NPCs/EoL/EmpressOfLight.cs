@@ -177,42 +177,42 @@ namespace WoTE.Content.NPCs.EoL
         /// <summary>
         /// The amount of damage prismatic bolts summoned by the Empress do.
         /// </summary>
-        public static int PrismaticBoltDamage => Main.expertMode ? 150 : 110;
+        public static int PrismaticBoltDamage => ApplyDamageModifiers(Main.expertMode ? 150 : 110);
 
         /// <summary>
         /// The amount of damage star bursts summoned by the Empress do.
         /// </summary>
-        public static int StarBurstDamage => Main.expertMode ? 150 : 110;
+        public static int StarBurstDamage => ApplyDamageModifiers(Main.expertMode ? 150 : 110);
 
         /// <summary>
         /// The amount of damage accelerating rainbows summoned by the Empress do.
         /// </summary>
-        public static int AcceleratingRainbowDamage => Main.expertMode ? 160 : 120;
+        public static int AcceleratingRainbowDamage => ApplyDamageModifiers(Main.expertMode ? 160 : 120);
 
         /// <summary>
         /// The amount of damage light lances summoned by the Empress do.
         /// </summary>
-        public static int LightLanceDamage => Main.expertMode ? 160 : 120;
+        public static int LightLanceDamage => ApplyDamageModifiers(Main.expertMode ? 160 : 120);
 
         /// <summary>
         /// The amount of damage lacewings summoned by the Empress' magic circle do.
         /// </summary>
-        public static int MagicRingLacewingDamage => Main.expertMode ? 165 : 120;
+        public static int MagicRingLacewingDamage => ApplyDamageModifiers(Main.expertMode ? 165 : 120);
 
         /// <summary>
         /// The amount of damage dazzling petals summoned by the Empress do.
         /// </summary>
-        public static int DazzlingPetalDamage => Main.expertMode ? 170 : 135;
+        public static int DazzlingPetalDamage => ApplyDamageModifiers(Main.expertMode ? 170 : 135);
 
         /// <summary>
         /// The amount of damage terraprismas summoned by the Empress do.
         /// </summary>
-        public static int TerraprismaDamage => Main.expertMode ? 170 : 135;
+        public static int TerraprismaDamage => ApplyDamageModifiers(Main.expertMode ? 170 : 135);
 
         /// <summary>
         /// The amount of damage dazzling deathrays casted by the Empress do.
         /// </summary>
-        public static int DazzlingDeathrayDamage => Main.expertMode ? 210 : 190;
+        public static int DazzlingDeathrayDamage => ApplyDamageModifiers(Main.expertMode ? 210 : 190);
 
         /// <summary>
         /// The standard volume that the drizzle sound play at.
@@ -229,6 +229,18 @@ namespace WoTE.Content.NPCs.EoL
         #endregion Fields and Properties
 
         #region Loading
+
+        /// <summary>
+        /// Applies modifiers to base damage values based on extraneous information, such as whether it's daytime or not.
+        /// </summary>
+        /// <param name="baseDamage">The base damage value.</param>
+        public static int ApplyDamageModifiers(int baseDamage)
+        {
+            if (Main.dayTime)
+                baseDamage += 120;
+
+            return baseDamage;
+        }
 
         public override void SetStaticDefaults()
         {
