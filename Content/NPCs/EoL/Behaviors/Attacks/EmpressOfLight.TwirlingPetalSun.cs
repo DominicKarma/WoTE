@@ -82,11 +82,14 @@ namespace WoTE.Content.NPCs.EoL
             {
                 SoundEngine.PlaySound(SoundID.Item159 with { MaxInstances = 0 });
 
-                float petalOffsetAngle = NPC.AngleTo(Target.Center) + MathHelper.Pi / TwirlingPetalSun_PetalCount;
-                for (int i = 0; i < TwirlingPetalSun_PetalCount; i++)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    float petalDirection = MathHelper.TwoPi * i / TwirlingPetalSun_PetalCount + petalOffsetAngle;
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DazzlingPetal>(), DazzlingPetalDamage, 0f, -1, petalDirection);
+                    float petalOffsetAngle = NPC.AngleTo(Target.Center) + MathHelper.Pi / TwirlingPetalSun_PetalCount;
+                    for (int i = 0; i < TwirlingPetalSun_PetalCount; i++)
+                    {
+                        float petalDirection = MathHelper.TwoPi * i / TwirlingPetalSun_PetalCount + petalOffsetAngle;
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DazzlingPetal>(), DazzlingPetalDamage, 0f, -1, petalDirection);
+                    }
                 }
             }
 
