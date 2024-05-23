@@ -31,6 +31,9 @@
         Teleport,
         ResetCycle,
 
+        // Enrage state. Used if the player kills a lacewing to summon the Empress.
+        Enraged,
+
         // "The player died so I should probably go away" state.
         Vanish,
 

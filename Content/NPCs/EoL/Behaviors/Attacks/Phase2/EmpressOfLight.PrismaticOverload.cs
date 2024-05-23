@@ -88,7 +88,7 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.ApplyToAllStatesExcept(state =>
             {
                 StateMachine.RegisterTransition(state, EmpressAIType.PrismaticOverload, false, () => PrismaticOverload_CanDanceToBeat);
-            }, EmpressAIType.Phase2Transition, EmpressAIType.Die, EmpressAIType.Vanish, EmpressAIType.Teleport, EmpressAIType.PrismaticOverload, EmpressAIType.ButterflyBurstDashes);
+            }, EmpressAIType.Phase2Transition, EmpressAIType.Enraged, EmpressAIType.Die, EmpressAIType.Vanish, EmpressAIType.Teleport, EmpressAIType.PrismaticOverload, EmpressAIType.ButterflyBurstDashes);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.PrismaticOverload, DoBehavior_PrismaticOverload);
         }

@@ -73,7 +73,7 @@ namespace WoTE.Content.NPCs.EoL
             StateMachine.ApplyToAllStatesExcept(state =>
             {
                 StateMachine.RegisterTransition(state, EmpressAIType.BeatSyncedBolts, false, () => BeatSyncedBolts_CanDanceToBeat);
-            }, EmpressAIType.Phase2Transition, EmpressAIType.Die, EmpressAIType.Vanish, EmpressAIType.Teleport, EmpressAIType.BeatSyncedBolts, EmpressAIType.ButterflyBurstDashes);
+            }, EmpressAIType.Phase2Transition, EmpressAIType.Enraged, EmpressAIType.Die, EmpressAIType.Vanish, EmpressAIType.Teleport, EmpressAIType.BeatSyncedBolts, EmpressAIType.ButterflyBurstDashes);
 
             StateMachine.RegisterStateBehavior(EmpressAIType.BeatSyncedBolts, DoBehavior_BeatSyncedBolts);
         }

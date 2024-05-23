@@ -81,6 +81,23 @@ namespace WoTE.Content.NPCs.EoL
             WithBackgroundTint(new Color(255, 40, 2) * 0.4f);
 
         /// <summary>
+        /// The Empress palette used when she's enraged. This must be used manually, as it is not included in the <see cref="Choose"/> method.
+        /// </summary>
+        public static readonly EmpressPaletteSet EnragedPaletteSet = RegisterNew(10, () => false).
+            WithPalette(EmpressPaletteType.ButterflyAvatar, Color.Black, Color.White, Color.Black, Color.White).
+            WithPalette(EmpressPaletteType.Wings, Color.Black, Color.White, Color.Black, Color.White).
+            WithPalette(EmpressPaletteType.Phase2Dress, Color.Black, Color.White, Color.Black, Color.White).
+            WithPalette(EmpressPaletteType.PrismaticBolt, Color.Black, Color.White, Color.Black, Color.White).
+            WithPalette(EmpressPaletteType.StarBolt, Color.Black, Color.White, Color.Black, Color.White).
+            WithPalette(EmpressPaletteType.RainbowArrow, Color.Black, Color.White, Color.Black, Color.White).
+            WithPalette(EmpressPaletteType.LacewingTrail, Color.Black, Color.White, Color.Black, Color.White).
+            WithPalette(EmpressPaletteType.DazzlingPetal, Color.Black, Color.White, Color.Black, Color.White).
+            WithCloudColor(Color.White).
+            WithMistColor(Color.White).
+            WithMoonColors(Color.Transparent, Color.Transparent).
+            WithBackgroundTint(Color.White * 0.4f);
+
+        /// <summary>
         /// Registers a new palette set that the Empress can use.
         /// </summary>
         /// <param name="priority">The priority of the palette.</param>

@@ -217,6 +217,11 @@ namespace WoTE.Content.NPCs.EoL
         public static int DazzlingDeathrayDamage => ApplyDamageModifiers(Main.expertMode ? 210 : 190);
 
         /// <summary>
+        /// The amount of projectiles summoned by the Empress do when she's enraged.
+        /// </summary>
+        public static int EnragedProjectileDamage => 10000;
+
+        /// <summary>
         /// The standard volume that the drizzle sound plays at.
         /// </summary>
         public static float StandardDrizzleVolume => 0.2f;
@@ -374,7 +379,9 @@ namespace WoTE.Content.NPCs.EoL
                 DoBehavior_LanceWallSupport_HandlePostStateSupportBehaviors();
 
             UpdateLoopingSounds();
-            GracePlayerWings();
+
+            if (CurrentState != EmpressAIType.Awaken && CurrentState != EmpressAIType.Enraged)
+                GracePlayerWings();
 
             // This is done to ensure that if the PerformStateTransitionCheck cleared the state stack there's a viable replacement state in there.
             // Without this, the AITimer ref will throw an exception due to there being nothing in the state stack to peek.

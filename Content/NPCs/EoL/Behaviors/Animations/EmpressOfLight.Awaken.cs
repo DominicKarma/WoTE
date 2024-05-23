@@ -8,12 +8,25 @@ namespace WoTE.Content.NPCs.EoL
 {
     public partial class EmpressOfLight : ModNPC
     {
+        /// <summary>
+        /// Whether the Empress was summoned in an enraged state or not.
+        /// </summary>
+        public bool Awaken_IsEnraged
+        {
+            get => NPC.ai[0] == 0f;
+            set => NPC.ai[0] = value ? 0f : 1f;
+        }
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_Awaken()
         {
             StateMachine.RegisterTransition(EmpressAIType.Awaken, EmpressAIType.VanillaPrismaticBolts, false, () =>
             {
-                return AITimer >= 170;
+                return AITimer >= 180 && !Awaken_IsEnraged;
+            });
+            StateMachine.RegisterTransition(EmpressAIType.Awaken, EmpressAIType.Enraged, false, () =>
+            {
+                return AITimer >= 180 && Awaken_IsEnraged;
             });
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Awaken, DoBehavior_Awaken);
@@ -32,6 +45,21 @@ namespace WoTE.Content.NPCs.EoL
 
             LeftHandFrame = EmpressHandFrame.HandPressedToChest;
             RightHandFrame = EmpressHandFrame.HandPressedToChest;
+            if (Awaken_IsEnraged)
+            {
+                Palette = EmpressPalettes.EnragedPaletteSet;
+
+                LeftHandFrame = EmpressHandFrame.OpenHandDownwardArm;
+                RightHandFrame = EmpressHandFrame.OpenHandDownwardArm;
+                if (AITimer >= 50)
+                {
+                    EmpressDialogueSystem.ShakyDialogue = true;
+                    EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(60f, 90f, 174f, 179f, AITimer);
+                    EmpressDialogueSystem.DialogueKeySuffix = "AngryIntroduction";
+                    EmpressDialogueSystem.DialogueColor = new(255, 3, 27);
+                }
+                Music = 0;
+            }
         }
     }
 }
