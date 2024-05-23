@@ -80,7 +80,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         /// </summary>
         public void Appear()
         {
-            Projectile.Opacity = Utilities.InverseLerp(0f, 12f, Time) * Utilities.InverseLerp(0f, 10f, Projectile.timeLeft);
+            Projectile.Opacity = Utilities.InverseLerp(0f, 12f, Time) * Utilities.InverseLerp(0f, 30f, Projectile.timeLeft);
             Projectile.scale = Utilities.InverseLerp(0f, 28f, Time).Squared() * Utilities.InverseLerp(0f, 15f, Projectile.timeLeft);
         }
 
