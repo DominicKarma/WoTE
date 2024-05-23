@@ -4,4 +4,5 @@ Credits to the following individuals for helping (whether directly or indirectly
 
 Programming: Dominic Karma
 Music: Phyrnna
+Artwork: Myra
 Testing and Quality Assurance: Blast, LGL, Lynel, SomeSnakeOilSalesman
