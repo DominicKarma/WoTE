@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Luminance.Common.Utilities;
@@ -220,6 +221,11 @@ namespace WoTE.Content.NPCs.EoL
         public static float StandardDrizzleVolume => 0.2f;
 
         /// <summary>
+        /// How much of a base health boost the Empress obtains if the Calamity Mod is enabled, to roughly match its balance.
+        /// </summary>
+        public static float CalamityHPBoostFactor => 1.45f;
+
+        /// <summary>
         /// The ambient drizzle sound that plays throughout the fight.
         /// </summary>
         public static readonly SoundStyle DrizzleSound = new("WoTE/Assets/Sounds/Custom/Drizzle");
@@ -271,6 +277,12 @@ namespace WoTE.Content.NPCs.EoL
             {
                 NPC.lifeMax /= 2;
                 NPC.damage = 92;
+            }
+
+            if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+            {
+                float hpBoostFactor = (float)calamity.Call("GetBossHealthBoost") * 0.01f + CalamityHPBoostFactor;
+                NPC.lifeMax = (int)MathF.Round(NPC.lifeMax * hpBoostFactor);
             }
 
             NPC.aiStyle = -1;
