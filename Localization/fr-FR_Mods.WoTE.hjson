@@ -28,7 +28,7 @@ Configs: {
 
 		PhotosensitivityMode: {
 			Label: Mode photosensibilité
-      Tooltip: Est-ce que certains effets visuels relativement rapide ou intense devraient être atténués pour des raisons de photosensibilité ?
+			Tooltip: Est-ce que certains effets visuels relativement rapide ou intense devraient être atténués pour des raisons de photosensibilité ?
 		}
 	}
 }
