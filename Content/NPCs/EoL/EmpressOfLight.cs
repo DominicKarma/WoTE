@@ -7,6 +7,7 @@ using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
+using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -489,6 +490,9 @@ namespace WoTE.Content.NPCs.EoL
             NPC.immortal = false;
             NPC.ShowNameOnHover = true;
             DashAfterimageInterpolant = Utilities.Saturate(DashAfterimageInterpolant - 0.01f);
+
+            if (Main.netMode != NetmodeID.Server)
+                Filters.Scene["BloodMoon"].Deactivate();
         }
 
         /// <summary>
