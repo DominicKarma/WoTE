@@ -13,8 +13,8 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public bool Awaken_IsEnraged
         {
-            get => NPC.ai[0] == 0f;
-            set => NPC.ai[0] = value ? 0f : 1f;
+            get => NPC.ai[0] == 1f;
+            set => NPC.ai[0] = value.ToInt();
         }
 
         [AutomatedMethodInvoke]

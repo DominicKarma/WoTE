@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Luminance.Common.Utilities;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,6 +15,7 @@ namespace WoTE.Content.NPCs.EoL
             if (npc.type == NPCID.HallowBoss)
             {
                 npc.Transform(ModContent.NPCType<EmpressOfLight>());
+                npc.As<EmpressOfLight>().Awaken_IsEnraged = true;
                 return false;
             }
 
