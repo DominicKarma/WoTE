@@ -28,7 +28,7 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         /// <summary>
         /// The ideal, maximum radius of this burst.
         /// </summary>
-        public static float IdealRadius => 600f;
+        public static float IdealRadius => 780f;
 
         /// <summary>
         /// How long this burst should exist for, in frames.

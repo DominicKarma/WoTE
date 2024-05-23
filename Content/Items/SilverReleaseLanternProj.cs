@@ -57,9 +57,9 @@ namespace WoTE.Content.Items
             DelegateMethods.v3_1 = new Vector3(0.85f, 1f, 1f);
             Utils.PlotTileLine(Projectile.Top, Projectile.Bottom, Projectile.width * Projectile.scale, DelegateMethods.CastLight);
 
-            if (Time >= 180f)
+            if (Time >= 150f)
             {
-                Projectile.velocity *= MathHelper.Lerp(1f, 0.8f, Utilities.InverseLerp(180f, 240f, Time));
+                Projectile.velocity *= MathHelper.Lerp(1f, 0.8f, Utilities.InverseLerp(150f, 240f, Time));
 
                 if (Projectile.timeLeft >= 90)
                     ReleaseEnergyParticles();
@@ -81,10 +81,14 @@ namespace WoTE.Content.Items
 
         public void ReleaseEnergyParticles()
         {
+            float energyParticleReleaseChance = Utilities.InverseLerp(150f, 240f, Time).Squared();
             EmpressPaletteSet palette = EmpressPalettes.Choose();
 
             for (int i = 0; i < 2; i++)
             {
+                if (!Main.rand.NextBool(energyParticleReleaseChance))
+                    continue;
+
                 float energySpawnOffsetAngle = MathHelper.TwoPi * (Main.rand.Next(4) + 0.5f) / 4f + Main.rand.NextFloatDirection() * 0.2f;
                 Color energyColor = palette.MulticolorLerp(EmpressPaletteType.LacewingTrail, Main.rand.NextFloat());
                 Vector2 energySpawnPosition = Projectile.Center + energySpawnOffsetAngle.ToRotationVector2() * Main.rand.NextFloat(820f, 1100f);
@@ -95,11 +99,26 @@ namespace WoTE.Content.Items
 
             for (int i = 0; i < 3; i++)
             {
+                if (!Main.rand.NextBool(energyParticleReleaseChance))
+                    continue;
+
                 Color energyColor = palette.MulticolorLerp(EmpressPaletteType.LacewingTrail, Main.rand.NextFloat());
                 Vector2 energySpawnPosition = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(820f, 1100f);
                 Vector2 energyVelocity = (Projectile.Center - energySpawnPosition) * 0.042f;
                 BloomPixelParticle bloom = new(energySpawnPosition, energyVelocity, Color.Wheat, energyColor, 180, Vector2.One * Main.rand.NextFloat(2f, 4f), null, Vector2.One * 0.023f);
                 bloom.Spawn();
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (!Main.rand.NextBool(energyParticleReleaseChance.Squared() * 0.1f))
+                    continue;
+
+                Color lacewingColor = palette.MulticolorLerp(EmpressPaletteType.LacewingTrail, Main.rand.NextFloat());
+                Vector2 lacewingSpawnPosition = Projectile.Center + new Vector2(Main.rand.NextFloatDirection() * 1200f, 850f);
+                Vector2 lacewingVelocity = -Vector2.UnitY.RotatedBy(0.4f) * Main.rand.NextFloat(11f, 30f);
+                PrismaticLacewingParticle lacewing = new(lacewingSpawnPosition, lacewingVelocity, lacewingColor, Main.rand.Next(60, 150), Vector2.One, () => lacewingSpawnPosition + lacewingVelocity * 280f);
+                lacewing.Spawn();
             }
         }
 
@@ -114,10 +133,10 @@ namespace WoTE.Content.Items
             Texture2D flare = MiscTexturesRegistry.ShineFlareTexture.Value;
             Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
 
-            float glimmerInterpolant = Utilities.InverseLerp(8f, 36f, Projectile.timeLeft);
+            float glimmerInterpolant = Utilities.InverseLerp(8f, 48f, Projectile.timeLeft);
             float flareOpacity = Utilities.InverseLerp(1f, 0.75f, glimmerInterpolant);
             float flareScale = MathF.Pow(Utilities.Convert01To010(glimmerInterpolant), 1.4f) * 2.8f + 1.4f;
-            float flareRotation = MathHelper.SmoothStep(0f, MathHelper.Pi, MathF.Pow(glimmerInterpolant, 0.2f)) + MathHelper.PiOver4;
+            float flareRotation = MathHelper.SmoothStep(0f, MathHelper.TwoPi, MathF.Pow(glimmerInterpolant, 0.2f)) + MathHelper.PiOver4;
             Vector2 flarePosition = drawPosition;
 
             Color flareColorA = palette.MulticolorLerp(EmpressPaletteType.PrismaticBolt, 0f);
@@ -136,7 +155,7 @@ namespace WoTE.Content.Items
             Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             Color lanternColor = Projectile.GetAlpha(lightColor);
-            Color backglowColor = Projectile.GetAlpha(Color.DeepSkyBlue) with { A = 0 } * 0.6f;
+            Color backglowColor = Projectile.GetAlpha(Main.dayTime ? Color.Orange : Color.DeepSkyBlue) with { A = 0 } * 0.6f;
 
             float bloomScale = (Time - 240f) * Projectile.Opacity * 0.017f;
             Color bloomColor = new Color(155, 255, 255, 0) * Utilities.Saturate(bloomScale);

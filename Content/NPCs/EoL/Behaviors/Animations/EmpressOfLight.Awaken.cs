@@ -1,9 +1,12 @@
-﻿using Luminance.Common.StateMachines;
+﻿using System;
+using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.NPCs.EoL.Projectiles;
 using WoTE.Content.Particles.Metaballs;
 
 namespace WoTE.Content.NPCs.EoL
@@ -24,7 +27,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.RegisterTransition(EmpressAIType.Awaken, EmpressAIType.VanillaPrismaticBolts, false, () =>
             {
-                return AITimer >= 240 && !Awaken_IsEnraged;
+                return AITimer >= 270 && !Awaken_IsEnraged;
             });
             StateMachine.RegisterTransition(EmpressAIType.Awaken, EmpressAIType.Enraged, false, () =>
             {
@@ -42,13 +45,15 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer <= 5)
                 NPC.velocity = Vector2.UnitY * 12f;
 
-            NPC.velocity *= 0.84f;
+            NPC.velocity = Vector2.Lerp(NPC.velocity, Vector2.UnitY * MathF.Sin(MathHelper.TwoPi * AITimer / 135f) * 0.6f, 0.16f);
             NPC.Opacity = Utilities.InverseLerp(0f, 12f, AITimer);
 
             if (AITimer == 2)
             {
-                ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 40f, shakeStrengthDissipationIncrement: 0.6f);
+                ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 33f, shakeStrengthDissipationIncrement: 0.45f);
                 ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.25f, 0.015f);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<PrismaticBurst>(), 0, 0f);
             }
 
             LeftHandFrame = EmpressHandFrame.OpenHandDownwardArm;
@@ -66,12 +71,12 @@ namespace WoTE.Content.NPCs.EoL
                 }
                 Music = 0;
             }
-            else if (AITimer >= 50)
+            else if (AITimer >= 80)
             {
                 EmpressDialogueSystem.ShakyDialogue = false;
                 EmpressDialogueSystem.DialogueKeySuffix = "BaseIntroduction";
                 EmpressDialogueSystem.DialogueColor = Color.HotPink;
-                EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(60f, 90f, 234f, 239f, AITimer);
+                EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(90f, 120f, 240f, 269f, AITimer);
                 if (Main.dayTime)
                 {
                     EmpressDialogueSystem.DialogueKeySuffix = "DayIntroduction";

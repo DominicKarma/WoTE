@@ -52,7 +52,10 @@ namespace WoTE.Content.NPCs.EoL
         private bool DrawTextWrapper()
         {
             if (EmpressOfLight.Myself is null)
+            {
+                DialogueOpacity = 0f;
                 return true;
+            }
 
             var font = Mod.Assets.Request<DynamicSpriteFont>("Assets/Fonts/EmpressDialogueText", AssetRequestMode.ImmediateLoad).Value;
             float dialogueScale = 0.8f;
