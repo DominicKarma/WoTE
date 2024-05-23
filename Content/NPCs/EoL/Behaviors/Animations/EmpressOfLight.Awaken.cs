@@ -48,6 +48,8 @@ namespace WoTE.Content.NPCs.EoL
             NPC.velocity = Vector2.Lerp(NPC.velocity, Vector2.UnitY * MathF.Sin(MathHelper.TwoPi * AITimer / 135f) * 0.6f, 0.16f);
             NPC.Opacity = Utilities.InverseLerp(0f, 12f, AITimer);
 
+            NPC.dontTakeDamage = true;
+
             if (AITimer == 2)
             {
                 ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 33f, shakeStrengthDissipationIncrement: 0.45f);
