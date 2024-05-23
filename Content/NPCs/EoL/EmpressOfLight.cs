@@ -18,6 +18,11 @@ namespace WoTE.Content.NPCs.EoL
         #region Fields and Properties
 
         /// <summary>
+        /// Private backing field for <see cref="Palette"/>.
+        /// </summary>
+        private EmpressPaletteSet palette;
+
+        /// <summary>
         /// Private backing field for <see cref="Myself"/>.
         /// </summary>
         private static NPC myself;
@@ -143,8 +148,8 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public EmpressPaletteSet Palette
         {
-            get;
-            set;
+            get => palette ??= EmpressPalettes.Choose();
+            set => palette = value;
         }
 
         /// <summary>
