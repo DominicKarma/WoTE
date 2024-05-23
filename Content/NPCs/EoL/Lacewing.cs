@@ -251,6 +251,8 @@ namespace WoTE.Content.NPCs.EoL
                     // This is done to give the player an easier chance at initially reacting to the attack.
                     if (EmpressOfLight.Myself.As<EmpressOfLight>().ButterflyBurstDashes_DashCounter <= 0f)
                         PlayerDirectionAtStartOfDash = 0f;
+
+                    NPC.netUpdate = true;
                 }
 
                 // Decide where to hover.
@@ -288,6 +290,9 @@ namespace WoTE.Content.NPCs.EoL
                 NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(target.Center - Vector2.UnitY * 9f) * 54f, 0.29f);
                 NPC.defense = 9999;
                 idealTrailOpacity = 2f;
+
+                if (AITimer == redirectTime + dashDelay + dashRepositionTime - 1)
+                    NPC.netUpdate = true;
             }
 
             else if (AITimer <= redirectTime + dashDelay + dashRepositionTime + dashTime)

@@ -322,11 +322,14 @@ namespace WoTE.Content.NPCs.EoL
         public override void SendExtraAI(BinaryWriter writer)
         {
             writer.Write(AITimer);
+            writer.Write(TeleportDuration);
             writer.Write(MusicTimer);
             writer.Write(ZPosition);
             writer.Write(Phase);
             writer.Write(LanceWallXPosition);
+            writer.Write(TeleportCompletionRatio);
             writer.Write(NPC.Opacity);
+            writer.WriteVector2(TeleportDestination);
 
             BitsByte flags = new()
             {
@@ -343,11 +346,14 @@ namespace WoTE.Content.NPCs.EoL
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             AITimer = reader.ReadInt32();
+            TeleportDuration = reader.ReadInt32();
             MusicTimer = reader.ReadInt32();
             ZPosition = reader.ReadSingle();
             Phase = reader.ReadInt32();
             LanceWallXPosition = reader.ReadSingle();
+            TeleportCompletionRatio = reader.ReadSingle();
             NPC.Opacity = reader.ReadSingle();
+            TeleportDestination = reader.ReadVector2();
 
             BitsByte flags = reader.ReadByte();
             SummonedAtNight = flags[0];

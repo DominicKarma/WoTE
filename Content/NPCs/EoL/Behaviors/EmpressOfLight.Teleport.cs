@@ -74,6 +74,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             NPC.velocity *= 0.85f;
             NPC.rotation = MathHelper.Lerp(NPC.rotation, NPC.velocity.X * 0.001f, 0.3f);
+            NPC.netOffset = Vector2.Zero;
             DashAfterimageInterpolant *= 0.7f;
 
             TeleportCompletionRatio = Utilities.InverseLerp(0f, TeleportDuration, AITimer);
@@ -95,6 +96,7 @@ namespace WoTE.Content.NPCs.EoL
                 {
                     NPC.velocity = Vector2.Zero;
                     NPC.Center = TeleportDestination;
+                    TeleportDestination = Vector2.Zero;
                     NPC.netUpdate = true;
                 }
             }

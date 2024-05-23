@@ -72,7 +72,7 @@ namespace WoTE.Content.NPCs.EoL
                     EmpressDialogueSystem.ShakyDialogue = true;
                     EmpressDialogueSystem.DialogueKeySuffix = "AngryIntroduction";
                     EmpressDialogueSystem.DialogueColor = new(255, 3, 27);
-                    EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(60f, 90f, 174f, 179f, AITimer);
+                    EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(60f, 90f, 164f, 169f, AITimer);
                 }
                 Music = 0;
             }
@@ -81,7 +81,7 @@ namespace WoTE.Content.NPCs.EoL
                 EmpressDialogueSystem.ShakyDialogue = false;
                 EmpressDialogueSystem.DialogueKeySuffix = "BaseIntroduction";
                 EmpressDialogueSystem.DialogueColor = Color.HotPink;
-                EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(90f, 120f, 240f, 269f, AITimer);
+                EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(90f, 120f, 230f, 259f, AITimer);
                 if (Main.dayTime)
                 {
                     EmpressDialogueSystem.DialogueKeySuffix = "DayIntroduction";
