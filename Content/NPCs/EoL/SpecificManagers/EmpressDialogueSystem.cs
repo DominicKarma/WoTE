@@ -61,26 +61,18 @@ namespace WoTE.Content.NPCs.EoL
             float dialogueScale = 0.8f;
             float spacingPerCharacter = 4f;
             string dialogue = Language.GetTextValue($"Mods.WoTE.Dialogue.{DialogueKeySuffix}");
-            Vector2 dialogueDrawPosition = EmpressOfLight.Myself.Top - Vector2.UnitY * 100f - Main.screenPosition;
+            Vector2 dialogueDrawPosition = EmpressOfLight.Myself.Top - Vector2.UnitY * 132f - Main.screenPosition;
             foreach (string line in Utils.WordwrapString(dialogue, font, 800, 10, out _))
             {
                 if (string.IsNullOrEmpty(line))
                     continue;
 
                 Vector2 characterLineOffset = (font.MeasureString(line) + Vector2.UnitX * line.Length * spacingPerCharacter) * Vector2.UnitX * dialogueScale * -0.5f;
-                foreach (char character in line)
-                {
-                    string characterString = character.ToString();
-                    Vector2 characterSize = font.MeasureString(characterString);
-                    if (character == 'i')
-                        characterSize.X *= 1.25f;
+                Vector2 lineSize = font.MeasureString(line);
+                Vector2 lineOffset = (ShakyDialogue ? Main.rand.NextVector2CircularEdge(1.7f, 2.4f) * dialogueScale : Vector2.Zero) + characterLineOffset;
 
-                    Vector2 characterOffset = (ShakyDialogue ? Main.rand.NextVector2CircularEdge(1.7f, 2.4f) * dialogueScale : Vector2.Zero) + characterLineOffset;
-
-                    ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, characterString, dialogueDrawPosition + characterOffset, DialogueColor * DialogueOpacity, 0f, characterSize * 0.5f, Vector2.One * dialogueScale, -1f, 1f);
-                    characterLineOffset.X += dialogueScale * (characterSize.X + spacingPerCharacter);
-                }
-                dialogueDrawPosition.Y += dialogueScale * 40f;
+                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, line, dialogueDrawPosition + lineOffset, DialogueColor * DialogueOpacity, 0f, lineSize * new Vector2(-0.1f, 0.5f), Vector2.One * dialogueScale, -1f, 1f);
+                dialogueDrawPosition.Y += dialogueScale * 48f;
             }
             return true;
         }
