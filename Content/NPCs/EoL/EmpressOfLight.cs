@@ -321,6 +321,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void SendExtraAI(BinaryWriter writer)
         {
+            writer.Write(AITimer);
             writer.Write(MusicTimer);
             writer.Write(ZPosition);
             writer.Write(Phase);
@@ -341,6 +342,7 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
+            AITimer = reader.ReadInt32();
             MusicTimer = reader.ReadInt32();
             ZPosition = reader.ReadSingle();
             Phase = reader.ReadInt32();
