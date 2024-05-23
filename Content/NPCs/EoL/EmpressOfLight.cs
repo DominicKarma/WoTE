@@ -268,6 +268,8 @@ namespace WoTE.Content.NPCs.EoL
             NPCID.Sets.MustAlwaysDraw[Type] = true;
             NPCID.Sets.TrailingMode[Type] = 3;
             NPCID.Sets.TrailCacheLength[Type] = 30;
+            NPCID.Sets.MPAllowedEnemies[Type] = true;
+            NPCID.Sets.BossBestiaryPriority.Add(Type);
         }
 
         public override void SetDefaults()
