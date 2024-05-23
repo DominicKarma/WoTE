@@ -20,6 +20,7 @@ Projectiles: {
 	HomingLacewing.DisplayName: Chrysope
 	LanceWallTelegraph.DisplayName: Mur de lances télégraphes
 	RainbowRiftArrow.DisplayName: Flèche Fendeuse d'Arc-en-ciel
+	// SilverReleaseLanternProj.DisplayName: Silver Release Lantern
 }
 
 Configs: {
@@ -37,6 +38,13 @@ Buffs: {
 	GracedWings: {
 		DisplayName: Ailes Bénites
 		Description: L'impératrice de la lumière vous laisse danser avec elle
+	}
+}
+
+Items: {
+	SilverReleaseLantern: {
+		// DisplayName: Silver Release Lantern
+		// Tooltip: Engages the Empress of Light in combat
 	}
 }
 

@@ -20,6 +20,7 @@ Projectiles: {
 	HomingLacewing.DisplayName: Lacewing
 	LanceWallTelegraph.DisplayName: Lance Wall Telegraph
 	RainbowRiftArrow.DisplayName: Rainbow Rift Arrow
+	SilverReleaseLanternProj.DisplayName: Silver Release Lantern
 }
 
 Configs: {
@@ -37,6 +38,13 @@ Buffs: {
 	GracedWings: {
 		DisplayName: Graced Wings
 		Description: The Empress is letting you dance with her
+	}
+}
+
+Items: {
+	SilverReleaseLantern: {
+		DisplayName: Silver Release Lantern
+		Tooltip: Engages the Empress of Light in combat
 	}
 }
 

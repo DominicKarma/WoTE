@@ -25,6 +25,11 @@ namespace WoTE.Content.Particles
         public Vector2 BloomScaleFactor;
 
         /// <summary>
+        /// The homer-in speed factor. Only used if <see cref="HomeInDestination"/> is used.
+        /// </summary>
+        public float HomeInSpeedFactor;
+
+        /// <summary>
         /// The optional position function that this pixel should try to home towards.
         /// </summary>
         public Func<Vector2>? HomeInDestination;
@@ -42,7 +47,7 @@ namespace WoTE.Content.Particles
 
         public override BlendState BlendState => BlendState.Additive;
 
-        public BloomPixelParticle(Vector2 position, Vector2 velocity, Color color, Color bloomColor, int lifetime, Vector2 scale, Func<Vector2>? homeInDestination = null, Vector2? bloomScaleFactor = null)
+        public BloomPixelParticle(Vector2 position, Vector2 velocity, Color color, Color bloomColor, int lifetime, Vector2 scale, Func<Vector2>? homeInDestination = null, Vector2? bloomScaleFactor = null, float homeInSpeedFactor = 1f)
         {
             Position = position;
             Velocity = velocity;
@@ -54,6 +59,7 @@ namespace WoTE.Content.Particles
             Opacity = 1f;
             Rotation = 0f;
             HomeInDestination = homeInDestination;
+            HomeInSpeedFactor = homeInSpeedFactor;
             BloomScaleFactor = bloomScaleFactor ?? Vector2.One * 0.04f;
         }
 
@@ -83,11 +89,11 @@ namespace WoTE.Content.Particles
                 float currentDirection = Velocity.ToRotation();
                 float idealDirection = (homeInDestination - Position).ToRotation();
                 Velocity = currentDirection.AngleLerp(idealDirection, flySpeedInterpolant * 0.014f).ToRotationVector2() * Velocity.Length();
-                Velocity = Vector2.Lerp(Velocity, idealDirection.ToRotationVector2() * (Time * 0.05f + 25f), flySpeedInterpolant * 0.0137f);
+                Velocity = Vector2.Lerp(Velocity, idealDirection.ToRotationVector2() * (Time * 0.05f + HomeInSpeedFactor * 25f), flySpeedInterpolant * 0.0137f);
                 if (Position.WithinRange(homeInDestination, 300f))
                     Velocity *= 0.97f;
 
-                if (Position.WithinRange(homeInDestination, 10f))
+                if (Position.WithinRange(homeInDestination, 18f))
                     Kill();
             }
 
