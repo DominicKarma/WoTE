@@ -50,6 +50,7 @@ Items: {
 
 Dialogue: {
 	BaseIntroduction: Blessed one... Let us dance beneath the silver moonglow this night.
+	DayIntroduction: Blessed one... Let us dance beneath the glorious sun.
 	AngryIntroduction: THOU GRACELESS KNAVE!
 }
 

@@ -50,6 +50,7 @@ Items: {
 
 Dialogue: {
 	BaseIntroduction: Bienheureux... Laisse nous danser sous la lueur de la lune argentée cette nuit.
+	// DayIntroduction: Blessed one... Let us dance beneath the glorious sun.
 	AngryIntroduction: CHEVALIER SANS GRÂCE!
 }
 

@@ -72,6 +72,11 @@ namespace WoTE.Content.NPCs.EoL
                 EmpressDialogueSystem.DialogueKeySuffix = "BaseIntroduction";
                 EmpressDialogueSystem.DialogueColor = Color.HotPink;
                 EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(60f, 90f, 234f, 239f, AITimer);
+                if (Main.dayTime)
+                {
+                    EmpressDialogueSystem.DialogueKeySuffix = "DayIntroduction";
+                    EmpressDialogueSystem.DialogueColor = Color.Orange;
+                }
             }
         }
     }
