@@ -155,8 +155,12 @@ namespace WoTE.Content.NPCs.EoL
         public void DoBehavior_RadialStarBurst_ShootBurstProjectiles()
         {
             SoundEngine.PlaySound(SoundID.Item122);
-            ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 7.2f);
-            ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 70f, 2f, 0.1f, 0.009f);
+
+            PerformVFXForMultiplayer(() =>
+            {
+                ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 7.2f);
+                ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 70f, 2f, 0.1f, 0.009f);
+            });
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 return;

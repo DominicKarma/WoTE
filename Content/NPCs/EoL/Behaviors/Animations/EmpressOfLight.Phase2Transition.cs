@@ -113,16 +113,19 @@ namespace WoTE.Content.NPCs.EoL
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), moonlightPosition, moonlightVelocity, ModContent.ProjectileType<ConvergingMoonlight>(), 0, 0f);
             }
 
-            for (int i = 0; i < appearanceInterpolant.Squared() * 16f; i++)
+            PerformVFXForMultiplayer(() =>
             {
-                float pixelScale = Main.rand.NextFloat(1f, 5f);
-                Vector2 pixelSpawnPosition = NPC.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(900f, 1256f);
-                Vector2 pixelVelocity = pixelSpawnPosition.SafeDirectionTo(NPC.Center).RotatedBy(MathHelper.PiOver4) * Main.rand.NextFloat(12f, 30f) / pixelScale;
-                Color pixelBloomColor = Utilities.MulticolorLerp(Main.rand.NextFloat(), Color.Yellow, Color.HotPink, Color.Violet, Color.DeepSkyBlue) * 0.6f;
+                for (int i = 0; i < appearanceInterpolant.Squared() * 16f; i++)
+                {
+                    float pixelScale = Main.rand.NextFloat(1f, 5f);
+                    Vector2 pixelSpawnPosition = NPC.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(900f, 1256f);
+                    Vector2 pixelVelocity = pixelSpawnPosition.SafeDirectionTo(NPC.Center).RotatedBy(MathHelper.PiOver4) * Main.rand.NextFloat(12f, 30f) / pixelScale;
+                    Color pixelBloomColor = Utilities.MulticolorLerp(Main.rand.NextFloat(), Color.Yellow, Color.HotPink, Color.Violet, Color.DeepSkyBlue) * 0.6f;
 
-                BloomPixelParticle bloom = new(pixelSpawnPosition, pixelVelocity, Color.White, pixelBloomColor, Main.rand.Next(150, 210), Vector2.One * pixelScale, () => NPC.Center);
-                bloom.Spawn();
-            }
+                    BloomPixelParticle bloom = new(pixelSpawnPosition, pixelVelocity, Color.White, pixelBloomColor, Main.rand.Next(150, 210), Vector2.One * pixelScale, () => NPC.Center);
+                    bloom.Spawn();
+                }
+            });
 
             if (AITimer >= Phase2Transition_EnergyChargeUpTime)
             {
@@ -144,18 +147,21 @@ namespace WoTE.Content.NPCs.EoL
 
                 if (Main.rand.NextBool() && ShapeCurveManager.TryFind("Butterfly", out ShapeCurve butterflyCurve))
                 {
-                    int lacewingLifetime = Main.rand.Next(25, 36);
-                    float lacewingScale = Main.rand.NextFloat(0.4f, 1.15f);
-                    Color lacewingColor = Color.Lerp(Color.Yellow, Color.LightGoldenrodYellow, Main.rand.NextFloat());
-                    Vector2 lacewingVelocity = (Main.rand.Next(butterflyCurve.ShapePoints) - Vector2.One * 0.5f) * new Vector2(1.75f, 0.9f) * Main.rand.NextFloat(30f, 83f);
-                    PrismaticLacewingParticle lacewing = new(NPC.Center, lacewingVelocity, lacewingColor, lacewingLifetime, Vector2.One * lacewingScale);
-                    lacewing.Spawn();
-
-                    for (int i = 0; i < 5; i++)
+                    PerformVFXForMultiplayer(() =>
                     {
-                        BloomPixelParticle pixel = new(NPC.Center, lacewingVelocity.RotatedByRandom(0.4f) * 0.35f + Main.rand.NextVector2Circular(5f, 5f), Color.White, lacewingColor * 0.45f, 45, Vector2.One * Main.rand.NextFloat(1.5f, 4f));
-                        pixel.Spawn();
-                    }
+                        int lacewingLifetime = Main.rand.Next(25, 36);
+                        float lacewingScale = Main.rand.NextFloat(0.4f, 1.15f);
+                        Color lacewingColor = Color.Lerp(Color.Yellow, Color.LightGoldenrodYellow, Main.rand.NextFloat());
+                        Vector2 lacewingVelocity = (Main.rand.Next(butterflyCurve.ShapePoints) - Vector2.One * 0.5f) * new Vector2(1.75f, 0.9f) * Main.rand.NextFloat(30f, 83f);
+                        PrismaticLacewingParticle lacewing = new(NPC.Center, lacewingVelocity, lacewingColor, lacewingLifetime, Vector2.One * lacewingScale);
+                        lacewing.Spawn();
+
+                        for (int i = 0; i < 5; i++)
+                        {
+                            BloomPixelParticle pixel = new(NPC.Center, lacewingVelocity.RotatedByRandom(0.4f) * 0.35f + Main.rand.NextVector2Circular(5f, 5f), Color.White, lacewingColor * 0.45f, 45, Vector2.One * Main.rand.NextFloat(1.5f, 4f));
+                            pixel.Spawn();
+                        }
+                    });
                 }
             }
 

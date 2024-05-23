@@ -151,6 +151,8 @@ namespace WoTE.Content.NPCs.EoL
                     Main.npc[lacewingIndex].lifeMax = lacewingHealth;
                 }
             }
+
+            NPC.netUpdate = true;
         }
 
         /// <summary>

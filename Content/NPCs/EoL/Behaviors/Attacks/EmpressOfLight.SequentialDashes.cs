@@ -160,7 +160,12 @@ namespace WoTE.Content.NPCs.EoL
             DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, 1f, 0.06f);
 
             if (AITimer % 5 == 0)
-                ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(75f, 75f) - NPC.velocity, Vector2.Zero, 120f, 1f, 0.1f, 0.016f);
+            {
+                PerformVFXForMultiplayer(() =>
+                {
+                    ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(75f, 75f) - NPC.velocity, Vector2.Zero, 120f, 1f, 0.1f, 0.016f);
+                });
+            }
 
             for (int i = 0; i < 5; i++)
             {

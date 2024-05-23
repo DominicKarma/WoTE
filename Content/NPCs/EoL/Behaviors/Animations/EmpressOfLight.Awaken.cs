@@ -52,8 +52,11 @@ namespace WoTE.Content.NPCs.EoL
 
             if (AITimer == 2)
             {
-                ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 33f, shakeStrengthDissipationIncrement: 0.45f);
-                ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.25f, 0.015f);
+                PerformVFXForMultiplayer(() =>
+                {
+                    ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 33f, shakeStrengthDissipationIncrement: 0.45f);
+                    ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.25f, 0.015f);
+                });
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<PrismaticBurst>(), 0, 0f);
             }

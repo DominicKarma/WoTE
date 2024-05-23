@@ -94,7 +94,12 @@ namespace WoTE.Content.NPCs.EoL
                     SoundEngine.PlaySound(SoundID.Item163);
 
                 if (DashAfterimageInterpolant >= 0.4f)
-                    ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(50f, 50f), Vector2.Zero, 30f, 0.75f, 0.25f, 0.02f);
+                {
+                    PerformVFXForMultiplayer(() =>
+                    {
+                        ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(50f, 50f), Vector2.Zero, 30f, 0.75f, 0.25f, 0.02f);
+                    });
+                }
             }
             else
             {

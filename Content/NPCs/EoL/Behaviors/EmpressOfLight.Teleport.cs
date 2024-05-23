@@ -80,7 +80,7 @@ namespace WoTE.Content.NPCs.EoL
 
             for (int i = 0; i < 8; i++)
             {
-                Vector2 spawnCenter = Main.rand.NextBool(TeleportCompletionRatio) ? TeleportDestination : NPC.Center;
+                Vector2 spawnCenter = Main.rand.NextBool(TeleportCompletionRatio) ? TeleportDestination : (NPC.Center + NPC.netOffset);
                 Vector2 lightSpawnPosition = spawnCenter + Main.rand.NextVector2Square(-NPC.width, NPC.width);
                 Dust light = Dust.NewDustPerfect(lightSpawnPosition, 261);
                 light.velocity = -Vector2.UnitY * Main.rand.NextFloat(4f);

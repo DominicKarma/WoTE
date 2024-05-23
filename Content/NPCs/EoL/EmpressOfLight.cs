@@ -320,6 +320,7 @@ namespace WoTE.Content.NPCs.EoL
             writer.Write(ZPosition);
             writer.Write(Phase);
             writer.Write(LanceWallXPosition);
+            writer.Write(NPC.Opacity);
 
             BitsByte flags = new()
             {
@@ -339,6 +340,7 @@ namespace WoTE.Content.NPCs.EoL
             ZPosition = reader.ReadSingle();
             Phase = reader.ReadInt32();
             LanceWallXPosition = reader.ReadSingle();
+            NPC.Opacity = reader.ReadSingle();
 
             BitsByte flags = reader.ReadByte();
             SummonedAtNight = flags[0];
@@ -392,6 +394,17 @@ namespace WoTE.Content.NPCs.EoL
             AITimer++;
 
             Lighting.AddLight(NPC.Center, Vector3.One * NPC.Opacity);
+        }
+
+        /// <summary>
+        /// Performs a client-side visual effect in a way that's multiplayer friendly.
+        /// </summary>
+        /// <param name="vfxAction">The visual effect to perform.</param>
+        public void PerformVFXForMultiplayer(Action vfxAction)
+        {
+            NPC.position += NPC.netOffset;
+            vfxAction();
+            NPC.position -= NPC.netOffset;
         }
 
         /// <summary>

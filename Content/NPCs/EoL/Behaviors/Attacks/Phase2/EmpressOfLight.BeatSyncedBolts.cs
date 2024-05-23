@@ -146,7 +146,10 @@ namespace WoTE.Content.NPCs.EoL
             // Be careful with this. This shake effect is subtle, but it plays a massive role in selling the impact of the beat to the player.
             ScreenShakeSystem.StartShake(6f, shakeStrengthDissipationIncrement: 0.5f);
 
-            ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.2f, 0.03f);
+            PerformVFXForMultiplayer(() =>
+            {
+                ModContent.GetInstance<DistortionMetaball>().CreateParticle(NPC.Center, Vector2.Zero, 32f, 1f, 0.2f, 0.03f);
+            });
         }
 
         /// <summary>
