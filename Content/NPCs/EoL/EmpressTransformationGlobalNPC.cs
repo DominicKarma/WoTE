@@ -11,8 +11,9 @@ namespace WoTE.Content.NPCs.EoL
 
         public override bool PreAI(NPC npc)
         {
-            // TODO -- Sidestep this if a different mod attempts to reset the Empress' AI, maybe?
-            if (npc.type == NPCID.HallowBoss)
+            bool calBossRush = ModLoader.TryGetMod("CalamityMod", out Mod calamity) && (bool)calamity.Call("DifficultyActive", "BossRush");
+            bool canUseCustomAI = !calBossRush;
+            if (npc.type == NPCID.HallowBoss && canUseCustomAI)
             {
                 npc.Transform(ModContent.NPCType<EmpressOfLight>());
                 npc.As<EmpressOfLight>().Awaken_IsEnraged = true;
