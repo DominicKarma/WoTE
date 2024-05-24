@@ -1,4 +1,4 @@
-﻿using Luminance.Common.Easings;
+﻿using System;
 using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -23,9 +23,9 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
-        /// The starting angle during the Empress' Spin Swirl Rainbows attack.
+        /// The hover offset angle during the Empress' Spin Swirl Rainbows attack.
         /// </summary>
-        public ref float SpinSwirlRainbows_HoverOffsetStartingAngle => ref NPC.ai[1];
+        public ref float SpinSwirlRainbows_SpinAngleAngle => ref NPC.ai[2];
 
         /// <summary>
         /// How long the Empress spends redirecting during her Spin Swirl Rainbows attack.
@@ -74,19 +74,22 @@ namespace WoTE.Content.NPCs.EoL
                     NPC.oldPos = new Vector2[NPC.oldPos.Length];
                     NPC.oldRot = new float[NPC.oldRot.Length];
 
-                    SpinSwirlRainbows_HoverOffsetStartingAngle = Main.rand.NextFloat(MathHelper.PiOver2);
+                    SpinSwirlRainbows_SpinAngleAngle = Main.rand.NextFloat(MathHelper.PiOver2);
 
                     // Ensure that the spin ends up on the same side of the target as the lance wall if it's in use.
                     if (PerformingLanceWallSupport)
-                        SpinSwirlRainbows_HoverOffsetStartingAngle = MathHelper.PiOver2 * (LanceWallXPosition >= Target.Center.X).ToDirectionInt();
+                        SpinSwirlRainbows_SpinAngleAngle = MathHelper.PiOver2 * (LanceWallXPosition >= Target.Center.X).ToDirectionInt();
 
                     SpinSwirlRainbows_StartedOnRightSideOfTarget = NPC.OnRightSideOf(Target.Center);
                     NPC.netUpdate = true;
                 }
 
                 float dashInterpolant = AITimer / (float)SpinSwirlRainbows_RainbowShootDelay;
-                float spinInterpolant = EasingCurves.Quadratic.Evaluate(EasingType.InOut, dashInterpolant);
-                Vector2 hoverDestination = Target.Center + Vector2.UnitY.RotatedBy(MathHelper.TwoPi * SpinSwirlRainbows_StartedOnRightSideOfTarget.ToDirectionInt() * spinInterpolant * 1.5f + SpinSwirlRainbows_HoverOffsetStartingAngle) * 950f;
+                float dashSpeedInterpolant = Utilities.Saturate(Utilities.Convert01To010(dashInterpolant));
+                float dashArc = MathHelper.TwoPi * MathF.Pow(dashSpeedInterpolant, 0.49f) / SpinSwirlRainbows_RainbowShootDelay;
+                SpinSwirlRainbows_SpinAngleAngle += dashArc * Utilities.Convert01To010(dashInterpolant) * SpinSwirlRainbows_StartedOnRightSideOfTarget.ToDirectionInt();
+
+                Vector2 hoverDestination = Target.Center + Vector2.UnitY.RotatedBy(SpinSwirlRainbows_SpinAngleAngle) * 950f;
                 NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, (1f - dashInterpolant) * 0.15f + 0.06f, 0.67f, 30f);
                 DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, Utilities.InverseLerp(4f, 30f, NPC.velocity.Length()), 0.2f);
 

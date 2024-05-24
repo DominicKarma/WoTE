@@ -75,13 +75,13 @@ namespace WoTE.Content.NPCs.EoL
 
         public void DoBehavior_VanillaPrismaticBolts_HoverAround()
         {
-            float redirectSpeed = MathHelper.Lerp(0.04f, 0.2f, Utilities.Convert01To010(Utilities.InverseLerp(0f, 45f, AITimer)));
+            float redirectSpeed = MathHelper.Lerp(0.04f, 0.2f, Utilities.Convert01To010(Utilities.InverseLerp(0f, 30f, AITimer).Squared()));
             Vector2 hoverDestination = Target.Center + new Vector2(MathF.Cos(MathHelper.TwoPi * AITimer / 90f) * 300f, -285f);
             NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, redirectSpeed, 1f - redirectSpeed, 50f);
             NPC.rotation = NPC.velocity.X * 0.01f;
 
             BlurInterpolant = Utilities.InverseLerp(45f, 70f, NPC.velocity.Length());
-            DashAfterimageInterpolant = BlurInterpolant * 0.3f;
+            DashAfterimageInterpolant = MathF.Max(DashAfterimageInterpolant, BlurInterpolant * 0.3f);
         }
     }
 }
