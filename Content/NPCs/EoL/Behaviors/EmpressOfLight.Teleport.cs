@@ -53,6 +53,7 @@ namespace WoTE.Content.NPCs.EoL
             }, () =>
             {
                 TeleportCompletionRatio = 0f;
+                NPC.netOffset = Vector2.Zero;
                 NPC.oldRot = new float[NPC.oldRot.Length];
                 NPC.oldPos = new Vector2[NPC.oldPos.Length];
             });
@@ -74,7 +75,6 @@ namespace WoTE.Content.NPCs.EoL
         {
             NPC.velocity *= 0.85f;
             NPC.rotation = MathHelper.Lerp(NPC.rotation, NPC.velocity.X * 0.001f, 0.3f);
-            NPC.netOffset = Vector2.Zero;
             DashAfterimageInterpolant *= 0.7f;
 
             TeleportCompletionRatio = Utilities.InverseLerp(0f, TeleportDuration, AITimer);
@@ -100,6 +100,9 @@ namespace WoTE.Content.NPCs.EoL
                     NPC.netUpdate = true;
                 }
             }
+
+            if (TeleportCompletionRatio >= 0.75f)
+                NPC.netOffset = Vector2.Zero;
 
             LeftHandFrame = EmpressHandFrame.OutstretchedDownwardHand;
             RightHandFrame = EmpressHandFrame.PointingUp;

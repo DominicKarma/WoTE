@@ -274,6 +274,7 @@ namespace WoTE.Content.NPCs.EoL
             NPCID.Sets.TrailingMode[Type] = 3;
             NPCID.Sets.TrailCacheLength[Type] = 30;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
+            NPCID.Sets.NoMultiplayerSmoothingByType[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
         }
 
@@ -321,7 +322,6 @@ namespace WoTE.Content.NPCs.EoL
 
         public override void SendExtraAI(BinaryWriter writer)
         {
-            writer.Write(AITimer);
             writer.Write(TeleportDuration);
             writer.Write(MusicTimer);
             writer.Write(ZPosition);
@@ -329,6 +329,7 @@ namespace WoTE.Content.NPCs.EoL
             writer.Write(LanceWallXPosition);
             writer.Write(TeleportCompletionRatio);
             writer.Write(NPC.Opacity);
+            writer.Write(EmpressDialogueSystem.DialogueOpacity);
             writer.WriteVector2(TeleportDestination);
 
             BitsByte flags = new()
@@ -341,11 +342,12 @@ namespace WoTE.Content.NPCs.EoL
 
             WritePreviousStates(writer);
             WriteStateMachineStack(writer);
+
+            writer.Write(AITimer);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
-            AITimer = reader.ReadInt32();
             TeleportDuration = reader.ReadInt32();
             MusicTimer = reader.ReadInt32();
             ZPosition = reader.ReadSingle();
@@ -353,6 +355,7 @@ namespace WoTE.Content.NPCs.EoL
             LanceWallXPosition = reader.ReadSingle();
             TeleportCompletionRatio = reader.ReadSingle();
             NPC.Opacity = reader.ReadSingle();
+            EmpressDialogueSystem.DialogueOpacity = reader.ReadSingle();
             TeleportDestination = reader.ReadVector2();
 
             BitsByte flags = reader.ReadByte();
@@ -362,6 +365,8 @@ namespace WoTE.Content.NPCs.EoL
 
             ReadPreviousStates(reader);
             ReadStateMachineStack(reader);
+
+            AITimer = reader.ReadInt32();
         }
 
         #endregion Syncing

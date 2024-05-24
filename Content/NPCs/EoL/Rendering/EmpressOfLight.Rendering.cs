@@ -59,7 +59,7 @@ namespace WoTE.Content.NPCs.EoL
 
             float illusionInterpolant = (1f - Utilities.InverseLerpBump(0f, 0.2f, 0.8f, 1f, TeleportCompletionRatio)) * DashAfterimageInterpolant;
             float cutoffYInterpolant = EasingCurves.Quadratic.Evaluate(EasingType.InOut, TeleportCompletionRatio);
-            if (TeleportCompletionRatio > 0f && TeleportCompletionRatio < 1f)
+            if (TeleportCompletionRatio > 0f && TeleportCompletionRatio < 1f && CurrentState == EmpressAIType.Teleport)
             {
                 DrawInstance(NPC.Center - screenPos, Color.White * (1f - illusionInterpolant), ZPosition, NPC.rotation, cutoffYInterpolant, false);
                 DrawInstance(TeleportDestination - screenPos, Color.White, NPC.rotation, ZPosition, 1f - cutoffYInterpolant, false);
