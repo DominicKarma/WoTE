@@ -9,6 +9,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Content.NPCs.EoL;
+using WoTE.Content.NPCs.EoL.Projectiles;
 using WoTE.Content.Particles;
 
 namespace WoTE.Content.Items
@@ -72,7 +73,7 @@ namespace WoTE.Content.Items
 
             if (Projectile.timeLeft == 8 && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Utilities.NewProjectileBetter(Projectile.GetSource_Death(), Projectile.Center - Vector2.UnitY * 150f, Vector2.Zero, ProjectileID.HallowBossDeathAurora, 0, 0f);
+                Utilities.NewProjectileBetter(Projectile.GetSource_Death(), Projectile.Center - Vector2.UnitY * 150f, Vector2.Zero, ModContent.ProjectileType<GlowingAurora>(), 0, 0f);
                 NPC.NewNPC(Projectile.GetSource_Death(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<EmpressOfLight>(), 1);
             }
 

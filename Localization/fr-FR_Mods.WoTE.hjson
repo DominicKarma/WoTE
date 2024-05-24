@@ -21,6 +21,7 @@ Projectiles: {
 	LanceWallTelegraph.DisplayName: Mur de lances télégraphes
 	RainbowRiftArrow.DisplayName: Flèche Fendeuse d'Arc-en-ciel
 	// SilverReleaseLanternProj.DisplayName: Silver Release Lantern
+	// GlowingAurora.DisplayName: Glowing Aurora
 }
 
 Configs: {

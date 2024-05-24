@@ -21,6 +21,7 @@ Projectiles: {
 	LanceWallTelegraph.DisplayName: Lance Wall Telegraph
 	RainbowRiftArrow.DisplayName: Rainbow Rift Arrow
 	SilverReleaseLanternProj.DisplayName: Silver Release Lantern
+	GlowingAurora.DisplayName: Glowing Aurora
 }
 
 Configs: {
