@@ -530,6 +530,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.immortal = false;
             NPC.ShowNameOnHover = true;
             DashAfterimageInterpolant = Utilities.Saturate(DashAfterimageInterpolant - 0.01f);
+            BlurInterpolant = Utilities.Saturate(BlurInterpolant - 0.051f);
 
             if (Main.netMode != NetmodeID.Server)
                 Filters.Scene["BloodMoon"].Deactivate();

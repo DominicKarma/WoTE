@@ -4,21 +4,33 @@ sampler erasureNoise : register(s1);
 bool invertDisappearanceDirection;
 float cutoffY;
 float globalTime;
-float blurOffset;
-float blurWeights[5];
+float directionBlurInterpolant;
+float defocusBlurOffset;
+float defocusBlurWeights[5];
+float2 directionalBlurOffset;
+float directionalBlurWeights[18];
 
 float4 CalculateBlurColor(float2 coords)
 {
-    float4 baseColor = 0;
+    float4 defocusBlurColor = 0;
     for (int i = -2; i < 3; i++)
     {
         for (int j = -2; j < 3; j++)
         {
-            float weight = blurWeights[abs(i) + abs(j)];
-            baseColor += tex2D(baseTexture, coords + float2(i, j) * blurOffset) * weight;
+            float weight = defocusBlurWeights[abs(i) + abs(j)];
+            defocusBlurColor += tex2D(baseTexture, coords + float2(i, j) * defocusBlurOffset) * weight;
         }
     }
-    return baseColor;
+    
+    float4 directionalBlurColor = 0;
+    for (int j = 0; j < 18; j++)
+    {
+        float blurWeight = directionalBlurWeights[j] * 0.5;
+        directionalBlurColor += tex2D(baseTexture, coords - j * directionalBlurOffset) * blurWeight;
+        directionalBlurColor += tex2D(baseTexture, coords + j * directionalBlurOffset) * blurWeight;
+    }
+    
+    return lerp(defocusBlurColor, directionalBlurColor, directionBlurInterpolant);
 }
 
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0

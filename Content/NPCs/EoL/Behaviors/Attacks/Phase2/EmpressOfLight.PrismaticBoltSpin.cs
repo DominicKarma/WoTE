@@ -96,6 +96,7 @@ namespace WoTE.Content.NPCs.EoL
             Vector2 spinDestination = Target.Center + PrismaticBoltSpin_SpinAngle.ToRotationVector2() * PrismaticBoltSpin_SpinRadius;
             NPC.SmoothFlyNear(spinDestination, spinSpeedInterpolant * 0.6f, 1f - spinSpeedInterpolant * 0.54f);
             DashAfterimageInterpolant = spinSpeedInterpolant * 0.24f;
+            BlurInterpolant = spinSpeedInterpolant * 0.9f;
 
             float spinSpeed = Utilities.InverseLerp(0f, 40f, AITimer) * MathHelper.TwoPi / 36f;
             PrismaticBoltSpin_SpinAngle += spinSpeed * PrismaticBoltSpin_SpinDirection;

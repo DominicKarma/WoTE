@@ -136,6 +136,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.velocity += NPC.SafeDirectionTo(hoverDestination) * flySpeedInterpolant * 50f;
 
             DashAfterimageInterpolant = 0.25f;
+            BlurInterpolant = 0.75f;
 
             if (swapTeleportHappened && NPC.OnRightSideOf(Target.Center).ToDirectionInt() == RadialStarBurst_HorizontalHoverDirection)
                 RadialStarBurst_HorizontalHoverDirection *= -1f;

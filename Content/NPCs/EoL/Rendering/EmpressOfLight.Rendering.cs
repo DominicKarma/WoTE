@@ -42,6 +42,15 @@ namespace WoTE.Content.NPCs.EoL
             set;
         }
 
+        /// <summary>
+        /// The amount of directional blur that should be applied to the Empress.
+        /// </summary>
+        public float BlurInterpolant
+        {
+            get;
+            set;
+        }
+
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
             if (Palette is null)
@@ -132,17 +141,24 @@ namespace WoTE.Content.NPCs.EoL
             float defocusInterpolant = Utilities.InverseLerp(0.3f, 2.4f, z);
             float opacity = MathHelper.Lerp(1f, 0.43f, backgroundFadeInterpolant);
 
-            float[] blurWeights = new float[5];
-            for (int i = 0; i < blurWeights.Length; i++)
-                blurWeights[i] = Utilities.GaussianDistribution(i - (int)(blurWeights.Length * 0.5f), 0.8f) / 7f;
+            float[] defocusBlurWeights = new float[5];
+            for (int i = 0; i < defocusBlurWeights.Length; i++)
+                defocusBlurWeights[i] = Utilities.GaussianDistribution(i - (int)(defocusBlurWeights.Length * 0.5f), 0.8f) / 7f;
 
-            ManagedShader teleportShader = ShaderManager.GetShader("WoTE.EmpressTeleportDisappearShader");
-            teleportShader.TrySetParameter("cutoffY", cutoffY);
-            teleportShader.TrySetParameter("invertDisappearanceDirection", invertDisappearanceDirection);
-            teleportShader.TrySetParameter("blurOffset", defocusInterpolant * 0.004f);
-            teleportShader.TrySetParameter("blurWeights", blurWeights);
-            teleportShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
-            teleportShader.Apply();
+            float[] directionalBlurWeights = new float[18];
+            for (int i = 0; i < directionalBlurWeights.Length; i++)
+                directionalBlurWeights[i] = Utilities.GaussianDistribution(i - (int)(directionalBlurWeights.Length * 0.5f), 6f);
+
+            ManagedShader postProcessingShader = ShaderManager.GetShader("WoTE.EmpressPostProcessingShader");
+            postProcessingShader.TrySetParameter("cutoffY", cutoffY);
+            postProcessingShader.TrySetParameter("invertDisappearanceDirection", invertDisappearanceDirection);
+            postProcessingShader.TrySetParameter("defocusBlurOffset", defocusInterpolant * 0.004f);
+            postProcessingShader.TrySetParameter("defocusBlurWeights", defocusBlurWeights);
+            postProcessingShader.TrySetParameter("directionBlurInterpolant", BlurInterpolant);
+            postProcessingShader.TrySetParameter("directionalBlurOffset", NPC.velocity.SafeNormalize(rotation.ToRotationVector2()) * BlurInterpolant * 0.0016f);
+            postProcessingShader.TrySetParameter("directionalBlurWeights", directionalBlurWeights);
+            postProcessingShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
+            postProcessingShader.Apply();
 
             SpriteEffects direction = NPC.spriteDirection.ToSpriteDirection();
             Main.EntitySpriteDraw(EmpressOfLightTargetManager.EmpressTarget, drawPosition, null, NPC.GetAlpha(color) * opacity, rotation, EmpressOfLightTargetManager.EmpressTarget.Size() * 0.5f, scale, direction, 0f);

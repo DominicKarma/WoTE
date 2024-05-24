@@ -54,6 +54,9 @@ namespace WoTE.Content.NPCs.EoL
             NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, redirectSpeed, 1f - redirectSpeed * 1.2f, 50f);
             NPC.rotation = NPC.velocity.X * 0.01f;
 
+            BlurInterpolant = Utilities.InverseLerp(45f, 70f, NPC.velocity.Length());
+            DashAfterimageInterpolant = BlurInterpolant * 0.3f;
+
             if (AITimer == VanillaPrismaticBolts_BoltShootDelay)
                 SoundEngine.PlaySound(SoundID.Item164);
 

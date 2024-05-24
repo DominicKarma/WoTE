@@ -158,6 +158,7 @@ namespace WoTE.Content.NPCs.EoL
             NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, dashInterpolant * 0.16f);
             NPC.damage = NPC.defDamage;
             DashAfterimageInterpolant = MathHelper.Lerp(DashAfterimageInterpolant, 1f, 0.06f);
+            BlurInterpolant = dashInterpolant * 0.775f;
 
             if (AITimer % 5 == 0)
             {

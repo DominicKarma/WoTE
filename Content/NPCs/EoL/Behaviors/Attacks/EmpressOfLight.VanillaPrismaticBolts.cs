@@ -64,10 +64,13 @@ namespace WoTE.Content.NPCs.EoL
 
         public void DoBehavior_VanillaPrismaticBolts_HoverAround()
         {
-            float redirectSpeed = Utils.Remap(AITimer, 0f, 25f, 0.13f, 0.07f);
+            float redirectSpeed = MathHelper.Lerp(0.07f, 0.2f, Utilities.Convert01To010(Utilities.InverseLerp(0f, 25f, AITimer)));
             Vector2 hoverDestination = Target.Center + new Vector2(MathF.Cos(MathHelper.TwoPi * AITimer / 90f) * 300f, -285f);
             NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, redirectSpeed, 1f - redirectSpeed, 50f);
             NPC.rotation = NPC.velocity.X * 0.01f;
+
+            BlurInterpolant = Utilities.InverseLerp(45f, 70f, NPC.velocity.Length());
+            DashAfterimageInterpolant = BlurInterpolant * 0.3f;
 
             if (AITimer == VanillaPrismaticBolts_BoltShootDelay)
                 SoundEngine.PlaySound(SoundID.Item164);
