@@ -22,16 +22,36 @@ namespace WoTE.Content.NPCs.EoL
             set => NPC.ai[0] = value.ToInt();
         }
 
+        /// <summary>
+        /// How long the Empress' awaken state animation goes on for by default.
+        /// </summary>
+        public static int Awaken_AnimationTime => Utilities.SecondsToFrames(4.5f);
+
+        /// <summary>
+        /// How long the Empress waits before speaking in her awaken state animation by default.
+        /// </summary>
+        public static int Awaken_TextAppearDelay => Utilities.SecondsToFrames(1.5f);
+
+        /// <summary>
+        /// How long the Empress' awaken state animation goes on for when enraged.
+        /// </summary>
+        public static int Awaken_AnimationTime_Enraged => Utilities.SecondsToFrames(3f);
+
+        /// <summary>
+        /// How long the Empress waits before speaking in her awaken state when enraged.
+        /// </summary>
+        public static int Awaken_TextAppearDelay_Enraged => Utilities.SecondsToFrames(1.5f);
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_Awaken()
         {
             StateMachine.RegisterTransition(EmpressAIType.Awaken, EmpressAIType.VanillaPrismaticBolts, false, () =>
             {
-                return AITimer >= 270 && !Awaken_IsEnraged;
+                return AITimer >= Awaken_AnimationTime && !Awaken_IsEnraged;
             });
             StateMachine.RegisterTransition(EmpressAIType.Awaken, EmpressAIType.Enraged, false, () =>
             {
-                return AITimer >= 180 && Awaken_IsEnraged;
+                return AITimer >= Awaken_AnimationTime_Enraged && Awaken_IsEnraged;
             });
 
             StateMachine.RegisterStateBehavior(EmpressAIType.Awaken, DoBehavior_Awaken);
@@ -45,7 +65,7 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer <= 5)
                 NPC.velocity = Vector2.UnitY * 12f;
 
-            NPC.velocity = Vector2.Lerp(NPC.velocity, Vector2.UnitY * MathF.Sin(MathHelper.TwoPi * AITimer / 135f) * 0.6f, 0.16f);
+            NPC.velocity = Vector2.Lerp(NPC.velocity, Vector2.UnitY * MathF.Sin(MathHelper.TwoPi * AITimer / Awaken_AnimationTime * 2f) * 0.6f, 0.16f);
             NPC.Opacity = Utilities.InverseLerp(0f, 12f, AITimer);
 
             NPC.dontTakeDamage = true;
@@ -67,25 +87,35 @@ namespace WoTE.Content.NPCs.EoL
             {
                 Palette = EmpressPalettes.EnragedPaletteSet;
 
-                if (AITimer >= 50)
+                if (AITimer >= Awaken_TextAppearDelay_Enraged)
                 {
                     EmpressDialogueSystem.ShakyDialogue = true;
                     EmpressDialogueSystem.DialogueKeySuffix = "AngryIntroduction";
                     EmpressDialogueSystem.DialogueColor = new(255, 3, 27);
-                    EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(60f, 90f, 164f, 169f, AITimer);
+                    EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(Awaken_TextAppearDelay_Enraged, Awaken_TextAppearDelay_Enraged + 30f, Awaken_AnimationTime_Enraged - 20f, Awaken_AnimationTime_Enraged - 10f, AITimer);
                 }
                 Music = 0;
             }
-            else if (AITimer >= 80)
+            else if (AITimer >= Awaken_TextAppearDelay)
             {
                 EmpressDialogueSystem.ShakyDialogue = false;
                 EmpressDialogueSystem.DialogueKeySuffix = "BaseIntroduction";
                 EmpressDialogueSystem.DialogueColor = Color.HotPink;
-                EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(90f, 120f, 230f, 259f, AITimer);
+                EmpressDialogueSystem.DialogueOpacity = Utilities.InverseLerpBump(Awaken_TextAppearDelay, Awaken_TextAppearDelay + 30f, Awaken_AnimationTime - 40f, Awaken_AnimationTime - 11f, AITimer);
+                if (Main.bloodMoon)
+                {
+                    EmpressDialogueSystem.DialogueKeySuffix = "BloodMoonIntroduction";
+                    EmpressDialogueSystem.DialogueColor = new(255, 9, 32);
+                }
                 if (Main.dayTime)
                 {
                     EmpressDialogueSystem.DialogueKeySuffix = "DayIntroduction";
                     EmpressDialogueSystem.DialogueColor = Color.Orange;
+                }
+                if (Main.eclipse)
+                {
+                    EmpressDialogueSystem.DialogueKeySuffix = "EclipseIntroduction";
+                    EmpressDialogueSystem.DialogueColor = Color.Yellow;
                 }
             }
         }

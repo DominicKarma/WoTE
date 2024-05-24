@@ -52,6 +52,8 @@ Items: {
 Dialogue: {
 	BaseIntroduction: Bienheureux... Laisse nous danser sous la lueur de la lune argentée cette nuit.
 	// DayIntroduction: Blessed one... Let us dance beneath the glorious sun.
+	// BloodMoonIntroduction: Blessed one... This night is scarlet. Still, we shall dance.
+	// EclipseIntroduction: Blessed one... This day is a harmony of sun and moon. Beneath it, we shall dance.
 	AngryIntroduction: CHEVALIER SANS GRÂCE!
 }
 
