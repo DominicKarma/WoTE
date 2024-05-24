@@ -55,23 +55,6 @@ namespace WoTE.Content.NPCs.EoL
         {
             DoBehavior_VanillaPrismaticBolts_HoverAround();
 
-            LeftHandFrame = EmpressHandFrame.PalmRaisedUp;
-            RightHandFrame = EmpressHandFrame.PointingUp;
-
-            NPC.spriteDirection = 1;
-            NPC.rotation = NPC.velocity.X * 0.0035f;
-        }
-
-        public void DoBehavior_VanillaPrismaticBolts_HoverAround()
-        {
-            float redirectSpeed = MathHelper.Lerp(0.07f, 0.2f, Utilities.Convert01To010(Utilities.InverseLerp(0f, 25f, AITimer)));
-            Vector2 hoverDestination = Target.Center + new Vector2(MathF.Cos(MathHelper.TwoPi * AITimer / 90f) * 300f, -285f);
-            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, redirectSpeed, 1f - redirectSpeed, 50f);
-            NPC.rotation = NPC.velocity.X * 0.01f;
-
-            BlurInterpolant = Utilities.InverseLerp(45f, 70f, NPC.velocity.Length());
-            DashAfterimageInterpolant = BlurInterpolant * 0.3f;
-
             if (AITimer == VanillaPrismaticBolts_BoltShootDelay)
                 SoundEngine.PlaySound(SoundID.Item164);
 
@@ -82,6 +65,23 @@ namespace WoTE.Content.NPCs.EoL
                 Vector2 boltVelocity = (MathHelper.TwoPi * AITimer / 45f).ToRotationVector2() * VanillaPrismaticBolts_BoltFireSpeed;
                 Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), handPosition, boltVelocity, ModContent.ProjectileType<PrismaticBolt>(), PrismaticBoltDamage, 0f, -1, NPC.target, AITimer / 45f % 1f);
             }
+
+            LeftHandFrame = EmpressHandFrame.PalmRaisedUp;
+            RightHandFrame = EmpressHandFrame.PointingUp;
+
+            NPC.spriteDirection = 1;
+            NPC.rotation = NPC.velocity.X * 0.0035f;
+        }
+
+        public void DoBehavior_VanillaPrismaticBolts_HoverAround()
+        {
+            float redirectSpeed = MathHelper.Lerp(0.04f, 0.2f, Utilities.Convert01To010(Utilities.InverseLerp(0f, 45f, AITimer)));
+            Vector2 hoverDestination = Target.Center + new Vector2(MathF.Cos(MathHelper.TwoPi * AITimer / 90f) * 300f, -285f);
+            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, redirectSpeed, 1f - redirectSpeed, 50f);
+            NPC.rotation = NPC.velocity.X * 0.01f;
+
+            BlurInterpolant = Utilities.InverseLerp(45f, 70f, NPC.velocity.Length());
+            DashAfterimageInterpolant = BlurInterpolant * 0.3f;
         }
     }
 }

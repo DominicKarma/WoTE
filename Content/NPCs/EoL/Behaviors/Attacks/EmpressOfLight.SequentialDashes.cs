@@ -1,4 +1,5 @@
-﻿using Luminance.Common.StateMachines;
+﻿using System;
+using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -59,7 +60,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.RegisterTransition(EmpressAIType.SequentialDashes, null, false, () =>
             {
-                return SequentialDashes_DashCounter >= SequentialDashes_DashCount;
+                return SequentialDashes_DashCounter >= SequentialDashes_DashCount && AITimer >= SequentialDashes_RedirectTime * 0.5f;
             });
 
             StateMachine.RegisterStateBehavior(EmpressAIType.SequentialDashes, DoBehavior_SequentialDashes);
@@ -72,7 +73,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             if (AITimer <= SequentialDashes_RedirectTime)
             {
-                if (AITimer == 1)
+                if (AITimer == 1 && SequentialDashes_DashCounter < SequentialDashes_DashCount)
                     TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(500f, 400f), (int)(DefaultTeleportDuration * 1.15f));
 
                 DoBehavior_SequentialDashes_Redirect();
@@ -86,7 +87,7 @@ namespace WoTE.Content.NPCs.EoL
             }
             else if (AITimer <= SequentialDashes_RedirectTime + SequentialDashes_DashTime + SequentialDashes_SlowDownTime)
             {
-                NPC.velocity *= 0.79f;
+                NPC.velocity *= 0.86f;
                 DashAfterimageInterpolant *= 0.85f;
             }
             else
@@ -120,11 +121,12 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_SequentialDashes_Redirect()
         {
+            float flySpeedInterpolant = MathF.Pow(AITimer / (float)SequentialDashes_RedirectTime, 0.6f);
             Vector2 hoverOffsetDirection = Target.SafeDirectionTo(NPC.Center) * new Vector2(1f, 0.995f);
             float backwardsWindUpOffset = Utilities.InverseLerp(-26f, -4f, SequentialDashes_RedirectTime - AITimer).Squared() * 670f;
             Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(400f, 390f) - NPC.SafeDirectionTo(Target.Center) * backwardsWindUpOffset;
 
-            NPC.SmoothFlyNear(hoverDestination, 0.17f, 0.85f);
+            NPC.SmoothFlyNear(hoverDestination, flySpeedInterpolant * 0.26f, 1f - flySpeedInterpolant * 0.28f);
         }
 
         /// <summary>

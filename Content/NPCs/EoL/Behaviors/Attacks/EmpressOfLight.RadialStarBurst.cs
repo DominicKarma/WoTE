@@ -130,10 +130,10 @@ namespace WoTE.Content.NPCs.EoL
                 return;
             }
 
-            float flySpeedInterpolant = wrappedTimer / (float)redirectTime;
+            float flySpeedInterpolant = Utilities.Convert01To010(wrappedTimer / (float)redirectTime);
             Vector2 hoverDestination = Target.Center + new Vector2(RadialStarBurst_HorizontalHoverDirection * 400f, 100f - Utilities.Convert01To010(wrappedTimer / (float)redirectTime) * 150f);
-            NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, flySpeedInterpolant * 0.3f);
-            NPC.velocity += NPC.SafeDirectionTo(hoverDestination) * flySpeedInterpolant * 50f;
+            NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, flySpeedInterpolant * 0.35f);
+            NPC.velocity += NPC.SafeDirectionTo(hoverDestination) * flySpeedInterpolant * 60f;
 
             DashAfterimageInterpolant = 0.25f;
             BlurInterpolant = 0.75f;

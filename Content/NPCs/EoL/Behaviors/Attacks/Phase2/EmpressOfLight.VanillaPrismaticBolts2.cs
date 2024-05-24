@@ -1,5 +1,4 @@
-﻿using System;
-using Luminance.Common.StateMachines;
+﻿using Luminance.Common.StateMachines;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -38,24 +37,13 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public void DoBehavior_VanillaPrismaticBolts2()
         {
-            DoBehavior_VanillaPrismaticBolts2_HoverAround();
+            DoBehavior_VanillaPrismaticBolts_HoverAround();
 
             LeftHandFrame = EmpressHandFrame.PalmRaisedUp;
             RightHandFrame = EmpressHandFrame.PointingUp;
 
             NPC.spriteDirection = 1;
             NPC.rotation = NPC.velocity.X * 0.0035f;
-        }
-
-        public void DoBehavior_VanillaPrismaticBolts2_HoverAround()
-        {
-            float redirectSpeed = Utils.Remap(AITimer, 0f, 25f, 0.14f, 0.08f);
-            Vector2 hoverDestination = Target.Center + new Vector2(MathF.Cos(MathHelper.TwoPi * AITimer / 90f) * 360f, -285f);
-            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, redirectSpeed, 1f - redirectSpeed * 1.2f, 50f);
-            NPC.rotation = NPC.velocity.X * 0.01f;
-
-            BlurInterpolant = Utilities.InverseLerp(45f, 70f, NPC.velocity.Length());
-            DashAfterimageInterpolant = BlurInterpolant * 0.3f;
 
             if (AITimer == VanillaPrismaticBolts_BoltShootDelay)
                 SoundEngine.PlaySound(SoundID.Item164);
