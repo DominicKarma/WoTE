@@ -63,10 +63,9 @@ namespace WoTE.Content.NPCs.EoL
             WithBackgroundTint(Color.Transparent);
 
         /// <summary>
-        /// The Empress palette used if the player is named "Lynel". This name check does not care about casing.
-        /// This palette is also used during blood moons.
+        /// The Empress palette used during blood moons.
         /// </summary>
-        public static readonly EmpressPaletteSet BloodMoonPaletteSet = RegisterNew(5, () => Main.LocalPlayer.name.Equals("Lynel", StringComparison.OrdinalIgnoreCase) || Main.bloodMoon).
+        public static readonly EmpressPaletteSet BloodMoonPaletteSet = RegisterNew(2, () => Main.bloodMoon).
             WithPalette(EmpressPaletteType.ButterflyAvatar, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72), Color.White).
             WithPalette(EmpressPaletteType.Wings, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
             WithPalette(EmpressPaletteType.Phase2Dress, Color.Black, Color.Black, new(33, 0, 62), new(250, 24, 72)).
@@ -78,7 +77,10 @@ namespace WoTE.Content.NPCs.EoL
             WithCloudColor(new(255, 74, 11, 165)).
             WithMistColor(new(244, 39, 72, 128)).
             WithMoonColors(new(255, 39, 4, 148), new(237, 168, 179, 0)).
-            WithBackgroundTint(new Color(255, 40, 2) * 0.4f);
+            WithBackgroundTint(new Color(255, 40, 2) * 0.4f).
+            WithArmTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/BloodMoon/Arm").
+            WithBodyTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/BloodMoon/EmpressBody").
+            WithWingTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/BloodMoon/EmpressWings");
 
         /// <summary>
         /// The Empress palette used when she's enraged. This must be used manually, as it is not included in the <see cref="Choose"/> method.

@@ -72,6 +72,33 @@ namespace WoTE.Content.NPCs.EoL
             private set;
         }
 
+        /// <summary>
+        /// The relative path to the overriding arm texture when this palette is used. Defaults to <see langword="null"/>.
+        /// </summary>
+        public string? ArmTextureOverride
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The relative path to the overriding body texture when this palette is used. Defaults to <see langword="null"/>.
+        /// </summary>
+        public string? BodyTextureOverride
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The relative path to the overriding wing texture when this palette is used. Defaults to <see langword="null"/>.
+        /// </summary>
+        public string? WingTextureOverride
+        {
+            get;
+            private set;
+        }
+
         public EmpressPaletteSet(int priority, Func<bool> usageCondition)
         {
             Priority = priority;
@@ -115,6 +142,24 @@ namespace WoTE.Content.NPCs.EoL
         public EmpressPaletteSet WithBackgroundTint(Color backgroundTint)
         {
             BackgroundTint = backgroundTint;
+            return this;
+        }
+
+        public EmpressPaletteSet WithArmTextureOverride(string texturePath)
+        {
+            ArmTextureOverride = texturePath;
+            return this;
+        }
+
+        public EmpressPaletteSet WithBodyTextureOverride(string texturePath)
+        {
+            BodyTextureOverride = texturePath;
+            return this;
+        }
+
+        public EmpressPaletteSet WithWingTextureOverride(string texturePath)
+        {
+            WingTextureOverride = texturePath;
             return this;
         }
 

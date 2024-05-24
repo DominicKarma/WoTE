@@ -222,7 +222,7 @@ namespace WoTE.Content.NPCs.EoL
             if (Palette is null)
                 return;
 
-            Texture2D texture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressBody").Value;
+            Texture2D texture = ModContent.Request<Texture2D>(Palette.BodyTextureOverride ?? "WoTE/Content/NPCs/EoL/Rendering/EmpressBody").Value;
             Texture2D eyes = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressEyes").Value;
 
             DrawBackglow(drawPosition);
@@ -265,7 +265,7 @@ namespace WoTE.Content.NPCs.EoL
         /// <param name="drawPosition">The draw position of the wings.</param>
         public void DrawWings(Vector2 drawPosition)
         {
-            Texture2D wingsTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressWings").Value;
+            Texture2D wingsTexture = ModContent.Request<Texture2D>(Palette.WingTextureOverride ?? "WoTE/Content/NPCs/EoL/Rendering/EmpressWings").Value;
             Texture2D wingsColorShapeTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressWingsGreyscale").Value;
             Rectangle wingsFrame = wingsTexture.Frame(1, 11, 0, (int)(Main.GlobalTimeWrappedHourly * 15f) % 11);
 
@@ -278,7 +278,7 @@ namespace WoTE.Content.NPCs.EoL
             if (Palette == EmpressPalettes.DaytimePaletteSet)
                 timeOffset = 0.6f;
             if (Palette == EmpressPalettes.BloodMoonPaletteSet)
-                timeOffset = 0.4f;
+                timeOffset = 0.24f;
 
             Vector4[] wingsPalette = Palette.Get(EmpressPaletteType.Wings);
             ManagedShader gradientShader = ShaderManager.GetShader("WoTE.EmpressWingGradientShader");
@@ -329,14 +329,14 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
-        /// Collects draw data for a given arm frame that the Empress uses, providing maximum respect to texture pack changes where possible.
+        /// Collects draw data for a given arm frame that the Empress uses.
         /// </summary>
         /// <param name="frameY">The arm's Y frame.</param>
         /// <param name="handTexture">The selected hand texture.</param>
         /// <param name="handFrame">The selected hand frame rectangle.</param>
-        public static void GetHandDrawData(int frameY, out Texture2D handTexture, out Rectangle handFrame)
+        public void GetHandDrawData(int frameY, out Texture2D handTexture, out Rectangle handFrame)
         {
-            handTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/Arm").Value;
+            handTexture = ModContent.Request<Texture2D>(Palette.ArmTextureOverride ?? "WoTE/Content/NPCs/EoL/Rendering/Arm").Value;
             handFrame = handTexture.Frame(1, 8, 0, frameY);
         }
 
@@ -351,7 +351,7 @@ namespace WoTE.Content.NPCs.EoL
 
             float scrollTime = Main.GlobalTimeWrappedHourly;
             if (Palette == EmpressPalettes.BloodMoonPaletteSet)
-                scrollTime = 0.32f;
+                scrollTime = 0.38f;
 
             Vector4[] dressPalette = Palette.Get(EmpressPaletteType.Phase2Dress);
             Texture2D dressTexture = ModContent.Request<Texture2D>("WoTE/Content/NPCs/EoL/Rendering/EmpressDressGlow").Value;
