@@ -1,8 +1,7 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
-using WoTE.Content.NPCs.EoL;
 
-namespace WoTE
+namespace WoTE.Content.NPCs.EoL
 {
     public class LowGravityRemovingPlayer : ModPlayer
     {
