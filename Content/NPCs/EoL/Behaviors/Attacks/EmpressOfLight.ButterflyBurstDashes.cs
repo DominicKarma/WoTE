@@ -58,6 +58,11 @@ namespace WoTE.Content.NPCs.EoL
         /// </summary>
         public static int ButterflyBurstDashes_ButterflyCount => 40;
 
+        /// <summary>
+        /// The acceleration of butterflies when dashing during the Empress' Butterfly Burst Dashes attack.
+        /// </summary>
+        public static float ButterflyBurstDashes_ButterflyDashAcceleration => Main.dayTime ? 5.3f : 3.5f;
+
         [AutomatedMethodInvoke]
         public void LoadStateTransitions_ButterflyBurstDashes()
         {

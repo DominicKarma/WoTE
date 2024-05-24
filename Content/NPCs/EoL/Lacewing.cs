@@ -297,8 +297,7 @@ namespace WoTE.Content.NPCs.EoL
 
             else if (AITimer <= redirectTime + dashDelay + dashRepositionTime + dashTime)
             {
-                // TODO -- Make this acceleration variable a property in the Empress' code.
-                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * (Main.dayTime ? 5.3f : 3.5f);
+                NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero) * EmpressOfLight.ButterflyBurstDashes_ButterflyDashAcceleration;
                 NPC.defense = 9999;
             }
             else
