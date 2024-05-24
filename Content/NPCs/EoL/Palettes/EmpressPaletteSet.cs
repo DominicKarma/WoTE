@@ -91,6 +91,15 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         /// <summary>
+        /// The relative path to the overriding tentacle texture when this palette is used. Defaults to <see langword="null"/>.
+        /// </summary>
+        public string? TentaclesTextureOverride
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// The relative path to the overriding wing texture when this palette is used. Defaults to <see langword="null"/>.
         /// </summary>
         public string? WingTextureOverride
@@ -160,6 +169,12 @@ namespace WoTE.Content.NPCs.EoL
         public EmpressPaletteSet WithWingTextureOverride(string texturePath)
         {
             WingTextureOverride = texturePath;
+            return this;
+        }
+
+        public EmpressPaletteSet WithTentacleTextureOverride(string texturePath)
+        {
+            TentaclesTextureOverride = texturePath;
             return this;
         }
 

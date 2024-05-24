@@ -60,7 +60,11 @@ namespace WoTE.Content.NPCs.EoL
             WithCloudColor(Color.Transparent).
             WithMistColor(Color.Transparent).
             WithMoonColors(Color.Transparent, Color.Transparent).
-            WithBackgroundTint(Color.Transparent);
+            WithBackgroundTint(Color.Transparent).
+            WithArmTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/Eclipse/Arm").
+            WithBodyTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/Eclipse/EmpressBody").
+            WithWingTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/Eclipse/EmpressWings").
+            WithTentacleTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/Eclipse/Tentacles");
 
         /// <summary>
         /// The Empress palette used during blood moons.
@@ -80,7 +84,8 @@ namespace WoTE.Content.NPCs.EoL
             WithBackgroundTint(new Color(255, 40, 2) * 0.4f).
             WithArmTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/BloodMoon/Arm").
             WithBodyTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/BloodMoon/EmpressBody").
-            WithWingTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/BloodMoon/EmpressWings");
+            WithWingTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/BloodMoon/EmpressWings").
+            WithTentacleTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/BloodMoon/Tentacles");
 
         /// <summary>
         /// The Empress palette used when she's enraged. This must be used manually, as it is not included in the <see cref="Choose"/> method.

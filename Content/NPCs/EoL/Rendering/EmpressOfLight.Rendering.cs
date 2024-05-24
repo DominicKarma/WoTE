@@ -314,19 +314,11 @@ namespace WoTE.Content.NPCs.EoL
         /// Draws the Empress' tentacles.
         /// </summary>
         /// <param name="drawPosition">The draw position of the tentacles.</param>
-        public static void DrawTentacles(Vector2 drawPosition)
+        public void DrawTentacles(Vector2 drawPosition)
         {
-            Color tentacleColor = Color.Gold * 0.6f;
-            tentacleColor.A = 0;
-
-            Texture2D tentaclesTexture = TextureAssets.Extra[ExtrasID.HallowBossTentacles].Value;
+            Texture2D tentaclesTexture = ModContent.Request<Texture2D>(Palette.TentaclesTextureOverride ?? "WoTE/Content/NPCs/EoL/Rendering/Tentacles").Value;
             Rectangle tantaclesFrame = tentaclesTexture.Frame(1, 8, 0, (int)(Main.GlobalTimeWrappedHourly * 15f) % 8);
             Main.EntitySpriteDraw(tentaclesTexture, drawPosition, tantaclesFrame, Color.White, 0f, tantaclesFrame.Size() * 0.5f, 1f, 0);
-            for (int i = 0; i < 4; i++)
-            {
-                Vector2 drawOffset = (MathHelper.TwoPi * i / 4f).ToRotationVector2() * 2f;
-                Main.EntitySpriteDraw(tentaclesTexture, drawPosition + drawOffset, tantaclesFrame, tentacleColor, 0f, tantaclesFrame.Size() * 0.5f, 1f, 0);
-            }
         }
 
         /// <summary>
