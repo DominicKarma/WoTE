@@ -164,8 +164,13 @@ namespace WoTE.Content.NPCs.EoL
         {
             get
             {
-                if (myself is not null && (!myself.active || myself.type != ModContent.NPCType<EmpressOfLight>()))
+                if (myself is not null && (!myself.active || myself.type != ModContent.NPCType<EmpressOfLight>()) || Main.gameMenu)
+                {
+                    if (Main.gameMenu)
+                        myself.active = false;
+
                     return null;
+                }
 
                 return myself;
             }
