@@ -20,8 +20,8 @@ Projectiles: {
 	HomingLacewing.DisplayName: Chrysope
 	LanceWallTelegraph.DisplayName: Mur de lances télégraphes
 	RainbowRiftArrow.DisplayName: Flèche Fendeuse d'Arc-en-ciel
-	// SilverReleaseLanternProj.DisplayName: Silver Release Lantern
-	// GlowingAurora.DisplayName: Glowing Aurora
+	SilverReleaseLanternProj.DisplayName: Lanterne de Déclenchement Argentée
+	GlowingAurora.DisplayName: Aurore Brillante
 }
 
 Configs: {
@@ -44,16 +44,16 @@ Buffs: {
 
 Items: {
 	SilverReleaseLantern: {
-		// DisplayName: Silver Release Lantern
-		// Tooltip: Engages the Empress of Light in combat
+		DisplayName: Lanterne de Déclenchement Argentée
+		Tooltip: Provoque l'Impératrice de la Lumière en combat
 	}
 }
 
 Dialogue: {
 	BaseIntroduction: Bienheureux... Laisse nous danser sous la lueur de la lune argentée cette nuit.
-	// DayIntroduction: Blessed one... Let us dance beneath the glorious sun.
-	// BloodMoonIntroduction: Blessed one... This night is scarlet. Still, we shall dance.
-	// EclipseIntroduction: Blessed one... This day is a harmony of sun and moon. Beneath it, we shall dance.
+	DayIntroduction: Bienheureux... Laisse nous danser sous ce soleil glorieux.
+	BloodMoonIntroduction: Bienheureux... Cette nuit est écarlate. Mais, nous danserons quand même.
+	EclipseIntroduction: Bienheureux... Cette journée est une harmonie du soleil et de la lune. Sous celles-ci, nous danserons.
 	AngryIntroduction: CHEVALIER SANS GRÂCE!
 }
 
