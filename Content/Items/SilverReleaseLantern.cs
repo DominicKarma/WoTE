@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Luminance.Common.Utilities;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTE.Content.NPCs.EoL;
@@ -21,7 +22,7 @@ namespace WoTE.Content.Items
             Item.noUseGraphic = true;
         }
 
-        public override bool CanUseItem(Player player) => !NPC.AnyNPCs(ModContent.NPCType<EmpressOfLight>());
+        public override bool CanUseItem(Player player) => !NPC.AnyNPCs(ModContent.NPCType<EmpressOfLight>()) && !Utilities.AnyProjectiles(ModContent.ProjectileType<SilverReleaseLanternProj>());
 
         public override void AddRecipes()
         {
