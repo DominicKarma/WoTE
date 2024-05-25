@@ -1,9 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Linq;
+using Luminance.Common.Utilities;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Content.Items;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -41,6 +45,16 @@ namespace WoTE.Content.NPCs.EoL
         private void CheckPauseState(On_Main.orig_UpdateAudio orig, Main self)
         {
             bool musicShouldPause = EmpressOfLight.Myself is not null && Main.gamePaused;
+            if (Utilities.AnyProjectiles(ModContent.ProjectileType<SilverReleaseLanternProj>()))
+            {
+                var lantern = Utilities.AllProjectilesByID(ModContent.ProjectileType<SilverReleaseLanternProj>()).First();
+                float lanternTime = lantern.As<SilverReleaseLanternProj>().Time;
+                Main.musicFade[Main.curMusic] *= MathF.Pow(Utilities.InverseLerp(180f, 0f, lanternTime), 0.5f);
+
+                if (Main.musicFade[Main.curMusic] <= 0f)
+                    musicShouldPause = true;
+            }
+
             if (MusicIsPaused != musicShouldPause)
             {
                 if (musicShouldPause)
