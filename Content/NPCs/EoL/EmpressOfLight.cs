@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Luminance.Common.Utilities;
@@ -26,6 +25,12 @@ namespace WoTE.Content.NPCs.EoL
         /// Private backing field for <see cref="Myself"/>.
         /// </summary>
         private static NPC myself;
+
+        private static int normalIconIndex;
+
+        private static int bloodMoonIconIndex;
+
+        private static int eclipseIconIndex;
 
         /// <summary>
         /// The current AI state the Empress is using. This uses the <see cref="StateMachine"/> under the hood.
@@ -264,14 +269,26 @@ namespace WoTE.Content.NPCs.EoL
             return baseDamage;
         }
 
+        public override void Load()
+        {
+            // This has be called from Load instead of SetStaticDefaults due to a weird TML limitation.
+            string normalIconPath = "WoTE/Content/NPCs/EoL/IconNormal";
+            string bloodMoonIconPath = "WoTE/Content/NPCs/EoL/IconBloodMoon";
+            string eclipseIconPath = "WoTE/Content/NPCs/EoL/IconEclipse";
+
+            Mod.AddBossHeadTexture(normalIconPath, -1);
+            normalIconIndex = ModContent.GetModBossHeadSlot(normalIconPath);
+
+            Mod.AddBossHeadTexture(bloodMoonIconPath, -1);
+            bloodMoonIconIndex = ModContent.GetModBossHeadSlot(bloodMoonIconPath);
+
+            Mod.AddBossHeadTexture(eclipseIconPath, -1);
+            eclipseIconIndex = ModContent.GetModBossHeadSlot(eclipseIconPath);
+        }
+
         public override void SetStaticDefaults()
         {
             this.ExcludeFromBestiary();
-
-            NPCID.Sets.BossHeadTextures[Type] = NPCID.Sets.BossHeadTextures[NPCID.HallowBoss];
-
-            IDictionary<int, int> npcToBossHead = (IDictionary<int, int>)(typeof(NPCHeadLoader)?.GetField("npcToBossHead", Utilities.UniversalBindingFlags)?.GetValue(null) ?? new Dictionary<int, int>());
-            npcToBossHead[Type] = NPCID.Sets.BossHeadTextures[Type];
 
             Main.npcFrameCount[Type] = 2;
 
@@ -594,5 +611,19 @@ namespace WoTE.Content.NPCs.EoL
         }
 
         #endregion Iframes
+
+        #region Head Icons
+
+        public override void BossHeadSlot(ref int index)
+        {
+            index = normalIconIndex;
+
+            if (Main.bloodMoon)
+                index = bloodMoonIconIndex;
+            if (Main.eclipse)
+                index = eclipseIconIndex;
+        }
+
+        #endregion Head Icons
     }
 }
