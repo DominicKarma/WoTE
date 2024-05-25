@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using ReLogic.Content;
 using ReLogic.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -58,6 +59,9 @@ namespace WoTE.Content.NPCs.EoL
             }
 
             var font = Mod.Assets.Request<DynamicSpriteFont>("Assets/Fonts/EmpressDialogueText", AssetRequestMode.ImmediateLoad).Value;
+            if (!GameCulture.FromCultureName(GameCulture.CultureName.English).IsActive)
+                font = FontAssets.DeathText.Value;
+
             float dialogueScale = 0.8f;
             float spacingPerCharacter = 4f;
             string dialogue = Language.GetTextValue($"Mods.WoTE.Dialogue.{DialogueKeySuffix}");
