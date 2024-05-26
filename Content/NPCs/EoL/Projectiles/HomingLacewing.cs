@@ -2,15 +2,18 @@
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Core.Configuration;
 
 namespace WoTE.Content.NPCs.EoL.Projectiles
 {
-    public class HomingLacewing : ModProjectile, IProjOwnedByBoss<EmpressOfLight>
+    public class HomingLacewing : ModProjectile, IProjOwnedByBoss<EmpressOfLight>, IPixelatedPrimitiveRenderer
     {
         /// <summary>
         /// How long this lacewing has existed for, in frames.
@@ -24,7 +27,12 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
 
         public override string Texture => $"Terraria/Images/NPC_{NPCID.EmpressButterfly}";
 
-        public override void SetStaticDefaults() => Main.projFrames[Type] = 3;
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Type] = 3;
+            ProjectileID.Sets.TrailingMode[Type] = 2;
+            ProjectileID.Sets.TrailCacheLength[Type] = 13;
+        }
 
         public override void SetDefaults()
         {
@@ -111,6 +119,54 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
                 Vector2 drawOffset = (MathHelper.TwoPi * i / 6f + Projectile.rotation).ToRotationVector2() * offset;
                 Main.spriteBatch.Draw(texture, drawPosition + drawOffset, frame, color, Projectile.rotation, frame.Size() * 0.5f, Projectile.scale, direction, 0f);
             }
+        }
+
+        public float TrailWidthFunction(float completionRatio)
+        {
+            float baseWidth = 30f;
+            float tipCutFactor = Utilities.InverseLerp(0.03f, 0.05f, completionRatio);
+            float slownessFactor = Utils.Remap(Projectile.velocity.Length(), 3f, 19f, 0.4f, 1f);
+            return baseWidth * tipCutFactor * slownessFactor * (1f - completionRatio);
+        }
+
+        public Color TrailColorFunction(float completionRatio)
+        {
+            return Color.White * Projectile.Opacity * (WoTEConfig.Instance.PhotosensitivityMode ? 0.5f : 1f);
+        }
+
+        public float CalculateSinusoidalOffset(float completionRatio)
+        {
+            return MathF.Sin(MathHelper.TwoPi * completionRatio + Main.GlobalTimeWrappedHourly * -9f + Projectile.identity) * Utilities.InverseLerp(0.01f, 0.9f, completionRatio);
+        }
+
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
+        {
+            if (EmpressOfLight.Myself is null)
+                return;
+
+            Vector4[] lacewingTrailPalette = EmpressOfLight.Myself.As<EmpressOfLight>().Palette.Get(EmpressPaletteType.LacewingTrail);
+            ManagedShader trailShader = ShaderManager.GetShader("WoTE.LacewingTrailShader");
+            trailShader.TrySetParameter("localTime", Main.GlobalTimeWrappedHourly * 1.56f + Projectile.whoAmI * 0.4f);
+            trailShader.TrySetParameter("gradient", lacewingTrailPalette);
+            trailShader.TrySetParameter("gradientCount", lacewingTrailPalette.Length);
+            trailShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
+            trailShader.SetTexture(TextureAssets.Extra[ExtrasID.MagicMissileTrailShape], 2, SamplerState.LinearWrap);
+            trailShader.Apply();
+
+            float perpendicularOffset = Utils.Remap(Projectile.velocity.Length(), 4f, 20f, 12f, 40f) * Utilities.InverseLerp(60f, 15f, Projectile.velocity.Length());
+            Vector2 perpendicular = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * perpendicularOffset;
+            Vector2[] trailPositions = new Vector2[Projectile.oldPos.Length];
+            for (int i = 0; i < trailPositions.Length; i++)
+            {
+                if (Projectile.oldPos[i] == Vector2.Zero)
+                    continue;
+
+                float sine = CalculateSinusoidalOffset(i / (float)trailPositions.Length);
+                trailPositions[i] = Projectile.oldPos[i] + perpendicular * sine;
+            }
+
+            PrimitiveSettings settings = new(TrailWidthFunction, TrailColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);
+            PrimitiveRenderer.RenderTrail(trailPositions, settings, 31);
         }
     }
 }
