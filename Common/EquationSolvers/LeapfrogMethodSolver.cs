@@ -107,10 +107,6 @@ namespace WoTE.Common.EquationSolvers
         /// Updates and applies this system to a given entity.
         /// </summary>
         /// <param name="entity">The entity to apply the system positioning to.</param>
-        public void ApplyTo(Entity entity)
-        {
-            Vector2 oldPosition = entity.Center;
-            entity.Center = Update(Main.LocalPlayer.Center, entity.velocity);
-        }
+        public void ApplyTo(Entity entity) => entity.Center = Update(Main.LocalPlayer.Center, entity.velocity);
     }
 }

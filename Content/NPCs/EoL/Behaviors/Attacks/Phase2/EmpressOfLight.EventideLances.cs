@@ -237,6 +237,7 @@ namespace WoTE.Content.NPCs.EoL
 
             EventideLances_TeleportCounter++;
 
+            NPC.netSpam = 0;
             NPC.netUpdate = true;
         }
 

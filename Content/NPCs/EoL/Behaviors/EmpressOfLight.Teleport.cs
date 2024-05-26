@@ -49,7 +49,8 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.RegisterTransition(EmpressAIType.Teleport, null, false, () =>
             {
-                return TeleportCompletionRatio >= 1f;
+                int latencyCorrection = (Main.netMode != NetmodeID.SinglePlayer).ToInt() * 8;
+                return AITimer >= TeleportDuration + latencyCorrection;
             }, () =>
             {
                 TeleportCompletionRatio = 0f;
@@ -89,7 +90,7 @@ namespace WoTE.Content.NPCs.EoL
                 light.noGravity = true;
             }
 
-            if (TeleportCompletionRatio >= 1f)
+            if (AITimer == TeleportDuration)
             {
                 ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 5f);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
