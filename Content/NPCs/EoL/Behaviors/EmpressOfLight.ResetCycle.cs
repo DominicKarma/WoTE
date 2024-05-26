@@ -104,7 +104,7 @@ namespace WoTE.Content.NPCs.EoL
             if (PrismaticOverload_ShouldntDoButterflyDashes && chosenCycle.Contains(EmpressAIType.ButterflyBurstDashes))
                 return false;
 
-            if (statesToAvoid.Take(3).Any(chosenCycle.Contains))
+            if (statesToAvoid.Any(chosenCycle.Contains))
                 return false;
 
             return true;
