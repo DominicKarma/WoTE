@@ -1,4 +1,5 @@
 Just another mod that reworks the Empress of Light. She may be summoned with a Silver Release Lantern.
+She has been tested in multiplayer and should work decently there.
 
 Credits to the following individuals for helping (whether directly or indirectly) in the creation of the mod:
 
