@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -160,12 +161,13 @@ namespace WoTE.Content.NPCs.EoL.Projectiles
         public float DeathrayWidthFunction(float completionRatio)
         {
             float baseWidth = Projectile.width * Projectile.scale;
-            return baseWidth;
+            float startCircleFactor = MathF.Sqrt(1f - Utilities.InverseLerp(0.07f, 0.02f, completionRatio).Squared());
+            return baseWidth * startCircleFactor;
         }
 
         public Color DeathrayColorFunction(float completionRatio)
         {
-            return Projectile.GetAlpha(new(255, 239, 182)) * Utilities.InverseLerp(0f, 0.1f, completionRatio);
+            return Projectile.GetAlpha(Color.White) * Utilities.InverseLerp(1f, 0.94f, completionRatio);
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
