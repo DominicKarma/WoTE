@@ -1,70 +1,28 @@
-﻿using Luminance.Common.Utilities;
+﻿using System.IO;
 using Microsoft.Xna.Framework;
+using Terraria;
 
-namespace WoTE.Common.ShapeCurves
+namespace WoTE.Common.EquationSolvers
 {
     public class LeapfrogMethodSolver
     {
         private Vector2 previousInputPosition;
 
-        private Vector2 outputPosition;
-
         private Vector2 outputVelocityHalf;
 
         /// <summary>
-        /// The frequency of motion resulting from the system.
+        /// The resulting output position from the last <see cref="Update(Vector2, Vector2?)"/> call, or from the constructor if it has yet to be called.
         /// </summary>
-        public float Frequency
+        public Vector2 OutputPosition
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Determines how strongly vibrations resulting from <see cref="Frequency"/> decay.
+        /// The movement configuration that governs the system.
         /// </summary>
-        /// 
-        /// <remarks>
-        /// At 0, no damping occurs, and the results oscillate forever.<br></br>
-        /// Between 0 and 1, the vibrations are weakened, in accordance with the intensity.<br></br>
-        /// Beyond 1, vibrations cease entirely, with the greater values resulting in a greater propensity for smooth regression to the norm.
-        /// </remarks>
-        public float DampingCoefficient
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Determines the initial response of the system.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// At 0, a smooth, natural curve occurs at the threshold of change.<br></br>
-        /// Between 0 and 1 the motion becomes harsh and discontinuous at the first derivative, with strength relative to the intensity of the value.<br></br>
-        /// Beyond 1, the motion overshoots a bit.<br></br>
-        /// Below 0, the motion anticipates a bit.
-        /// </remarks>
-        public float InitialResponseCoefficient
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// k1 as defined in the differential equation that this attemps to solve.
-        /// </summary>
-        public float K1 => DampingCoefficient / (MathHelper.Pi * Frequency);
-
-        /// <summary>
-        /// k2 as defined in the differential equation that this attemps to solve.
-        /// </summary>
-        public float K2 => 1f / (MathHelper.TwoPi * Frequency).Squared();
-
-        /// <summary>
-        /// k3 as defined in the differential equation that this attemps to solve.
-        /// </summary>
-        public float K3 => InitialResponseCoefficient * DampingCoefficient / (MathHelper.TwoPi * Frequency);
+        public DynamicMovementConfiguration MovementConfiguration;
 
         /// <summary>
         /// The time-step of the solver. This is constant because Terraria's update rate is limited via a fixed time-step.
@@ -76,11 +34,35 @@ namespace WoTE.Common.ShapeCurves
         /// </summary>
         public const float TimeStepSquared = TimeStep * TimeStep;
 
-        public LeapfrogMethodSolver(float frequency, float dampingCoefficient, float initialResponseCoefficient)
+        public LeapfrogMethodSolver(Vector2 startingPosition, DynamicMovementConfiguration config)
         {
-            Frequency = frequency;
-            DampingCoefficient = dampingCoefficient;
-            InitialResponseCoefficient = initialResponseCoefficient;
+            OutputPosition = startingPosition;
+            MovementConfiguration = config;
+        }
+
+        public void WriteTo(BinaryWriter writer)
+        {
+            writer.Write(MovementConfiguration.K1);
+            writer.Write(MovementConfiguration.K2);
+            writer.Write(MovementConfiguration.K3);
+            writer.WriteVector2(previousInputPosition);
+            writer.WriteVector2(outputVelocityHalf);
+            writer.WriteVector2(OutputPosition);
+        }
+
+        public static LeapfrogMethodSolver ReadFrom(BinaryReader reader)
+        {
+            float k1 = reader.ReadSingle();
+            float k2 = reader.ReadSingle();
+            float k3 = reader.ReadSingle();
+            Vector2 previousInputPosition = reader.ReadVector2();
+            Vector2 outputVelocityHalf = reader.ReadVector2();
+            Vector2 outputPosition = reader.ReadVector2();
+            return new(outputPosition, new(k1, k2, k3, 0f))
+            {
+                outputVelocityHalf = outputVelocityHalf,
+                previousInputPosition = previousInputPosition,
+            };
         }
 
         /// <summary>
@@ -100,19 +82,35 @@ namespace WoTE.Common.ShapeCurves
                 previousInputPosition = inputPosition;
             }
 
+            float k1 = MovementConfiguration.K1;
+            float k2 = MovementConfiguration.K2;
+            float k3 = MovementConfiguration.K3;
+            if (k2 == 0f)
+                return inputPosition;
+
             // Estimate the velocity at time i + 0.5.
             // In this context, OutputVelocityHalf is the previous estimate, at time i - 0.5.
-            Vector2 velocityHalf = outputVelocityHalf + (inputPosition - outputPosition - K1 * outputVelocityHalf) / K2 * TimeStep * 0.5f;
+            Vector2 velocityHalf = outputVelocityHalf + (inputPosition - OutputPosition - k1 * outputVelocityHalf) / k2 * TimeStep * 0.5f;
 
             // Calculate the new position estimate.
-            Vector2 newPosition = outputPosition + velocityHalf * TimeStep;
+            Vector2 newPosition = OutputPosition + velocityHalf * TimeStep;
 
             // Iterate to the next frame.
-            Vector2 newVelocityHalf = velocityHalf + (inputPosition + inputVelocity.Value * K3 - newPosition - K1 * velocityHalf) / K2 * TimeStep * 0.5f;
-            outputPosition = newPosition;
+            Vector2 newVelocityHalf = velocityHalf + (inputPosition + inputVelocity.Value * k3 - newPosition - k1 * velocityHalf) / k2 * TimeStep * 0.5f;
+            OutputPosition = newPosition;
             outputVelocityHalf = newVelocityHalf;
 
-            return outputPosition;
+            return OutputPosition;
+        }
+
+        /// <summary>
+        /// Updates and applies this system to a given entity.
+        /// </summary>
+        /// <param name="entity">The entity to apply the system positioning to.</param>
+        public void ApplyTo(Entity entity)
+        {
+            Vector2 oldPosition = entity.Center;
+            entity.Center = Update(Main.LocalPlayer.Center, entity.velocity);
         }
     }
 }

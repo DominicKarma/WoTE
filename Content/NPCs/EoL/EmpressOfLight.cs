@@ -9,6 +9,7 @@ using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTE.Common.EquationSolvers;
 
 namespace WoTE.Content.NPCs.EoL
 {
@@ -155,6 +156,15 @@ namespace WoTE.Content.NPCs.EoL
         {
             get => palette ??= EmpressPalettes.Choose();
             set => palette = value;
+        }
+
+        /// <summary>
+        /// The dynamic movement handler that affects the Empress' motion.
+        /// </summary>
+        public LeapfrogMethodSolver DynamicMovementHandler
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -362,6 +372,7 @@ namespace WoTE.Content.NPCs.EoL
             };
             writer.Write(flags);
 
+            DynamicMovementHandler.WriteTo(writer);
             WritePreviousStates(writer);
             WriteStateMachineStack(writer);
 
@@ -385,6 +396,7 @@ namespace WoTE.Content.NPCs.EoL
             PerformingLanceWallSupport = flags[1];
             PerformedFrameOneEffects = flags[2];
 
+            DynamicMovementHandler = LeapfrogMethodSolver.ReadFrom(reader);
             ReadPreviousStates(reader);
             ReadStateMachineStack(reader);
 
@@ -463,6 +475,7 @@ namespace WoTE.Content.NPCs.EoL
         {
             Palette = EmpressPalettes.Choose();
             SummonedAtNight = !Main.dayTime;
+            DynamicMovementHandler = new(NPC.Center, CommonDynamicMovementConfigurations.Default);
         }
 
         /// <summary>
