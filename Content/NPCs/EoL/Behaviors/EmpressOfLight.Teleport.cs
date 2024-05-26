@@ -49,10 +49,14 @@ namespace WoTE.Content.NPCs.EoL
         {
             StateMachine.RegisterTransition(EmpressAIType.Teleport, null, false, () =>
             {
-                int latencyCorrection = (Main.netMode != NetmodeID.SinglePlayer).ToInt() * 8;
+                int latencyCorrection = (Main.netMode != NetmodeID.SinglePlayer).ToInt() * 6;
                 return AITimer >= TeleportDuration + latencyCorrection;
             }, () =>
             {
+                ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 5f);
+                NPC.velocity = Vector2.Zero;
+                NPC.Center = TeleportDestination;
+                TeleportDestination = Vector2.Zero;
                 TeleportCompletionRatio = 0f;
                 NPC.netOffset = Vector2.Zero;
                 NPC.oldRot = new float[NPC.oldRot.Length];
@@ -88,18 +92,6 @@ namespace WoTE.Content.NPCs.EoL
                 light.velocity = -Vector2.UnitY * Main.rand.NextFloat(4f);
                 light.color = Palette.MulticolorLerp(EmpressPaletteType.Phase2Dress, Main.rand.NextFloat());
                 light.noGravity = true;
-            }
-
-            if (AITimer == TeleportDuration)
-            {
-                ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 5f);
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    NPC.velocity = Vector2.Zero;
-                    NPC.Center = TeleportDestination;
-                    TeleportDestination = Vector2.Zero;
-                    NPC.netUpdate = true;
-                }
             }
 
             if (TeleportCompletionRatio >= 0.75f)
