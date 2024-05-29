@@ -534,7 +534,7 @@ namespace WoTE.Content.NPCs.EoL
             else
                 Main.time = MathHelper.Lerp((float)Main.time, 27020f, 0.1f);
 
-            // The ambient sounds of these things absolutely kill the mood of the fight.
+            // The ambient sounds of these things absolutely ruin the mood of the fight.
             // Kill them.
             foreach (Projectile proj in Main.ActiveProjectiles)
             {
