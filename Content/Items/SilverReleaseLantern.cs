@@ -1,4 +1,4 @@
-﻿using Luminance.Common.Utilities;
+using Luminance.Common.Utilities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,6 +19,7 @@ namespace WoTE.Content.Items
             Item.damage = 0;
             Item.DamageType = DamageClass.Default;
             Item.rare = ItemRarityID.Purple;
+            Item.consumable = false;
             Item.noUseGraphic = true;
         }
 
