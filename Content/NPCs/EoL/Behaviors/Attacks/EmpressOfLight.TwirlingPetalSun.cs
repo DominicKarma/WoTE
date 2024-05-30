@@ -96,8 +96,8 @@ namespace WoTE.Content.NPCs.EoL
             if (AITimer == TwirlingPetalSun_PetalSummonDelay + TwirlingPetalSun_TwirlTime + TwirlingPetalSun_FlareTransformTime + TwirlingPetalSun_FlareRetractTime + TwirlingPetalSun_BurstTime)
                 DoBehavior_TwirlingPetalSun_ReleasePrismaticBolts();
 
-            float flySpeed = PerformingLanceWallSupport ? 6f : 2f;
-            float hoverInterpolant = PerformingLanceWallSupport ? 0.023f : 0.013f;
+            float flySpeed = PerformingLanceWallSupport ? 5f : 1.67f;
+            float hoverInterpolant = PerformingLanceWallSupport ? 0.023f : 0.012f;
             NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, hoverInterpolant);
             NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * flySpeed, 0.035f);
         }
