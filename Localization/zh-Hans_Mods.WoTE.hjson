@@ -1,61 +1,63 @@
 NPCs: {
-    EmpressOfLight.DisplayName: 光之女皇
-    Lacewing.DisplayName: 七彩草蛉
+	EmpressOfLight.DisplayName: 光之女皇
+	Lacewing.DisplayName: 七彩草蛉
 }
 
 Projectiles: {
-    PrismaticBolt.DisplayName: 七彩矢
-    LightLance.DisplayName: 辐棱长枪
-    AcceleratingLightLance.DisplayName: 辐棱长枪
-    AcceleratingRainbow.DisplayName: 虹光
-    SpinningTerraprisma.DisplayName: 泰拉棱镜
-    DazzlingPetal.DisplayName: 眩目绽放
-    StarBolt.DisplayName: 星光矢
-    PrismaticBurst.DisplayName: 七彩爆发
-    DazzlingTornado.DisplayName: 眩目龙卷
-    EmpressOrbitingTerraprisma.DisplayName: 泰拉棱镜
-    ConvergingMoonlight.DisplayName: 汇聚月光
-    DazzlingDeathray.DisplayName: 眩目死光
-    MagicCircle.DisplayName: 魔法阵
-    HomingLacewing.DisplayName: 七彩草蛉
-    LanceWallTelegraph.DisplayName: 长枪墙预警线
-    RainbowRiftArrow.DisplayName: 彩虹裂隙箭
-    SilverReleaseLanternProj.DisplayName: 银妆天灯
-    GlowingAurora.DisplayName: 闪耀极光
+	PrismaticBolt.DisplayName: 七彩矢
+	LightLance.DisplayName: 辐棱长枪
+	AcceleratingLightLance.DisplayName: 辐棱长枪
+	AcceleratingRainbow.DisplayName: 虹光
+	SpinningTerraprisma.DisplayName: 泰拉棱镜
+	DazzlingPetal.DisplayName: 炫目绽放
+	StarBolt.DisplayName: 星光矢
+	PrismaticBurst.DisplayName: 七彩爆发
+	DazzlingTornado.DisplayName: 眩目龙卷
+	EmpressOrbitingTerraprisma.DisplayName: 泰拉棱镜
+	ConvergingMoonlight.DisplayName: 凝月之光
+	DazzlingDeathray.DisplayName: 眩目死光
+	MagicCircle.DisplayName: 魔法阵
+	HomingLacewing.DisplayName: 七彩草蛉
+	LanceWallTelegraph.DisplayName: 长枪墙预警线
+	RainbowRiftArrow.DisplayName: 彩虹裂隙箭
+	SilverReleaseLanternProj.DisplayName: 银妆天灯
+	GlowingAurora.DisplayName: 耀目极光
+}
 
 Configs: {
-    WoTEConfig: {
-        DisplayName: 个人配置
-        PhotosensitivityMode: {
-            Label: 光敏模式
-            Tooltip: 出于光敏性原因，一些视觉冲击强烈或速度过快的效果会被柔化
-        }
-    }
+	WoTEConfig: {
+		DisplayName: 个人配置
+
+		PhotosensitivityMode: {
+			Label: 光敏模式
+			Tooltip: 出于光敏性原因，一些视觉冲击强烈或速度过快的效果会被柔化
+		}
+	}
 }
 
 Buffs: {
-    GracedWings: {
-        DisplayName: 蒙赐之翼
-        Description: 女皇邀你与她共舞
-    }
+	GracedWings: {
+		DisplayName: 蒙赐之翼
+		Description: 女皇邀你与她共舞
+	}
 }
 
 Items: {
-    SilverReleaseLantern: {
-        DisplayName: 银妆天灯
-        Tooltip: 引光之女皇前来交战
-    }
+	SilverReleaseLantern: {
+		DisplayName: 银妆天灯
+		Tooltip: 引光之女皇前来交战
+	}
 }
 
 Dialogue: {
-    BaseIntroduction: 蒙赐之人……倘能共舞于此皎月之夜？
-    DayIntroduction: 蒙赐之人……倘能共舞于此光辉白昼？
-    BloodMoonIntroduction: 蒙赐之人……今夜明月蒙蚀。共舞依旧。
-    EclipseIntroduction: 蒙赐之人……此刻日月连珠。共舞依旧。
-    AngryIntroduction: 厚颜竖子！
+	BaseIntroduction: 蒙赐之人……倘能共舞于此皎月之夜？
+	DayIntroduction: 蒙赐之人……倘能共舞于此光辉白昼？
+	BloodMoonIntroduction: 蒙赐之人……今夜明月蒙蚀。共舞依旧。
+	EclipseIntroduction: 蒙赐之人……此刻日月连珠。共舞依旧。
+	AngryIntroduction: 无 耻 之 徒 ！
 }
 
 MenuThemes: {
-    GloriousDawnMainMenu.DisplayName: 光辉明昼
-    GlimmerdewBlessedMoonlightMainMenu.DisplayName: 银皎夜光
+	GloriousDawnMainMenu.DisplayName: 光辉明昼
+	GlimmerdewBlessedMoonlightMainMenu.DisplayName: 银皎夜光
 }
