@@ -19,6 +19,7 @@ namespace WoTE.Content.Items
             Item.damage = 0;
             Item.DamageType = DamageClass.Default;
             Item.rare = ItemRarityID.Purple;
+            Item.maxStack = 1;
             Item.consumable = false;
             Item.noUseGraphic = true;
         }
