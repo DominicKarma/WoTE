@@ -1,4 +1,4 @@
-using Luminance.Common.Utilities;
+﻿using Luminance.Common.Utilities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -30,7 +30,7 @@ namespace WoTE.Content.Items
             CreateRecipe(1).
                 AddTile(TileID.LunarCraftingStation).
                 AddIngredient(ItemID.ReleaseLantern).
-                AddIngredient(ItemID.LunarOre).
+                AddIngredient(ItemID.LunarOre, 10).
                 AddIngredient(ItemID.EmpressButterfly).
                 Register();
         }
