@@ -1,4 +1,4 @@
 displayName = Wrath of the Empress
 author = Dominic Karma
-version = 1.0.1
+version = 1.0.2
 modReferences = Luminance
