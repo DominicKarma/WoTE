@@ -43,7 +43,7 @@ namespace WoTE.Content.NPCs.EoL
             WithCloudColor(new(255, 74, 11, 165)).
             WithMistColor(new(197, 25, 22, 190)).
             WithMoonColors(Color.Transparent, Color.Transparent).
-            WithBackgroundTint(new Color(213, 24, 25) * 0.725f).
+            WithBackgroundTint(new Color(213, 24, 25) * 0.75f).
             WithArmTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/Daytime/Arm").
             WithBodyTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/Daytime/EmpressBody").
             WithWingTextureOverride("WoTE/Content/NPCs/EoL/Rendering/CustomTextures/Daytime/EmpressWings").
