@@ -107,12 +107,6 @@ namespace WoTE.Content.NPCs.EoL
             LeftHandFrame = EmpressHandFrame.PalmRaisedUp;
             RightHandFrame = EmpressHandFrame.PalmRaisedUp;
 
-            if (Main.mouseRight && Main.mouseRightRelease)
-            {
-                IProjOwnedByBoss<EmpressOfLight>.KillAll();
-                AITimer = 0;
-            }
-
             float appearanceInterpolant = Utilities.InverseLerp(0f, PrismaticOverload_MagicCircleAppearTime, AITimer);
             float shootSuspenseInterpolant = Utilities.InverseLerp(0f, PrismaticOverload_ShootSuspenseTime, AITimer - PrismaticOverload_ShootPrepareDelay);
 
